@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectEXE.Models;
+using ProjectEXE.Services.Implementations;
+using ProjectEXE.Services.Interfaces;
 
 namespace ProjectEXE
 {
@@ -11,6 +13,11 @@ namespace ProjectEXE
 
             builder.Services.AddDbContext<RevaContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyCnn")));
+
+
+            //DI
+            builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+            builder.Services.AddScoped<IShopService, ShopService>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
