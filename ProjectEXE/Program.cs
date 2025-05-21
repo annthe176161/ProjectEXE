@@ -18,6 +18,7 @@ namespace ProjectEXE
             //DI
             builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
             builder.Services.AddScoped<IShopService, ShopService>();
+            builder.Services.AddScoped<IZaloPayService, ZaloPayService>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
