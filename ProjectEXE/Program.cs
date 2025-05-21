@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using ProjectEXE.Models;
 using ProjectEXE.Services.Implementations;
@@ -12,15 +13,34 @@ namespace ProjectEXE
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddDbContext<RevaContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MyCnn")));
-
-
-            //DI
-            builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
-            builder.Services.AddScoped<IShopService, ShopService>();
+                        options.UseSqlServer(builder.Configuration.GetConnectionString("MyCnn")));
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // DI
+            builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IShopService, ShopService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IShopOrderService, ShopOrderService>();
+            builder.Services.AddScoped<IPackageService, PackageService>();
+            builder.Services.AddScoped<IAdminPackageService, AdminPackageService>();
+
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                            .AddCookie(options =>
+                            {
+                                options.LoginPath = "/Account/Login";
+                                options.LogoutPath = "/Account/Logout";
+                                options.AccessDeniedPath = "/Account/AccessDenied";
+                                options.Cookie.Name = "RevaAuth";
+                                options.Cookie.HttpOnly = true;
+                                options.Cookie.SameSite = SameSiteMode.Lax;
+                                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                                options.ExpireTimeSpan = TimeSpan.FromDays(30);
+                                options.SlidingExpiration = true;
+                            });
 
             var app = builder.Build();
 
@@ -37,6 +57,7 @@ namespace ProjectEXE
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

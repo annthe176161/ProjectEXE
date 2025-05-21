@@ -1,0 +1,174 @@
+﻿@model ProjectEXE.ViewModel.OrderViewModel.OrderDetailsViewModel
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng #" + Model.OrderId;
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a asp-action="OrderList">Đơn hàng của tôi</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Đơn hàng #@Model.OrderId</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-4">Chi tiết đơn hàng #@Model.OrderId</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center bg-white">
+            <h5 class="mb-0">Thông tin đơn hàng</h5>
+            <span class="@(Model.OrderStatusId switch {
+                1 => "badge bg-warning text-dark",
+                2 => "badge bg-primary",
+                3 => "badge bg-info",
+                4 => "badge bg-success",
+                5 => "badge bg-danger",
+                _ => "badge bg-secondary"
+            })">
+                @Model.OrderStatus
+            </span>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Ngày đặt hàng:</strong> @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+                    <p><strong>Cập nhật lần cuối:</strong> @(Model.UpdatedAt?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</p>
+                    @if (Model.OrderStatusId == 5 && !string.IsNullOrEmpty(Model.CancelReason))
+                    {
+                        <p><strong>Lý do hủy:</strong> @Model.CancelReason</p>
+                    }
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p><strong>Người mua:</strong> @Model.BuyerName</p>
+                    @if (Model.OrderStatusId >= 2) // Chỉ hiển thị thông tin liên hệ khi đơn hàng đã được xác nhận
+                    {
+                        <p><strong>Số điện thoại:</strong> @Model.BuyerPhoneNumber</p>
+                        <p><strong>Địa chỉ:</strong> @Model.BuyerAddress</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">Thông tin sản phẩm</h5>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-2">
+                    <img src="@Model.ProductImageUrl" alt="@Model.ProductName" class="img-fluid rounded">
+                </div>
+                <div class="col-md-6">
+                    <h5>@Model.ProductName</h5>
+                    <p class="mb-0">
+                        <strong>Cửa hàng:</strong> @Model.ShopName
+                    </p>
+                    @if (Model.OrderStatusId >= 2 && !string.IsNullOrEmpty(Model.ShopContactInfo))
+                    {
+                        <p class="mb-0">
+                            <strong>Thông tin liên hệ shop:</strong> @Model.ShopContactInfo
+                        </p>
+                    }
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <h5 class="text-danger">@Model.Price.ToString("N0")₫</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        <h5><i class="fas fa-info-circle me-2"></i>Thông tin quan trọng:</h5>
+        <p>Reva là nền tảng kết nối người mua và người bán. Sau khi người bán xác nhận đơn hàng, hai bên sẽ được chia sẻ thông tin liên hệ để thống nhất về phương thức thanh toán và giao nhận.</p>
+        <p class="mb-0">Reva không trực tiếp xử lý việc thanh toán sản phẩm và giao nhận hàng hóa.</p>
+    </div>
+
+    <div class="d-flex gap-2">
+        <a asp-action="OrderList" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+        </a>
+
+        @if (Model.CanBeCancelled)
+        {
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelOrderModal">
+                <i class="fas fa-times-circle me-2"></i>Hủy đơn hàng
+            </button>
+        }
+    </div>
+</div>
+
+<!-- Modal hủy đơn hàng -->
+@if (Model.CanBeCancelled)
+{
+    <div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form asp-action="CancelOrder" method="post">
+                    <input type="hidden" name="orderId" value="@Model.OrderId" />
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cancelOrderModalLabel">Hủy đơn hàng #@Model.OrderId</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Bạn có chắc muốn hủy đơn hàng này?</p>
+                        <div class="mb-3">
+                            <label for="reason" class="form-label">Lý do hủy đơn:</label>
+                            <select class="form-select" id="reason" name="reason" required>
+                                <option value="">-- Chọn lý do --</option>
+                                <option value="Đổi ý, không muốn mua nữa">Đổi ý, không muốn mua nữa</option>
+                                <option value="Tìm thấy sản phẩm khác phù hợp hơn">Tìm thấy sản phẩm khác phù hợp hơn</option>
+                                <option value="Người bán không phản hồi">Người bán không phản hồi</option>
+                                <option value="Đặt nhầm sản phẩm">Đặt nhầm sản phẩm</option>
+                                <option value="Khác">Khác</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 d-none" id="otherReasonContainer">
+                            <label for="otherReason" class="form-label">Lý do khác:</label>
+                            <textarea class="form-control" id="otherReason" name="otherReason" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const reasonSelect = document.getElementById('reason');
+            const otherReasonContainer = document.getElementById('otherReasonContainer');
+            const otherReasonTextarea = document.getElementById('otherReason');
+
+            reasonSelect.addEventListener('change', function() {
+                if (this.value === 'Khác') {
+                    otherReasonContainer.classList.remove('d-none');
+                    otherReasonTextarea.setAttribute('required', '');
+                } else {
+                    otherReasonContainer.classList.add('d-none');
+                    otherReasonTextarea.removeAttribute('required');
+                }
+            });
+        });
+    </script>
+}
