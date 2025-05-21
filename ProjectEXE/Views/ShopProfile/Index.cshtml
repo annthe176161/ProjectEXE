@@ -1,0 +1,94 @@
+﻿@model ProjectEXE.Models.Shop
+@{
+    ViewData["Title"] = "Gian hàng của bạn";
+}
+
+<div class="container py-5">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-body text-center py-5">
+                    @if (!string.IsNullOrEmpty(Model.ProfileImage))
+                    {
+                        <img src="@Model.ProfileImage" alt="@Model.ShopName" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                    }
+                    else
+                    {
+                        <div class="bg-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 150px; height: 150px;">
+                            <i class="fas fa-store" style="font-size: 60px; color: #6c757d;"></i>
+                        </div>
+                    }
+
+                    <h3 class="fw-bold mb-0">@Model.ShopName</h3>
+                    <p class="text-muted">Thành viên từ @Model.CreatedAt.ToString("MM/yyyy")</p>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="#" class="btn btn-primary">
+                            <i class="fas fa-cog me-2"></i>Chỉnh sửa gian hàng
+                        </a>
+                        <a asp-controller="ShopOrder" asp-action="Index" class="btn btn-outline-primary">
+                            <i class="fas fa-shopping-bag me-2"></i>Quản lý đơn hàng
+                        </a>
+                        <a href="#" class="btn btn-outline-success">
+                            <i class="fas fa-box me-2"></i>Thêm sản phẩm mới
+                        </a>
+                        <a asp-controller="Package" asp-action="Index" class="btn btn-outline-primary">
+                            <i class="fas fa-crown me-2"></i>Nâng cấp gói dịch vụ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow h-100">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">Thông tin gian hàng</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">Mô tả gian hàng</h5>
+                        <p>@(string.IsNullOrEmpty(Model.Description) ? "Chưa có mô tả" : Model.Description)</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">Thông tin liên hệ</h5>
+                        <p><i class="fas fa-address-card me-2 text-primary"></i>@(string.IsNullOrEmpty(Model.ContactInfo) ? "Chưa cập nhật thông tin liên hệ" : Model.ContactInfo)</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">Thống kê</h5>
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="border rounded py-3">
+                                    <h3 class="text-primary mb-0">0</h3>
+                                    <small class="text-muted">Sản phẩm</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border rounded py-3">
+                                    <h3 class="text-success mb-0">0</h3>
+                                    <small class="text-muted">Đơn hàng</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border rounded py-3">
+                                    <h3 class="text-warning mb-0">0</h3>
+                                    <small class="text-muted">Đánh giá</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

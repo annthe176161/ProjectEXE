@@ -7,40 +7,154 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ProjectEXE.styles.css" asp-append-version="true" />
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <!-- toastr -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="~/css/header.css" />
+    @RenderSection("Styles", required: false)
+
+
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ProjectEXE</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <div class="top-bar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span><i class="fas fa-phone"></i> 0123 456 789</span>
+                        <span class="ms-3">
+                            <i class="fas fa-envelope"></i>
+                            lienhe@thoitrangdocu.com
+                        </span>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="dropdown d-inline ms-3">
+                                <a class="dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user me-1"></i> @User.Identity.Name
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Profile" asp-action="Index">Tài khoản của tôi</a>
+                                    </li>
+
+                                    @* Kiểm tra vai trò người dùng và hiển thị các tùy chọn phù hợp *@
+                                    @if (User.IsInRole("Seller"))
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="ShopProfile" asp-action="Index">
+                                                <i class="fas fa-store me-2"></i>Gian hàng của tôi
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="ShopOrder" asp-action="Index">
+                                                <i class="fas fa-shopping-bag me-2"></i>Quản lý đơn hàng
+                                            </a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Shop" asp-action="Create">
+                                                <i class="fas fa-store-alt me-2"></i>Tạo gian hàng
+                                            </a>
+                                        </li>
+                                    }
+
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Order" asp-action="OrderList">
+                                            <i class="fas fa-receipt me-2"></i>Đơn hàng của tôi
+                                        </a>
+                                    </li>
+
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="LogoutConfirm"><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a></li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path" class="ms-3">
+                                <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập
+                            </a>
+                            <span class="mx-1">|</span>
+                            <a asp-controller="Account" asp-action="Register" class="">
+                                <i class="fas fa-user-plus me-1"></i> Đăng ký
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <img src="~/images/logo.jpg" alt="Logo Thời Trang Đồ Cũ" height="50" />
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link active" href="index.html">Trang Chủ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-controller="Product" asp-action="ProductList">
+                                Sản Phẩm
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Về Chúng Tôi</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Liên Hệ</a>
                         </li>
                     </ul>
+
+                    <form class="d-flex me-2">
+                        <div class="input-group">
+                            <input class="form-control" type="search" placeholder="Tìm kiếm sản phẩm..." />
+                            <button class="btn btn-search" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="cart-icon">
+                        <a href="#" class="position-relative">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count">0</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+
+            <!-- @* <partial name="_Notification" /> *@ -->
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - ProjectEXE - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
