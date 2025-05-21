@@ -1,0 +1,142 @@
+﻿@model ProjectEXE.ViewModel.ProductViewModel.ShopDetailViewModel
+@{
+    ViewData["Title"] = $"Shop {Model.ShopName}";
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Product" asp-action="ProductList">Sản phẩm</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Shop @Model.ShopName</li>
+        </ol>
+    </nav>
+
+    <!-- Thông tin shop -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 text-center">
+                    <img src="@Model.ProfileImage" alt="@Model.ShopName" class="img-fluid rounded-circle mb-3" style="max-width: 150px; height: 150px; object-fit: cover;">
+                    @if (Model.IsPremium)
+                    {
+                        <div class="mt-2">
+                            <span class="badge bg-warning text-dark">
+                                <i class="fas fa-crown me-1"></i> Shop Premium
+                            </span>
+                        </div>
+                    }
+                </div>
+                <div class="col-md-9">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="mb-0">@Model.ShopName</h2>
+                    </div>
+                    <div class="shop-info mb-3">
+                        <p><i class="fas fa-user me-2"></i> <strong>Người bán:</strong> @Model.SellerName</p>
+                        <p><i class="fas fa-map-marker-alt me-2"></i> <strong>Địa chỉ:</strong> @Model.Location</p>
+                        <p><i class="fas fa-calendar-alt me-2"></i> <strong>Ngày tham gia:</strong> @Model.CreatedAt.ToString("dd/MM/yyyy")</p>
+                        <p><i class="fas fa-box me-2"></i> <strong>Tổng sản phẩm:</strong> @Model.ProductCount</p>
+                    </div>
+                    <div class="shop-description">
+                        <h5>Giới thiệu shop</h5>
+                        <p>@Model.Description</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danh sách sản phẩm -->
+    <div class="shop-products">
+        <h3 class="mb-4">Sản phẩm của shop</h3>
+
+        @if (Model.Products.Any())
+        {
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                @foreach (var product in Model.Products)
+                {
+                    <div class="col">
+                        <div class="card product-card h-100">
+                            <div class="position-relative">
+                                <img src="@product.MainImageUrl" class="card-img-top" alt="@product.ProductName" style="height: 200px; object-fit: cover;">
+                                @if (product.IsNew)
+                                {
+                                    <span class="badge bg-success position-absolute top-0 start-0 m-2">Mới</span>
+                                }
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">@product.ProductName</h5>
+                                <p class="card-text small text-muted">@product.Condition | @product.Category</p>
+                                <p class="price">@product.Price.ToString("N0")₫</p>
+                                <div class="d-flex justify-content-between">
+                                    <a asp-controller="Product" asp-action="ProductDetails" asp-route-id="@product.ProductId" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i> Chi tiết
+                                    </a>
+                                    <button class="btn btn-primary btn-sm">
+                                        <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Phân trang -->
+            @if (Model.Pagination.TotalPages > 1)
+            {
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        @for (int i = 1; i <= Model.Pagination.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == Model.Pagination.CurrentPage ? "active" : "")">
+                                <a class="page-link" asp-action="Details" asp-route-id="@Model.ShopId" asp-route-page="@i">@i</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
+        }
+        else
+        {
+            <div class="alert alert-info">
+                Shop chưa có sản phẩm nào.
+            </div>
+        }
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .shop-info p {
+            margin-bottom: 0.5rem;
+        }
+
+        .product-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+            .product-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+
+        .price {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #dc3545;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            height: 2.5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+    </style>
+}

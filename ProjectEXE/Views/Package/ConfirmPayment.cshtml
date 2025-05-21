@@ -1,0 +1,63 @@
+﻿@model ProjectEXE.ViewModel.ServicePackageViewModel.PaymentCompletionViewModel
+@{
+    ViewData["Title"] = "Xác nhận thanh toán";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-success">
+                <div class="card-header bg-success text-white py-3">
+                    <h4 class="mb-0"><i class="fas fa-check-circle me-2"></i>Xác nhận thanh toán thành công</h4>
+                </div>
+                <div class="card-body p-4 text-center">
+                    <div class="mb-4">
+                        <div class="bg-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 100px; height: 100px;">
+                            <i class="fas fa-clock text-success" style="font-size: 50px;"></i>
+                        </div>
+                        <h4>Thanh toán đang chờ xác nhận</h4>
+                        <p class="text-muted">Yêu cầu thanh toán của bạn đã được ghi nhận</p>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="border-bottom pb-2 mb-3">Chi tiết thanh toán</h5>
+                            <ul class="list-unstyled text-start mb-0">
+                                <li class="mb-3 d-flex justify-content-between">
+                                    <span class="text-muted">Mã giao dịch:</span>
+                                    <span class="fw-bold user-select-all">@Model.TransactionCode</span>
+                                </li>
+                                <li class="mb-3 d-flex justify-content-between">
+                                    <span class="text-muted">Gói dịch vụ:</span>
+                                    <span class="fw-bold">@Model.PackageName</span>
+                                </li>
+                                <li class="mb-3 d-flex justify-content-between">
+                                    <span class="text-muted">Số tiền:</span>
+                                    <span class="fw-bold text-danger">@Model.Amount.ToString("N0")₫</span>
+                                </li>
+                                <li class="d-flex justify-content-between">
+                                    <span class="text-muted">Ngày thanh toán:</span>
+                                    <span class="fw-bold">@Model.PaymentDate.ToString("dd/MM/yyyy HH:mm")</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <span>Admin sẽ xác nhận thanh toán của bạn trong thời gian sớm nhất. Gói dịch vụ sẽ được kích hoạt sau khi thanh toán được xác nhận.</span>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <a asp-controller="ShopProfile" asp-action="Index" class="btn btn-primary">
+                            <i class="fas fa-store me-2"></i>Quay lại gian hàng
+                        </a>
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="fas fa-list me-2"></i>Xem danh sách gói dịch vụ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
