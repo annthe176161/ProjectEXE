@@ -30,18 +30,6 @@ namespace ProjectEXE.Controllers
             return View("ShopView", shopViewModel);
         }
 
-        public async Task<IActionResult> Create()
-        {
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            // Kiểm tra xem người dùng đã có shop chưa
-            if (await _shopService.HasShopAsync(userId))
-            {
-                return RedirectToAction("Index", "ShopProfile");
-            }
-            return View();
-        }
-
         public ActionResult ActiveShop(int id)
         {
             return View();
@@ -64,34 +52,47 @@ namespace ProjectEXE.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+        
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            [ValidateAntiForgeryToken]
-            public async Task<IActionResult> Create(CreateShopViewModel model)
+            // Kiểm tra xem người dùng đã có shop chưa
+            if (await _shopService.HasShopAsync(userId))
             {
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
+                return RedirectToAction("Index", "ShopProfile");
+            }
+            return View();
+        }
 
-                int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-                // Kiểm tra xem người dùng đã có shop chưa
-                if (await _shopService.HasShopAsync(userId))
-                {
-                    return RedirectToAction("Index", "ShopProfile");
-                }
-
-                var result = await _shopService.CreateShopAsync(model, userId);
-
-                if (result)
-                {
-                    TempData["SuccessMessage"] = "Gian hàng của bạn đã được tạo thành công!";
-                    return RedirectToAction("Index", "ShopProfile");
-                }
-
-                ModelState.AddModelError(string.Empty, "Không thể tạo gian hàng. Tên gian hàng có thể đã được sử dụng.");
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateShopViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
                 return View(model);
             }
+
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            // Kiểm tra xem người dùng đã có shop chưa
+            if (await _shopService.HasShopAsync(userId))
+            {
+                return RedirectToAction("Index", "ShopProfile");
+            }
+
+            var result = await _shopService.CreateShopAsync(model, userId);
+
+            if (result)
+            {
+                TempData["SuccessMessage"] = "Gian hàng của bạn đã được tạo thành công!";
+                return RedirectToAction("Index", "ShopProfile");
+            }
+
+            ModelState.AddModelError(string.Empty, "Không thể tạo gian hàng. Tên gian hàng có thể đã được sử dụng.");
+            return View(model);
+        }
         
-    } 
+    }
 }

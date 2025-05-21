@@ -50,7 +50,13 @@ namespace ProjectEXE.Controllers
                             ExpiresUtc = DateTime.UtcNow.AddDays(model.RememberMe ? 30 : 1)
                         });
 
-                    // Kiểm tra và xử lý ReturnUrl
+                    // Kiểm tra nếu là admin (RoleId = 1), chuyển hướng đến trang quản lý gói dịch vụ
+                    if (user.RoleId == 1) // RoleId 1 là Admin
+                    {
+                        return RedirectToAction("Index", "AdminPackageManagement");
+                    }
+
+                    // Kiểm tra và xử lý ReturnUrl cho người dùng không phải admin
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                     {
                         return Redirect(model.ReturnUrl);
