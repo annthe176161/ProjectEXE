@@ -79,3 +79,26 @@
         border-bottom: none;
     }
 }
+
+.top-bar {
+    background-color: var(--dark-color);
+    color: var(--white-color);
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+    .top-bar a {
+        color: var(--white-color);
+        text-decoration: none;
+    }
+
+@media (max-width: 768px) {
+    .top-bar {
+        font-size: 12px;
+    }
+
+        .top-bar .text-end {
+            text-align: left !important;
+            margin-top: 5px;
+        }
+}
