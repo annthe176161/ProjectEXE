@@ -3,6 +3,7 @@ using ProjectEXE.Models;
 using ProjectEXE.Services.Interfaces;
 using ProjectEXE.ViewModel.ProductViewModel;
 using ProjectEXE.ViewModel.ShopViewModel;
+using System.Security.Claims;
 
 namespace ProjectEXE.Services.Implementations
 {
@@ -10,22 +11,34 @@ namespace ProjectEXE.Services.Implementations
     {
         private readonly RevaContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ShopService(RevaContext context, IWebHostEnvironment webHostEnvironment)
+        public ShopService(RevaContext context, IWebHostEnvironment webHostEnvironment, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<bool> ActiveShop(ShopView shop, string imageUrl)
         {
+            var user = _httpContextAccessor.HttpContext?.User;
+            var userIdClaim = user?.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (userIdClaim == null)
+            {
+                return false; // Không xác định được người dùng
+            }
+
+            int userId = int.Parse(userIdClaim.Value);
+
             if (_context.Shops.Any(n => n.ShopName == shop.ShopName))
             {
                 return false;
             }
             var shopModel = new Shop
             {
-                UserId = 1, //tạm thời lấy user = 1
+                UserId = userId,
                 ShopName = shop.ShopName,
                 Description = shop.Description,
                 ProfileImage = imageUrl,

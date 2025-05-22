@@ -6,16 +6,18 @@ using System.Security.Claims;
 
 namespace ProjectEXE.Controllers
 {
-    [Authorize(Roles = "Seller")]
+    //[Authorize(Roles = "Seller")]
     public class ShopProductController : Controller
     {
         private readonly IShopProductService _shopProductService;
         private readonly IShopService _shopService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ShopProductController(IShopProductService shopProductService, IShopService shopService)
+        public ShopProductController(IShopProductService shopProductService, IShopService shopService, IHttpContextAccessor httpContextAccessor)
         {
             _shopProductService = shopProductService;
             _shopService = shopService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         private async Task<int> GetCurrentShopIdAsync()
@@ -28,11 +30,17 @@ namespace ProjectEXE.Controllers
         // GET: ShopProduct/Create
         public async Task<IActionResult> AddProduct()
         {
+            //method nay k can
             var shopId = await GetCurrentShopIdAsync();
 
-            if (shopId == 0)
+            var user = _httpContextAccessor.HttpContext?.User;
+            var userIdClaim = user?.FindFirst(ClaimTypes.NameIdentifier);
+            var userId = int.Parse(userIdClaim?.Value);
+
+            if (!_shopProductService.IsShopBuyPackage(userId))
             {
-                return RedirectToAction("Create", "Shop");
+                TempData["Error"] = "Shop của bạn chưa được kích hoạt, vui lòng kích hoạt";
+                return RedirectToAction("Index", "Package");
             }
 
             // Kiểm tra quyền tạo sản phẩm

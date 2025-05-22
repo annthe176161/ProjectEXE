@@ -11,5 +11,6 @@ namespace ProjectEXE.Services.Interfaces
         Task<bool> DeleteProductAsync(int productId, int shopId);
         Task<List<CategoryViewModel>> GetCategoriesAsync();
         Task<List<ConditionViewModel>> GetConditionsAsync();
+        bool IsShopBuyPackage(int userId);
     }
 }

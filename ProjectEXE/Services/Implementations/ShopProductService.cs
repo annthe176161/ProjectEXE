@@ -320,5 +320,11 @@ namespace ProjectEXE.Services.Implementations
                 // Bỏ qua lỗi khi xóa file
             }
         }
+
+        public bool IsShopBuyPackage(int userId)
+        {
+            if(_context.PackagePayments.Any(p => p.UserId == userId)) return true;
+            return false;
+        }
     }
 }

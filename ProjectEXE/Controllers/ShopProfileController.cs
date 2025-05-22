@@ -25,7 +25,7 @@ namespace ProjectEXE.Controllers
             if (shop == null)
             {
                 // Nếu chưa có shop, chuyển hướng đến trang tạo shop
-                return RedirectToAction("Create", "Shop");
+                return RedirectToAction("ActiveShop", "Shop");
             }
 
             // Hiển thị thông tin shop

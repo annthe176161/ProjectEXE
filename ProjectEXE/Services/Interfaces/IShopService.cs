@@ -1,6 +1,7 @@
 ﻿using ProjectEXE.Models;
 using ProjectEXE.ViewModel.ProductViewModel;
 using ProjectEXE.ViewModel.ShopViewModel;
+using System.Security.Claims;
 
 namespace ProjectEXE.Services.Interfaces
 {
