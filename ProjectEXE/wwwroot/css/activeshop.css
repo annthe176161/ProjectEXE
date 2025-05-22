@@ -1,0 +1,187 @@
+﻿/* Custom shop styles - only applies to .shop-section classes */
+.shop-section {
+    font-family: 'Nunito', 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+    /* Colors */
+    .shop-section .text-primary,
+    .shop-section .card-title {
+        color: #2e8b57 !important; /* Sea Green - xanh lá đậm */
+    }
+
+    .shop-section .bg-primary {
+        background-color: #2e8b57 !important;
+    }
+
+    .shop-section .bg-light {
+        background-color: #e8f5e9 !important; /* Light Green - xanh lá nhạt */
+    }
+
+    /* Headings */
+    .shop-section .shop-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #2e8b57;
+        letter-spacing: -0.5px;
+    }
+
+    .shop-section .shop-subtitle {
+        color: #6c757d;
+        font-size: 1.1rem;
+    }
+
+    /* Divider */
+    .shop-section .divider-custom {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 1.5rem 0;
+    }
+
+    .shop-section .divider-custom-line {
+        width: 100%;
+        max-width: 7rem;
+        height: 0.25rem;
+        background-color: #2e8b57;
+        border-radius: 1rem;
+        opacity: 0.6;
+    }
+
+    .shop-section .divider-custom-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: #2e8b57;
+        padding: 0 1.5rem;
+    }
+
+    /* Cards */
+    .shop-section .card {
+        border: none;
+        border-radius: 0.8rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 0.15rem 1.75rem rgba(58, 59, 69, 0.1);
+        margin-bottom: 1.5rem;
+    }
+
+        .shop-section .card:hover {
+            box-shadow: 0 0.35rem 2rem rgba(58, 59, 69, 0.15);
+        }
+
+    .shop-section .card-body {
+        padding: 1.5rem;
+    }
+
+    .shop-section .card-title {
+        position: relative;
+        padding-bottom: 0.8rem;
+        margin-bottom: 1.2rem;
+        font-weight: 700;
+    }
+
+        .shop-section .card-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: #2e8b57;
+            border-radius: 3px;
+        }
+
+    /* List groups */
+    .shop-section .list-group-item {
+        border: none;
+        padding: 0.75rem 1.5rem;
+    }
+
+        .shop-section .list-group-item .text-success {
+            color: #2e8b57 !important;
+        }
+
+    /* Alerts */
+    .shop-section .alert-info {
+        background-color: #e8f5e9;
+        border-color: #2e8b57;
+        color: #1e5631;
+    }
+
+    /* Form Elements */
+    .shop-section .form-label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .shop-section .form-control:focus {
+        border-color: #2e8b57;
+        box-shadow: 0 0 0 0.25rem rgba(46, 139, 87, 0.15);
+    }
+
+    .shop-section .form-check-input:checked {
+        background-color: #2e8b57;
+        border-color: #2e8b57;
+    }
+
+    /* Buttons */
+    .shop-section .btn-primary {
+        background-color: #2e8b57;
+        border-color: #2e8b57;
+        transition: all 0.3s;
+    }
+
+        .shop-section .btn-primary:hover,
+        .shop-section .btn-primary:focus {
+            background-color: #1e5631;
+            border-color: #1e5631;
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1rem rgba(46, 139, 87, 0.2);
+        }
+
+    /* File input styling */
+    .shop-section .form-control[type="file"] {
+        border: 2px dashed #d1d3e2;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        transition: all 0.3s;
+        background-color: white;
+        cursor: pointer;
+    }
+
+        .shop-section .form-control[type="file"]:hover {
+            border-color: #2e8b57;
+            background-color: #f8fff8;
+        }
+
+    /* Image preview */
+    .shop-section .img-thumbnail {
+        border-color: #2e8b57;
+    }
+
+    /* Animation */
+    .shop-section .fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Custom padding/margin adjustments */
+.shop-section .mb-4 {
+    margin-bottom: 1.8rem !important;
+}
+
+.shop-section .py-4 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+}

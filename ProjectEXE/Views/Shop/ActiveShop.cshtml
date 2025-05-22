@@ -1,129 +1,148 @@
 ﻿@model ProjectEXE.ViewModel.ShopViewModel.ShopView
 
-<div class="">
-    <div class="row">
-        <div class="col-lg-8 mx-auto">
-            <!-- Phần tiêu đề và hướng dẫn -->
-            <div class="text-center mb-4">
-                <h1 class="fw-bold text-primary">Tạo Gian Hàng Của Bạn</h1>
-                <div class="divider-custom">
-                    <div class="divider-custom-line"></div>
-                    <div class="divider-custom-icon"><i class="fas fa-store"></i></div>
-                    <div class="divider-custom-line"></div>
-                </div>
-            </div>
+<link rel="stylesheet" href="~/css/activeshop.css" asp-append-version="true" />
 
-            <div class="card shadow mb-5">
-                <div class="card-body p-4">
-                    <h5 class="card-title text-center mb-4">Bắt đầu bán hàng trên REVA</h5>
-
-                    <div class="mb-4">
-                        <p>
-                            Chào mừng bạn đến với REVA! Để bắt đầu bán quần áo second-hand trên nền tảng của chúng
-                            tôi,
-                            bạn cần tạo gian hàng của riêng mình. Quá trình này rất đơn giản và chỉ mất vài phút.
-                        </p>
-
-                        <p>Sau khi hoàn thành bước này, bạn sẽ có thể:</p>
-                        <ul class="list-group list-group-flush mb-3">
-                            <li class="list-group-item bg-light">
-                                <i class="fas fa-check-circle text-success me-2"></i> Đăng bán các sản phẩm của bạn
-                            </li>
-                            <li class="list-group-item bg-light">
-                                <i class="fas fa-check-circle text-success me-2"></i> Quản lý đơn hàng và tương tác
-                                với người mua
-                            </li>
-                            <li class="list-group-item bg-light">
-                                <i class="fas fa-check-circle text-success me-2"></i> Xây dựng thương hiệu cá nhân
-                                trên nền tảng REVA
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="alert alert-info mb-4">
-                        <h6 class="alert-heading">
-                            <i class="fas fa-info-circle me-2"></i> Hướng dẫn tạo gian hàng:
-                        </h6>
-                        <hr>
-                        <ol class="mb-0">
-                            <li>Điền đầy đủ thông tin vào mẫu bên dưới</li>
-                            <li>Tên gian hàng phải là duy nhất và dễ nhớ</li>
-                            <li>Thêm mô tả ngắn gọn để người mua hiểu về gian hàng của bạn</li>
-                            <li>Tải lên ảnh đại diện đẹp để tăng tính chuyên nghiệp (không bắt buộc)</li>
-                        </ol>
+<div class="shop-section">
+    <div class="py-4 fade-in">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- Phần tiêu đề và hướng dẫn -->
+                <div class="text-center mb-4">
+                    <h1 class="shop-title text-primary">Tạo Gian Hàng Của Bạn</h1>
+                    <div class="divider-custom">
+                        <div class="divider-custom-line"></div>
+                        <div class="divider-custom-icon"><i class="fas fa-store"></i></div>
+                        <div class="divider-custom-line"></div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Phần form nhập thông tin sẽ tiếp tục ở đây -->
+                <div class="card shadow mb-5">
+                    <div class="card-body p-4">
+                        <h5 class="card-title text-center mb-4">Bắt đầu bán hàng trên REVA</h5>
+
+                        <div class="mb-4">
+                            <p>
+                                Chào mừng bạn đến với REVA! Để bắt đầu bán quần áo second-hand trên nền tảng của chúng
+                                tôi, bạn cần tạo gian hàng của riêng mình. Quá trình này rất đơn giản và chỉ mất vài phút.
+                            </p>
+
+                            <p>Sau khi hoàn thành bước này, bạn sẽ có thể:</p>
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item bg-light">
+                                    <i class="fas fa-check-circle text-success me-2"></i> Đăng bán các sản phẩm của bạn
+                                </li>
+                                <li class="list-group-item bg-light">
+                                    <i class="fas fa-check-circle text-success me-2"></i> Quản lý đơn hàng và tương tác
+                                    với người mua
+                                </li>
+                                <li class="list-group-item bg-light">
+                                    <i class="fas fa-check-circle text-success me-2"></i> Xây dựng thương hiệu cá nhân
+                                    trên nền tảng REVA
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-info mb-4">
+                            <h6 class="alert-heading">
+                                <i class="fas fa-info-circle me-2"></i> Hướng dẫn tạo gian hàng:
+                            </h6>
+                            <hr>
+                            <ol class="mb-0">
+                                <li>Điền đầy đủ thông tin vào mẫu bên dưới</li>
+                                <li>Tên gian hàng phải là duy nhất và dễ nhớ</li>
+                                <li>Thêm mô tả ngắn gọn để người mua hiểu về gian hàng của bạn</li>
+                                <li>Tải lên ảnh đại diện đẹp để tăng tính chuyên nghiệp (không bắt buộc)</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form tạo gian hàng -->
+                <div class="card shadow">
+                    <div class="card-body p-4">
+                        <h5 class="card-title mb-4">Thông tin gian hàng của bạn</h5>
+
+                        <form asp-action="ActiveShop" method="post" enctype="multipart/form-data">
+                            <!-- Tên gian hàng - bắt buộc -->
+                            <div class="mb-4">
+                                <label asp-for="ShopName" class="form-label fw-bold">
+                                    Tên gian hàng <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-store"></i></span>
+                                    <input asp-for="ShopName" class="form-control" required placeholder="Nhập tên gian hàng của bạn">
+                                </div>
+                                <div class="form-text">Tên phải là duy nhất (tối đa 100 ký tự)</div>
+                            </div>
+
+                            <!-- Mô tả gian hàng - không bắt buộc -->
+                            <div class="mb-4">
+                                <label asp-for="Description" class="form-label fw-bold">Mô tả gian hàng</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-align-left"></i></span>
+                                    <textarea class="form-control" asp-for="Description" rows="4"
+                                              placeholder="Mô tả ngắn gọn về gian hàng và sản phẩm của bạn" maxlength="500"></textarea>
+                                </div>
+                                <div class="form-text"><span id="descCount">0</span>/500 ký tự</div>
+                            </div>
+
+                            <!-- Ảnh đại diện - không bắt buộc - GIỮ NGUYÊN CHỨC NĂNG-->
+                            <div class="mb-4">
+                                <label asp-for="ImagePath" class="form-label fw-bold">Ảnh đại diện gian hàng</label>
+                                <input type="file" class="form-control" asp-for="ImagePath" accept=".jpg,.png,.jpeg" id="shopImage">
+                                <div class="form-text">Định dạng .jpg, .png, .jpeg - Ảnh đẹp sẽ tạo ấn tượng tốt với khách hàng</div>
+
+                                <!-- Xem trước ảnh (mặc định ẩn) -->
+                                <div class="mt-3 d-none" id="imagePreviewContainer">
+                                    <div class="position-relative d-inline-block">
+                                        <img id="imagePreview" class="img-thumbnail" style="max-height: 200px;" alt="Ảnh đại diện">
+                                        <button type="button" id="removePreview" class="btn btn-sm btn-danger position-absolute"
+                                                style="top: -10px; right: -10px; border-radius: 50%; width: 25px; height: 25px; padding: 0;">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Thông tin liên hệ - không bắt buộc -->
+                            <div class="mb-4">
+                                <label asp-for="ContactInfo" class="form-label fw-bold">Thông tin liên hệ</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-phone-alt"></i></span>
+                                    <textarea class="form-control" asp-for="ContactInfo" rows="2"
+                                              placeholder="Số điện thoại, địa chỉ, hoặc thông tin liên hệ khác"></textarea>
+                                </div>
+                                <div class="form-text">Thông tin này sẽ hiển thị để khách hàng liên hệ với bạn</div>
+                            </div>
+
+                            <!-- Đồng ý điều khoản -->
+                            <div class="card bg-light mb-4">
+                                <div class="card-body">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                                        <label class="form-check-label" for="termsCheck">
+                                            Tôi đã đọc và đồng ý với <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">
+                                                điều khoản dịch vụ
+                                            </a> của REVA
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Nút gửi và quay lại -->
+                            <div class="d-grid gap-2 d-md-flex">
+                                <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Quay lại
+                                </a>
+                                <button type="submit" class="btn btn-primary flex-grow-1">
+                                    <i class="fas fa-store-alt me-2"></i>Tạo gian hàng
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-
-<!-- Phần form nhập thông tin sẽ tiếp tục ở đây -->
-<div class="card shadow">
-    <div class="card-body p-4">
-        <h5 class="card-title mb-4">Thông tin gian hàng của bạn</h5>
-
-        <form asp-action="ActiveShop" method="post" enctype="multipart/form-data">
-            <!-- Tên gian hàng - bắt buộc -->
-            <div class="mb-3">
-                <label asp-for="ShopName" class="form-label fw-bold">
-                    Tên gian hàng <span class="text-danger">*</span>
-                </label>
-                <input asp-for="ShopName" class="form-control"  required placeholder="Nhập tên gian hàng của bạn">
-                <div class="form-text">Tên phải là duy nhất (tối đa 100 ký tự)</div>
-            </div>
-
-            <!-- Mô tả gian hàng - không bắt buộc -->
-            <div class="mb-3">
-                <label asp-for="Description" class="form-label fw-bold">Mô tả gian hàng</label>
-                <textarea class="form-control" asp-for="Description" rows="4"
-                          placeholder="Mô tả ngắn gọn về gian hàng và sản phẩm của bạn" maxlength="500"></textarea>
-                <div class="form-text">Tối đa 500 ký tự</div>
-            </div>
-
-            <!-- Ảnh đại diện - không bắt buộc -->
-            <div class="mb-3">
-                <label asp-for="ImagePath" class="form-label fw-bold">Ảnh đại diện gian hàng</label>
-                <div class="input-group mb-2">
-                    <input type="file" class="form-control" asp-for="ImagePath" accept=".jpg,.png,.jpeg">
-             
-                </div>
-                <div class="form-text">Định dạng .jpg,.png,.jpeg</div>
-
-                <!-- Xem trước ảnh (mặc định ẩn) -->
-                <div class="mt-2 d-none" id="imagePreviewContainer">
-                    <img id="imagePreview" class="img-thumbnail" style="max-height: 200px;" alt="Ảnh đại diện">
-                </div>
-            </div>
-
-            <!-- Thông tin liên hệ - không bắt buộc -->
-            <div class="mb-3">
-                <label asp-for="ContactInfo" class="form-label fw-bold">Thông tin liên hệ</label>
-                <textarea class="form-control" asp-for="ContactInfo" rows="2"
-                          placeholder="Số điện thoại, địa chỉ, hoặc thông tin liên hệ khác"></textarea>
-            </div>
-
-            <!-- Đồng ý điều khoản -->
-            <div class="mb-4">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="termsCheck" required>
-                    <label class="form-check-label" for="termsCheck">
-                        Tôi đã đọc và đồng ý với <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">
-                            điều
-                            khoản dịch vụ
-                        </a> của REVA
-                    </label>
-                </div>
-            </div>
-
-            <!-- Nút gửi và quay lại -->
-            <div class="d-grid gap-2 d-md-flex">
-                <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Quay lại</a>
-                <button type="submit" class="btn btn-primary flex-grow-1">Tạo</button>
-            </div>
-        </form>
     </div>
 </div>
 
@@ -131,29 +150,91 @@
 <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="termsModalLabel">Điều khoản dịch vụ</h5>
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="termsModalLabel">
+                    <i class="fas fa-file-contract me-2"></i>Điều khoản dịch vụ
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <h6>Điều khoản sử dụng gian hàng trên REVA</h6>
+                <div class="alert alert-info mb-4">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Vui lòng đọc kỹ các điều khoản dưới đây trước khi tạo gian hàng trên REVA.
+                </div>
+
+                <h6 class="fw-bold mb-3">Điều khoản sử dụng gian hàng trên REVA</h6>
                 <p>Khi tạo và sử dụng gian hàng trên REVA, bạn đồng ý tuân thủ các điều khoản sau:</p>
                 <ol>
-                    <li>Chỉ đăng bán các sản phẩm quần áo và phụ kiện second-hand thực tế</li>
-                    <li>Cung cấp thông tin chính xác về tình trạng sản phẩm</li>
-                    <li>Không đăng bán các sản phẩm bị cấm theo quy định của pháp luật</li>
-                    <li>Tuân thủ các quy định về thanh toán và giao dịch của nền tảng</li>
-                    <li>Đảm bảo thời gian phản hồi nhanh chóng đối với khách hàng</li>
-                    <li>Chịu trách nhiệm về nội dung và hình ảnh đăng tải</li>
-                    <li>Đồng ý thanh toán phí dịch vụ theo gói đã đăng ký</li>
+                    <li class="mb-2">Chỉ đăng bán các sản phẩm quần áo và phụ kiện second-hand thực tế</li>
+                    <li class="mb-2">Cung cấp thông tin chính xác về tình trạng sản phẩm</li>
+                    <li class="mb-2">Không đăng bán các sản phẩm bị cấm theo quy định của pháp luật</li>
+                    <li class="mb-2">Tuân thủ các quy định về thanh toán và giao dịch của nền tảng</li>
+                    <li class="mb-2">Đảm bảo thời gian phản hồi nhanh chóng đối với khách hàng</li>
+                    <li class="mb-2">Chịu trách nhiệm về nội dung và hình ảnh đăng tải</li>
+                    <li class="mb-2">Đồng ý thanh toán phí dịch vụ theo gói đã đăng ký</li>
                 </ol>
-                <p>
+                <p class="mb-0">
                     REVA có quyền tạm khóa hoặc xóa gian hàng vi phạm các điều khoản trên mà không cần thông báo trước.
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tôi đồng ý</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-success" id="agreeTerms" data-bs-dismiss="modal">
+                    <i class="fas fa-check me-2"></i>Tôi đồng ý
+                </button>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Xử lý đếm ký tự mô tả
+        $(document).ready(function() {
+            // Cập nhật số đếm ký tự ban đầu
+            updateCharCount();
+
+            // Cập nhật khi người dùng nhập
+            $("#Description").on('input', function() {
+                updateCharCount();
+            });
+
+            function updateCharCount() {
+                var count = $("#Description").val().length;
+                $("#descCount").text(count);
+
+                // Đổi màu khi gần đạt giới hạn
+                if (count > 450) {
+                    $("#descCount").css('color', '#e74a3b');
+                } else {
+                    $("#descCount").css('color', '');
+                }
+            }
+
+            // Xử lý xem trước ảnh
+            $("#shopImage").change(function() {
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        $('#imagePreview').attr('src', e.target.result);
+                        $('#imagePreviewContainer').removeClass('d-none');
+                    }
+
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+            // Xử lý xóa xem trước
+            $("#removePreview").click(function() {
+                $('#shopImage').val('');
+                $('#imagePreviewContainer').addClass('d-none');
+            });
+
+            // Khi nhấn đồng ý trong modal
+            $("#agreeTerms").click(function() {
+                $("#termsCheck").prop("checked", true);
+            });
+        });
+    </script>
+}

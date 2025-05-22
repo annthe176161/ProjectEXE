@@ -1,145 +1,81 @@
-﻿:root {
-    --primary-color: #2e8b57; /* Sea Green */
-    --secondary-color: #3cb371; /* Medium Sea Green */
-    --accent-color: #228b22; /* Forest Green */
-    --light-color: #e8f5e9; /* Light Green */
-    --dark-color: #1b5e20; /* Dark Green */
-    --text-color: #333333;
-    --white-color: #ffffff;
-}
-
-body {
-    font-family: 'Roboto', sans-serif;
-    color: var(--text-color);
-}
-
-/* Top bar styles */
-.top-bar {
-    background-color: var(--dark-color);
-    color: var(--white-color);
-    padding: 8px 0;
-    font-size: 14px;
-}
-
-    .top-bar a {
-        color: var(--white-color);
-        text-decoration: none;
-    }
-
-.social-icon {
-    margin-right: 10px;
-    transition: opacity 0.3s;
-}
-
-    .social-icon:hover {
-        opacity: 0.8;
-    }
-
-/* Main navbar styles */
-.navbar {
-    background-color: var(--white-color);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 15px 0;
-}
-
-.navbar-brand img {
-    height: 50px;
-    max-width: 180px;
-}
-
-.navbar-nav .nav-link {
-    color: var(--text-color);
+﻿/* Styles cho thanh header */
+.user-welcome {
+    color: var(--light-color);
     font-weight: 500;
-    padding: 0.5rem 1rem;
+}
+
+.user-logout {
+    color: #ff9999 !important;
     transition: color 0.3s;
 }
 
-    .navbar-nav .nav-link:hover,
-    .navbar-nav .nav-link.active {
-        color: var(--primary-color);
+    .user-logout:hover {
+        color: #ff6666 !important;
     }
 
-.navbar-nav .dropdown-menu {
-    border: none;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+/* Styles cho items trong menu */
+.navbar-nav .nav-item .nav-link {
+    position: relative;
+    transition: all 0.3s;
 }
 
-.navbar-nav .dropdown-item {
-    padding: 10px 20px;
-    transition: background-color 0.3s;
-}
-
-    .navbar-nav .dropdown-item:hover {
-        background-color: var(--light-color);
-        color: var(--primary-color);
+    .navbar-nav .nav-item .nav-link i {
+        transition: transform 0.3s;
     }
 
-/* Search form */
-.form-control {
-    border-radius: 20px 0 0 20px;
-    border: 1px solid #ddd;
-}
-
-.btn-search {
-    border-radius: 0 20px 20px 0;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-}
-
-    .btn-search:hover {
-        background-color: var(--accent-color);
+    .navbar-nav .nav-item .nav-link:hover i {
+        transform: translateX(3px);
     }
 
-/* Shopping cart */
-.cart-icon {
-    margin-left: 15px;
+/* Highlight menu cho vai trò đặc biệt */
+.highlight-nav {
+    position: relative;
 }
 
-    .cart-icon a {
-        color: var(--text-color);
-        font-size: 20px;
-        text-decoration: none;
+    .highlight-nav::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--primary-color);
+        transition: width 0.3s;
     }
 
-.cart-count {
+    .highlight-nav:hover::after {
+        width: 100%;
+    }
+
+    .highlight-nav:hover {
+        color: var(--primary-color) !important;
+    }
+
+/* Badge đánh dấu cho các menu quan trọng */
+.navbar-nav .nav-item .badge-new {
     position: absolute;
-    top: -8px;
-    right: -8px;
-    background-color: var(--primary-color);
+    top: -5px;
+    right: -5px;
+    font-size: 8px;
+    background-color: var(--accent-color);
+    padding: 2px 5px;
+    border-radius: 10px;
     color: white;
-    font-size: 12px;
-    padding: 2px 6px;
-    border-radius: 50%;
 }
 
-/* Responsive adjustments */
+/* Responsive */
 @media (max-width: 992px) {
-    .navbar-collapse {
-        background-color: var(--white-color);
-        padding: 15px;
-        border-radius: 8px;
-        margin-top: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    .navbar-nav .nav-item {
+        margin-bottom: 5px;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        padding-bottom: 5px;
     }
 
-    .form-control, .btn-search {
-        font-size: 14px;
+    .highlight-nav::after {
+        display: none;
     }
 
-    .cart-icon {
-        margin: 10px 0 0 0;
+    .navbar-nav .nav-item:last-child {
+        border-bottom: none;
     }
-}
-
-@media (max-width: 768px) {
-    .top-bar {
-        font-size: 12px;
-    }
-
-        .top-bar .text-end {
-            text-align: left !important;
-            margin-top: 5px;
-        }
 }

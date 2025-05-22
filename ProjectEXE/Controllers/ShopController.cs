@@ -42,7 +42,7 @@ namespace ProjectEXE.Controllers
             string imageUrl = await _cloudinaryService.UploadImageAsync(shopModel.ImagePath);
             if (await _shopService.ActiveShop(shopModel, imageUrl))
             {
-                TempData["Success"] = "Chuyển đổi thành người bán thành công";
+                TempData["Success"] = "Bạn đã kích hoạt gian hàng thành công!";
             }
             else
             {
