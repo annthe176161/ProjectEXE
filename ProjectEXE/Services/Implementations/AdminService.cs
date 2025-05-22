@@ -62,18 +62,22 @@ namespace ProjectEXE.Services.Implementations
             var twelveMonthsAgo = DateTime.Now.AddMonths(-11);
             var firstDay = new DateTime(twelveMonthsAgo.Year, twelveMonthsAgo.Month, 1);
 
-            var revenueData = _context.PackagePayments
+            var revenueData = await _context.PackagePayments
                 .Where(p => p.CreatedAt >= firstDay && p.Status.StatusName == "Confirmed")
-                .AsEnumerable()
+                .ToListAsync(); // Get data from database first
+
+            var result = revenueData
                 .GroupBy(p => p.CreatedAt.ToString("yyyy-MM"))
                 .Select(g => new RBMDto
                 {
                     RevenueMonth = g.Key,
-                    TotalRevenue = g.Sum(p => p.Amount) / 1000
+                    TotalRevenue = g.Sum(p => p.Amount), // Remove division by 1000
+                    FormattedRevenue = string.Format("{0:n0}", g.Sum(p => p.Amount)) // Format with thousand separators
                 })
                 .OrderBy(x => x.RevenueMonth)
                 .ToList();
-            return revenueData;
+
+            return result;
         }
 
         public async Task<List<RBPDto>> getRevenueByPackage()
@@ -81,16 +85,18 @@ namespace ProjectEXE.Services.Implementations
             var twelveMonthsAgo = DateTime.Now.AddMonths(-11);
             var firstDay = new DateTime(twelveMonthsAgo.Year, twelveMonthsAgo.Month, 1);
 
-            var revenueByPackage = _context.PackagePayments
+            var revenueByPackage = await _context.PackagePayments
                 .Where(p => p.CreatedAt >= firstDay && p.Status.StatusName == "Confirmed")
                 .GroupBy(p => p.Package.PackageName)
                 .Select(g => new RBPDto
                 {
                     PackageName = g.Key,
-                    TotalRevenue = g.Sum(p => p.Amount) / 1000
+                    TotalRevenue = g.Sum(p => p.Amount),  // Remove division by 1000
+                    FormattedRevenue = string.Format("{0:n0}", g.Sum(p => p.Amount))  // Format with thousand separators
                 })
                 .OrderByDescending(x => x.TotalRevenue)
-                .ToList();
+                .ToListAsync();
+
             return revenueByPackage;
         }
     }
