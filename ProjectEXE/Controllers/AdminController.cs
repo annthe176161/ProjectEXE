@@ -25,6 +25,11 @@ namespace ProjectEXE.Controllers
         {
             var userViewModels = await _userService.GetAllUsersAsync();
             ViewData["TotalUsersCount"] = await _userService.GetTotalUsersCountAsync();
+            ViewData["TotalShopsCount"] = await _userService.GetTotalShopsCountAsync();
+            ViewData["TotalProductsCount"] = await _userService.GetTotalProductsCountAsync(); // <== LẤY TỔNG SỐ SẢN PHẨM
+
+            ViewData["TotalRevenue"] = await _userService.GetTotalPackagePaymentsRevenueAsync(); // <== LẤY TỔNG DOANH THU
+
             List<ServicePackage> services = await _adminService.getAllService();
             List<RBMDto> RBM = await _adminService.getRevenueByMonth();
             List<RBPDto> RBP = await _adminService.getRevenueByPackage();

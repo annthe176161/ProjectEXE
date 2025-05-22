@@ -12,6 +12,7 @@ namespace ProjectEXE.Services.Implementations
     public class UserService : IUserService
     {
         private readonly RevaContext _context;
+        private const int CONFIRMED_PAYMENT_STATUS_ID = 2;
         public UserService(RevaContext context)
         {
             _context = context;
@@ -80,6 +81,45 @@ namespace ProjectEXE.Services.Implementations
         public async Task<int> GetTotalUsersCountAsync()
         {
             return await _context.Users.CountAsync();
+        }
+
+
+        public async Task<int> GetTotalShopsCountAsync()
+        {
+            // Giả định RevaContext của bạn có public DbSet<Shop> Shops { get; set; }
+            // và bạn đã có model Shop.cs trong thư mục Models
+            if (_context.Shops == null) // Kiểm tra phòng trường hợp DbSet chưa được khởi tạo
+            {
+                return 0;
+            }
+            return await _context.Shops.CountAsync();
+        }
+
+
+
+        // PHƯƠNG THỨC MỚI ĐỂ ĐẾM TỔNG SỐ SẢN PHẨM
+        public async Task<int> GetTotalProductsCountAsync()
+        {
+            // Giả định RevaContext của bạn có public DbSet<Product> Products { get; set; }
+            // và bạn đã có model Product.cs trong thư mục Models
+            if (_context.Products == null) // Kiểm tra phòng trường hợp DbSet chưa được khởi tạo
+            {
+                return 0;
+            }
+            return await _context.Products.CountAsync();
+        }
+
+
+        public async Task<decimal> GetTotalPackagePaymentsRevenueAsync()
+        {
+            if (_context.PackagePayments == null)
+            {
+                return 0m; // Trả về 0 kiểu decimal
+            }
+            // Tính tổng cột 'Amount' cho các thanh toán đã được xác nhận (StatusId = 2)
+            return await _context.PackagePayments
+                                 .Where(p => p.StatusId == CONFIRMED_PAYMENT_STATUS_ID)
+                                 .SumAsync(p => p.Amount);
         }
 
     }

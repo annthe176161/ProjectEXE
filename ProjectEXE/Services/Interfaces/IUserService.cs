@@ -18,6 +18,14 @@ namespace ProjectEXE.Services.Interfaces
         Task<bool> SetUserActiveStatusAsync(int userId, bool isActive);
 
         Task<int> GetTotalUsersCountAsync(); // <== PHƯƠNG THỨC MỚI
+
+
+        Task<int> GetTotalShopsCountAsync(); // <== PHƯƠNG THỨC MỚI
+
+        Task<int> GetTotalProductsCountAsync(); // <== PHƯƠNG THỨC MỚI
+
+
+        Task<decimal> GetTotalPackagePaymentsRevenueAsync();
     }
     
 }

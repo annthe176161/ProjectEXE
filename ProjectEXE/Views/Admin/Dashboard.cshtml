@@ -387,10 +387,17 @@
                     <i class="fas fa-store"></i>
                 </div>
                 <h3>Tổng cửa hàng</h3>
-                <div class="card-value">456</div>
-                <div class="card-change positive">
-                    <i class="fas fa-arrow-up"></i> 8% so với tháng trước
+                <div class="card-value">
+                    @if (ViewData["TotalShopsCount"] != null)
+                    {
+                        @Convert.ToInt32(ViewData["TotalShopsCount"]).ToString("N0")
+                    }
+                    else
+                    {
+                        @:0
+                    }
                 </div>
+                
             </div>
         </div>
         <div class="col-md-3 col-sm-6">
@@ -399,10 +406,17 @@
                     <i class="fas fa-tshirt"></i>
                 </div>
                 <h3>Tổng sản phẩm</h3>
-                <div class="card-value">8,742</div>
-                <div class="card-change positive">
-                    <i class="fas fa-arrow-up"></i> 15% so với tháng trước
+                <div class="card-value">
+                    @if (ViewData["TotalProductsCount"] != null)
+                    {
+                        @Convert.ToInt32(ViewData["TotalProductsCount"]).ToString("N0")
+                    }
+                    else
+                    {
+                        @:0
+                    }
                 </div>
+                
             </div>
         </div>
         <div class="col-md-3 col-sm-6">
@@ -410,11 +424,29 @@
                 <div class="card-icon">
                     <i class="fas fa-money-bill-wave"></i>
                 </div>
-                <h3>Doanh thu tháng</h3>
-                <div class="card-value">24,5 triệu</div>
-                <div class="card-change positive">
-                    <i class="fas fa-arrow-up"></i> 5% so với tháng trước
+                <h3>Tổng doanh thu</h3>
+                <div class="card-value">
+                    @if (ViewData["TotalRevenue"] != null)
+                    {
+                        decimal revenue = Convert.ToDecimal(ViewData["TotalRevenue"]);
+                        if (revenue >= 1000000) // Nếu doanh thu từ 1 triệu trở lên
+                        {
+                            // Hiển thị dạng "X.Y triệu VNĐ"
+                            // Làm tròn đến 1 chữ số thập phân cho phần triệu
+                            @((revenue / 1000000M).ToString("N1", System.Globalization.CultureInfo.GetCultureInfo("vi-VN")) + " triệu VNĐ")
+                        }
+                        else
+                        {
+                            // Hiển thị dạng "XXX.XXX VNĐ"
+                            @(revenue.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN")) + " VNĐ")
+                        }
+                    }
+                    else
+                    {
+                        @("0 VNĐ")
+                    }
                 </div>
+                
             </div>
         </div>
     </div>
