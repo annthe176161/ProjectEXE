@@ -1,0 +1,283 @@
+﻿@model ProjectEXE.ViewModel.ProductViewModel.ProductDetailViewModel
+@{
+    ViewData["Title"] = Model.ProductName;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/productdetails.css" />
+}
+
+<main class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Product" asp-action="ProductList">Sản Phẩm</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Product" asp-action="ProductList" asp-route-SelectedCategoryIds="@Model.CategoryId">@Model.Category</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.ProductName</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Phần hình ảnh sản phẩm -->
+        <div class="col-lg-6 mb-4">
+            <div class="product-gallery">
+                <!-- Hình ảnh chính -->
+                <div class="main-image-container mb-3">
+                    <img id="main-product-image" src="@Model.MainImageUrl"
+                         alt="@Model.ProductName" class="img-fluid rounded">
+                </div>
+
+                <!-- Swiper cho gallery -->
+                @if (Model.ImageUrls.Count > 1)
+                {
+                    <div class="swiper product-thumbnails">
+                        <div class="swiper-wrapper">
+                            @foreach (var image in Model.ImageUrls)
+                            {
+                                <div class="swiper-slide thumbnail-item @(image == Model.MainImageUrl ? "active" : "")"
+                                     data-img="@image">
+                                    <img src="@image" alt="@Model.ProductName"
+                                         class="img-fluid rounded">
+                                </div>
+                            }
+                        </div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Thông tin sản phẩm -->
+        <div class="col-lg-6">
+            <div class="product-info">
+                <div class="product-condition badge bg-primary mb-2">@Model.Condition</div>
+                <h1 class="product-title mb-2">@Model.ProductName</h1>
+
+                <div class="shop-info mb-3">
+                    <a href="#" class="shop-link">
+                        <i class="fas fa-store-alt me-1"></i> @Model.Shop.ShopName
+                        @if (Model.Shop.IsPremium)
+                        {
+                            <span class="badge bg-warning text-dark">Premium</span>
+                        }
+                    </a>
+                </div>
+
+                <div class="product-price mb-4">
+                    <span class="current-price">@Model.Price.ToString("N0")₫</span>
+                </div>
+
+                <div class="product-specs mb-4">
+                    <div class="spec-item">
+                        <span class="spec-label">Danh mục:</span>
+                        <span class="spec-value">@Model.Category</span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.Brand))
+                    {
+                        <div class="spec-item">
+                            <span class="spec-label">Thương hiệu:</span>
+                            <span class="spec-value">@Model.Brand</span>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Size))
+                    {
+                        <div class="spec-item">
+                            <span class="spec-label">Kích thước:</span>
+                            <span class="spec-value">@Model.Size</span>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Color))
+                    {
+                        <div class="spec-item">
+                            <span class="spec-label">Màu sắc:</span>
+                            <span class="spec-value">@Model.Color</span>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Material))
+                    {
+                        <div class="spec-item">
+                            <span class="spec-label">Chất liệu:</span>
+                            <span class="spec-value">@Model.Material</span>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Gender))
+                    {
+                        <div class="spec-item">
+                            <span class="spec-label">Giới tính:</span>
+                            <span class="spec-value">@Model.Gender</span>
+                        </div>
+                    }
+                    <div class="spec-item">
+                        <span class="spec-label">Tình trạng:</span>
+                        <span class="spec-value">@(Model.IsInStock ? "Còn hàng" : "Hết hàng")</span>
+                    </div>
+                </div>
+
+                <div class="product-actions mb-4">
+                    <button class="btn btn-primary btn-lg add-to-cart-btn">
+                        <i class="fas fa-shopping-cart me-2"></i> Thêm vào giỏ hàng
+                    </button>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <form asp-controller="Order" asp-action="CreateOrder" method="post" class="d-inline">
+                            <input type="hidden" name="productId" value="@Model.ProductId" />
+                            <button type="submit" class="btn btn-outline-primary btn-lg ms-2">
+                                <i class="fas fa-shopping-bag me-2"></i> Mua hàng
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("ProductDetails", "Product", new { id = Model.ProductId })" class="btn btn-outline-primary btn-lg ms-2">
+                            <i class="fas fa-shopping-bag me-2"></i> Mua hàng
+                        </a>
+                    }
+                </div>
+
+                <div class="contact-seller mb-4">
+                    <button class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-comments me-2"></i> Liên hệ người bán
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mô tả sản phẩm -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <ul class="nav nav-tabs" id="productTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
+                            data-bs-target="#description" type="button" role="tab" aria-controls="description"
+                            aria-selected="true">
+                        Mô tả sản phẩm
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="shop-info-tab" data-bs-toggle="tab" data-bs-target="#shop-info"
+                            type="button" role="tab" aria-controls="shop-info" aria-selected="false">
+                        Thông tin cửa hàng
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content p-4 border border-top-0 rounded-bottom" id="productTabContent">
+                <div class="tab-pane fade show active" id="description" role="tabpanel"
+                     aria-labelledby="description-tab">
+                    <h4>@Model.ProductName</h4>
+                    <div class="product-description">
+                        @Html.Raw(Model.Description)
+                    </div>
+
+                    <h5>Tình trạng:</h5>
+                    <p>
+                        @Model.Condition - @Model.ConditionDescription
+                    </p>
+                </div>
+                <div class="tab-pane fade" id="shop-info" role="tabpanel" aria-labelledby="shop-info-tab">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <img src="@Model.Shop.ProfileImage" alt="@Model.Shop.ShopName" class="img-fluid rounded">
+                        </div>
+                        <div class="col-md-8">
+                            <h4>@Model.Shop.ShopName</h4>
+                            <p><i class="fas fa-map-marker-alt me-2"></i> @Model.Shop.Location</p>
+                            <p><i class="fas fa-calendar-alt me-2"></i> Tham gia từ: @Model.Shop.CreatedAt.ToString("dd/MM/yyyy")</p>
+                            <p><i class="fas fa-box me-2"></i> Sản phẩm: @Model.Shop.ProductCount+</p>
+                            <p class="mb-3">
+                                @Model.Shop.Description
+                            </p>
+                            <a asp-controller="Shop" asp-action="Details" asp-route-id="@Model.Shop.ShopId" class="btn btn-outline-primary">
+                                <i class="fas fa-store me-2"></i> Xem shop
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sản phẩm liên quan -->
+    @if (Model.RelatedProducts.Any())
+    {
+        <div class="related-products mt-5">
+            <h3 class="section-title mb-4">Sản phẩm liên quan</h3>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+                @foreach (var product in Model.RelatedProducts)
+                {
+                    <div class="col">
+                        <div class="card product-card h-100">
+                            <img src="@product.MainImageUrl" class="card-img-top" alt="@product.ProductName">
+                            <div class="card-body">
+                                <h5 class="card-title">@product.ProductName</h5>
+                                <p class="shop-name">
+                                    <i class="fas fa-store-alt me-1"></i>
+                                    @product.Shop.ShopName
+                                    @if (product.Shop.IsPremium)
+                                    {
+                                        <span class="badge bg-warning text-dark">Premium</span>
+                                    }
+                                </p>
+                                <p class="price">@product.Price.ToString("N0")₫</p>
+                                <div class="d-flex justify-content-between">
+                                    <a asp-controller="Product" asp-action="ProductDetails" asp-route-id="@product.ProductId" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i> Chi tiết
+                                    </a>
+                                    <button class="btn btn-primary btn-sm">
+                                        <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</main>
+
+@section Scripts {
+    <script>
+        // Khởi tạo Swiper cho gallery
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.querySelector('.product-thumbnails')) {
+                const swiper = new Swiper('.product-thumbnails', {
+                    slidesPerView: 4,
+                    spaceBetween: 10,
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    breakpoints: {
+                        640: {
+                            slidesPerView: 3,
+                        },
+                        768: {
+                            slidesPerView: 4,
+                        }
+                    }
+                });
+            }
+
+            // Chức năng đổi ảnh chính khi click vào thumbnail
+            document.querySelectorAll('.thumbnail-item').forEach(item => {
+                item.addEventListener('click', function () {
+                    // Cập nhật ảnh chính
+                    const imgSrc = this.getAttribute('data-img');
+                    document.getElementById('main-product-image').src = imgSrc;
+
+                    // Xóa class active từ tất cả thumbnails
+                    document.querySelectorAll('.thumbnail-item').forEach(thumb => {
+                        thumb.classList.remove('active');
+                    });
+
+                    // Thêm class active cho thumbnail được chọn
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+}

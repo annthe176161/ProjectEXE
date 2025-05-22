@@ -1,0 +1,164 @@
+﻿@model ProjectEXE.ViewModel.Profile.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Thông tin cá nhân";
+}
+
+<div class="container py-5">
+    <!-- Hiển thị thông báo thành công nếu có -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <!-- Card thông tin cá nhân -->
+            <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-user-circle me-2"></i>Thông tin cá nhân</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="avatar-wrapper mb-3">
+                            <img src="https://via.placeholder.com/150" alt="@Model.User?.FullName" class="rounded-circle img-thumbnail shadow-sm" width="120">
+                        </div>
+                        <h4 class="fw-bold">@Model.User?.FullName</h4>
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-user-tag me-1"></i> @Model.User?.Role?.RoleName
+                        </p>
+                        <div class="hstack gap-2 justify-content-center mt-4">
+                            <a asp-action="Edit" class="btn btn-primary">
+                                <i class="fas fa-edit me-1"></i> Chỉnh sửa thông tin
+                            </a>
+                            <a asp-action="ChangePassword" class="btn btn-warning">
+                                <i class="fas fa-key me-1"></i> Đổi mật khẩu
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <!-- Card chi tiết thông tin -->
+            <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+                <div class="card-header bg-white py-3">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#info">
+                                <i class="fas fa-info-circle me-1"></i> Chi tiết thông tin
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#orders">
+                                <i class="fas fa-shopping-cart me-1"></i> Đơn hàng gần đây
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="info">
+                            <div class="p-3">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="info-group">
+                                            <label class="text-muted small mb-1">Họ và tên</label>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-user text-primary me-2"></i>
+                                                <h6 class="mb-0">@Model.User?.FullName</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="info-group">
+                                            <label class="text-muted small mb-1">Email</label>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-envelope text-primary me-2"></i>
+                                                <h6 class="mb-0">@Model.User?.Email</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="info-group">
+                                            <label class="text-muted small mb-1">Số điện thoại</label>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-phone text-primary me-2"></i>
+                                                <h6 class="mb-0">@(string.IsNullOrEmpty(Model.User?.PhoneNumber) ? "Chưa cập nhật" : Model.User?.PhoneNumber)</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="info-group">
+                                            <label class="text-muted small mb-1">Vai trò</label>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-user-tag text-primary me-2"></i>
+                                                <h6 class="mb-0">@Model.User?.Role?.RoleName</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="info-group">
+                                            <label class="text-muted small mb-1">Địa chỉ</label>
+                                            <div class="d-flex">
+                                                <i class="fas fa-map-marker-alt text-primary me-2 mt-1"></i>
+                                                <h6 class="mb-0">@(string.IsNullOrEmpty(Model.User?.Address) ? "Chưa cập nhật" : Model.User?.Address)</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .avatar-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+            .avatar-wrapper img {
+                border: 3px solid #fff;
+                box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+                transition: all 0.3s ease;
+            }
+
+        .info-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-tabs .nav-link {
+            color: #6c757d;
+            font-weight: 500;
+            border: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+            .nav-tabs .nav-link.active {
+                color: #0d6efd;
+                border-bottom: 2px solid #0d6efd;
+                background-color: transparent;
+            }
+
+            .nav-tabs .nav-link:hover:not(.active) {
+                border-color: transparent;
+                color: #0d6efd;
+            }
+
+        .tab-content {
+            padding-top: 1rem;
+        }
+    </style>
+}

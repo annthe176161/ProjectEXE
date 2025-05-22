@@ -1,0 +1,166 @@
+﻿@model ProjectEXE.ViewModel.Profile.EditProfileViewModel
+
+@{
+    ViewData["Title"] = "Cập nhật thông tin";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a asp-controller="Profile" asp-action="Index">Tài khoản</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Cập nhật thông tin</li>
+                </ol>
+            </nav>
+
+            <!-- Card chỉnh sửa thông tin -->
+            <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+                <div class="card-header bg-primary text-white py-3">
+                    <h4 class="card-title mb-0">
+                        <i class="fas fa-user-edit me-2"></i>Cập nhật thông tin cá nhân
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3" role="alert"></div>
+
+                        <!-- Họ tên -->
+                        <div class="form-group mb-4">
+                            <label asp-for="FullName" class="form-label fw-semibold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-primary bg-opacity-10 border-end-0 text-primary">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <input asp-for="FullName" class="form-control border-start-0" />
+                            </div>
+                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group mb-4">
+                            <label asp-for="Email" class="form-label fw-semibold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-primary bg-opacity-10 border-end-0 text-primary">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                                <input asp-for="Email" class="form-control border-start-0" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Số điện thoại -->
+                        <div class="form-group mb-4">
+                            <label asp-for="PhoneNumber" class="form-label fw-semibold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-primary bg-opacity-10 border-end-0 text-primary">
+                                    <i class="fas fa-phone"></i>
+                                </span>
+                                <input asp-for="PhoneNumber" class="form-control border-start-0" />
+                            </div>
+                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Địa chỉ -->
+                        <div class="form-group mb-4">
+                            <label asp-for="Address" class="form-label fw-semibold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-primary bg-opacity-10 border-end-0 text-primary">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </span>
+                                <input asp-for="Address" class="form-control border-start-0" />
+                            </div>
+                            <span asp-validation-for="Address" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Nút submit & quay lại -->
+                        <div class="form-group d-flex gap-3 mt-5">
+                            <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                                <i class="fas fa-arrow-left me-2"></i> Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-save me-2"></i> Lưu
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+@section Styles {
+    <style>
+        .input-group-text {
+            border-radius: 0.375rem 0 0 0.375rem;
+        }
+
+        .form-control {
+            border-radius: 0 0.375rem 0.375rem 0;
+            padding: 0.7rem 1rem;
+            font-size: 1rem;
+        }
+
+        .input-group .form-control:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+            z-index: 1;
+        }
+
+        .breadcrumb {
+            background-color: transparent;
+            padding: 0.75rem 0;
+        }
+
+        .breadcrumb-item a {
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+            .breadcrumb-item a:hover {
+                text-decoration: underline;
+            }
+
+        .breadcrumb-item.active {
+            color: #6c757d;
+        }
+
+        .form-label {
+            margin-bottom: 0.5rem;
+            color: #495057;
+        }
+
+        .btn-primary,
+        .btn-outline-secondary {
+            font-weight: 500;
+            padding: 0.6rem 1.5rem;
+            border-radius: 0.375rem;
+            transition: all 0.3s ease;
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(13, 110, 253, 0.2);
+            }
+
+            .btn-outline-secondary:hover {
+                transform: translateY(-2px);
+            }
+
+        .card {
+            transition: all 0.3s ease;
+        }
+
+            .card:hover {
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+            }
+    </style>
+}

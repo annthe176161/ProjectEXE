@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ProjectEXE.ViewModel
+namespace ProjectEXE.ViewModel.ShopViewModel
 {
-    public class ShopViewModel
+    public class ShopView
     {
         public int UserId { get; set; }
         [Required]
