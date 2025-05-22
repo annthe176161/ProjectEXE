@@ -1035,20 +1035,20 @@
         type: 'doughnut',
         data: {
             labels: packageLabels,
-            datasets: [{
-                data: packageRevenues,
-                backgroundColor: [
-                    'rgba(46, 139, 87, 0.7)',
-                    'rgba(60, 179, 113, 0.7)',
-                    'rgba(34, 139, 34, 0.7)'
-                ],
-                borderColor: [
-                    'rgba(46, 139, 87, 1)',
-                    'rgba(60, 179, 113, 1)',
-                    'rgba(34, 139, 34, 1)'
-                ],
-                borderWidth: 1
-            }]
+                datasets: [{
+                    data: packageRevenues,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)', // Đỏ hồng
+                        'rgba(54, 162, 235, 0.7)', // Xanh dương
+                        'rgba(255, 206, 86, 0.7)'  // Vàng
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
         },
         options: {
             responsive: true,
