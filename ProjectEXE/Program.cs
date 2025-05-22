@@ -23,6 +23,7 @@ namespace ProjectEXE
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddHttpContextAccessor();
 
             // DI
             builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
@@ -33,6 +34,7 @@ namespace ProjectEXE
             builder.Services.AddScoped<IShopOrderService, ShopOrderService>();
             builder.Services.AddScoped<IPackageService, PackageService>();
             builder.Services.AddScoped<IAdminPackageService, AdminPackageService>();
+            builder.Services.AddScoped<IShopProductService, ShopProductService>();
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                             .AddCookie(options =>
