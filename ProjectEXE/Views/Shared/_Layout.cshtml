@@ -42,38 +42,12 @@
 
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <div class="dropdown d-inline ms-3">
-                                <a class="dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-user me-1"></i> @User.Identity.Name
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                    <li><a class="dropdown-item" href="#"><i class="fas fa-user-circle me-2"></i>Tài khoản của tôi</a></li>
-
-                                    @* Kiểm tra vai trò người dùng và hiển thị các tùy chọn phù hợp *@
-                                    @if (User.IsInRole("Seller"))
-                                    {
-                                        <li>
-                                            <a class="dropdown-item" asp-controller="ShopProfile" asp-action="Index">
-                                                <i class="fas fa-store me-2"></i>Gian hàng của tôi
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" asp-controller="ShopOrder" asp-action="Index">
-                                                <i class="fas fa-shopping-bag me-2"></i>Quản lý đơn hàng
-                                            </a>
-                                        </li>
-                                    }
-
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Order" asp-action="OrderList">
-                                            <i class="fas fa-receipt me-2"></i>Đơn hàng của tôi
-                                        </a>
-                                    </li>
-
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="LogoutConfirm"><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a></li>
-                                </ul>
-                            </div>
+                            <span class="ms-3 user-welcome">
+                                <i class="fas fa-user me-1"></i> @User.Identity.Name
+                            </span>
+                            <a asp-controller="Account" asp-action="LogoutConfirm" class="ms-3 user-logout">
+                                <i class="fas fa-sign-out-alt me-1"></i> Đăng xuất
+                            </a>
                         }
                         else
                         {
@@ -103,19 +77,68 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" asp-controller="Home" asp-action="Index">Trang Chủ</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Product" asp-action="ProductList">
-                                Sản Phẩm
+                            <a class="nav-link active" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home me-1"></i>Trang Chủ
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Về Chúng Tôi</a>
+                            <a class="nav-link" asp-controller="Product" asp-action="ProductList">
+                                <i class="fas fa-tshirt me-1"></i>Sản Phẩm
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Liên Hệ</a>
-                        </li>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("Seller"))
+                            {
+                                <!-- Menu cho Seller -->
+                                <li class="nav-item">
+                                    <a class="nav-link highlight-nav" asp-controller="ShopProfile" asp-action="Index">
+                                        <i class="fas fa-store me-1"></i>Gian hàng của tôi
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link highlight-nav" asp-controller="ShopOrder" asp-action="Index">
+                                        <i class="fas fa-shopping-bag me-1"></i>Quản lý đơn hàng
+                                    </a>
+                                </li>
+                            }
+                            else if (User.IsInRole("Admin"))
+                            {
+                                <!-- Menu cho Admin -->
+                                <li class="nav-item">
+                                    <a class="nav-link highlight-nav" asp-controller="Admin" asp-action="Dashboard">
+                                        <i class="fas fa-tachometer-alt me-1"></i>Bảng điều khiển
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link highlight-nav" asp-controller="Admin" asp-action="UserManagement">
+                                        <i class="fas fa-users-cog me-1"></i>Quản lý người dùng
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <!-- Menu cho Buyer thông thường -->
+                                <li class="nav-item">
+                                    <a class="nav-link highlight-nav" asp-controller="Account" asp-action="Profile">
+                                        <i class="fas fa-user-circle me-1"></i>Tài khoản của tôi
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link highlight-nav" asp-controller="Shop" asp-action="Create">
+                                        <i class="fas fa-store-alt me-1"></i>Tạo gian hàng
+                                    </a>
+                                </li>
+                            }
+
+                            <!-- Menu chung cho tất cả người dùng đã đăng nhập -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Order" asp-action="OrderList">
+                                    <i class="fas fa-receipt me-1"></i>Đơn hàng của tôi
+                                </a>
+                            </li>
+                        }
                     </ul>
 
                     <form class="d-flex me-2">
