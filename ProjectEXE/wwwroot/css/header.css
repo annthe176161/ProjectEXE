@@ -81,16 +81,12 @@
 }
 
 .top-bar {
-    background-color: var(--dark-color);
+    background-color: #39ed47;
     color: var(--white-color);
     padding: 8px 0;
     font-size: 14px;
 }
 
-    .top-bar a {
-        color: var(--white-color);
-        text-decoration: none;
-    }
 
 @media (max-width: 768px) {
     .top-bar {
