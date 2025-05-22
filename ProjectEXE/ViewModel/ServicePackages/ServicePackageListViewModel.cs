@@ -1,6 +1,6 @@
 ﻿using ProjectEXE.Models;
 
-namespace ProjectEXE.ViewModel.ServicePackageViewModel
+namespace ProjectEXE.ViewModel.ServicePackages
 {
     public class ServicePackageListViewModel
     {

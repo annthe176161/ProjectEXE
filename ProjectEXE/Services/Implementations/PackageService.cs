@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjectEXE.Models;
 using ProjectEXE.Services.Interfaces;
-using ProjectEXE.ViewModel.ServicePackageViewModel;
+using ProjectEXE.ViewModel.ServicePackages;
 
 namespace ProjectEXE.Services.Implementations
 {

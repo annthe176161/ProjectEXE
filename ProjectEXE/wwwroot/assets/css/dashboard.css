@@ -1,0 +1,374 @@
+/* Color Variables */
+:root {
+    --primary-green: #2E8B57; /* Sea Green */
+    --secondary-yellow: #FFD700; /* Gold */
+    --light-green: #98FB98; /* Pale Green */
+    --dark-green: #006400; /* Dark Green */
+    --hover-green: #3AA76D;
+    --text-on-dark: #FFFFFF;
+    --text-on-light: #333333;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navbar Styling */
+.eco-navbar {
+    background-color: var(--primary-green);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+}
+
+.eco-navbar .navbar-brand {
+    color: var(--text-on-dark);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.eco-navbar .navbar-brand img {
+    filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.eco-navbar .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.eco-navbar .nav-link {
+    color: var(--text-on-dark);
+    transition: all 0.3s ease;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+.eco-navbar .nav-link:hover {
+    background-color: var(--hover-green);
+}
+
+/* Dropdown Styling */
+.eco-navbar .dropdown-menu {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 10px 0;
+}
+
+.eco-navbar .dropdown-item {
+    color: var(--text-on-light);
+    padding: 8px 20px;
+    transition: all 0.2s ease;
+}
+
+.eco-navbar .dropdown-item:hover {
+    background-color: var(--light-green);
+    color: var(--dark-green);
+}
+
+/* Search Bar Styling */
+.eco-search {
+    max-width: 400px;
+    position: relative;
+}
+
+.eco-search .form-control {
+    border-radius: 25px;
+    padding-right: 40px;
+    border: 2px solid var(--light-green);
+}
+
+.eco-search .form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(152, 251, 152, 0.25);
+    border-color: var(--primary-green);
+}
+
+.search-btn {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--secondary-yellow);
+    border: none;
+    color: var(--text-on-light);
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+    background-color: var(--primary-green);
+    color: var(--text-on-dark);
+}
+
+/* User Action Icons */
+.navbar-nav .nav-item {
+    margin: 0 5px;
+}
+
+.navbar-nav .nav-item .nav-link i {
+    font-size: 1.25rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .eco-search {
+        margin: 15px 0;
+        width: 100%;
+        max-width: none;
+    }
+    
+    .navbar-nav .nav-item {
+        margin: 5px 0;
+    }
+}
+
+/* Animations */
+.dropdown-menu {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Dashboard Cards */
+.dashboard-card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.bg-soft-primary {
+  background-color: rgba(13, 110, 253, 0.1);
+  color: #0d6efd;
+}
+
+.bg-soft-success {
+  background-color: rgba(25, 135, 84, 0.1);
+  color: #198754;
+}
+
+.bg-soft-warning {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+}
+
+.bg-soft-danger {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}
+
+.bg-soft-info {
+  background-color: rgba(13, 202, 240, 0.1);
+  color: #0dcaf0;
+}
+
+/* Chart Container */
+.chart-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Table Styling */
+.comparison-table th {
+  font-weight: 600;
+  background-color: #f8f9fa;
+}
+
+.comparison-table td {
+  vertical-align: middle;
+}
+
+/* KPI Progress Bars */
+.kpi-progress {
+  margin-bottom: 1.5rem;
+}
+
+.kpi-progress .progress {
+  height: 8px;
+  border-radius: 4px;
+  background-color: #e9ecef;
+}
+
+/* Dashboard Section */
+.dashboard-section {
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 70px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .icon-circle {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .dashboard-card .card-body {
+    padding: 1rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .chart-container {
+    height: 250px !important;
+  }
+}
+
+/* Phân tích doanh thu chi tiết */
+.revenue-analysis h2 {
+    color: #2E8B57;
+    font-weight: 600;
+}
+
+/* Màu chấm cho danh mục */
+.color-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+/* Badges cho tình trạng sản phẩm */
+.condition-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.condition-badge.new {
+    background-color: #28a745;
+    color: white;
+}
+
+.condition-badge.like-new {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.condition-badge.good {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.condition-badge.fair {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Chấm cho nguồn traffic */
+.traffic-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.traffic-dot.organic {
+    background-color: #28a745;
+}
+
+.traffic-dot.direct {
+    background-color: #007bff;
+}
+
+.traffic-dot.social {
+    background-color: #e83e8c;
+}
+
+.traffic-dot.email {
+    background-color: #fd7e14;
+}
+
+.traffic-dot.other {
+    background-color: #6c757d;
+}
+
+/* Placeholder cho map */
+.region-map-container {
+    max-width: 100%;
+    height: 200px;
+    position: relative;
+}
+
+.region-map-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.region-map-placeholder img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+/* Styling cho phần doanh thu từ hoa hồng */
+.avatar {
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.commission-category-stats .progress {
+    border-radius: 4px;
+    background-color: #e9ecef;
+}
+
+.commission-category-stats .progress-bar {
+    border-radius: 4px;
+}
+
+/* Animation cho hover card trong phần hoa hồng */
+.dashboard-card:hover .icon-circle {
+    transform: scale(1.15);
+}
+
+.icon-circle {
+    transition: all 0.3s ease;
+}
+
+/* Table hover effects */
+.table-hover tbody tr:hover {
+    background-color: rgba(46, 139, 87, 0.05);
+}

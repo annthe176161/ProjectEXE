@@ -15,6 +15,12 @@ namespace ProjectEXE
             builder.Services.AddDbContext<RevaContext>(options =>
                         options.UseSqlServer(builder.Configuration.GetConnectionString("MyCnn")));
 
+            builder.Services.AddScoped<IUserService, UserService>(); 
+            
+            builder.Services.AddScoped<IAdminService, AdminService>();
+            
+
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
