@@ -3,6 +3,7 @@ using ProjectEXE.Models;
 using ProjectEXE.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Humanizer;
+using ProjectEXE.ViewModel;
 
 namespace ProjectEXE.Services.Implementations
 {
@@ -98,6 +99,35 @@ namespace ProjectEXE.Services.Implementations
                 .ToListAsync();
 
             return revenueByPackage;
+        }
+
+
+        public async Task<IEnumerable<RecentPackagePaymentDto>> GetRecentPackagePaymentsAsync(int count)
+        {
+            if (_context.PackagePayments == null)
+            {
+                return Enumerable.Empty<RecentPackagePaymentDto>();
+            }
+
+            var recentPayments = await _context.PackagePayments
+                .AsNoTracking()
+                .Include(pp => pp.User)
+                .Include(pp => pp.Package)
+                .Include(pp => pp.Status)
+                .OrderByDescending(pp => pp.CreatedAt)
+                .Take(count)
+                .Select(pp => new RecentPackagePaymentDto // Đảm bảo đây là ProjectEXE.ViewModels.RecentPackagePaymentDto
+                {
+                    UserId = pp.UserId,
+                    UserFullName = pp.User != null ? pp.User.FullName : "Không xác định",
+                    PackageName = pp.Package != null ? pp.Package.PackageName : "Không xác định",
+                    PricePaid = pp.Amount,
+                    PaymentStatus = pp.Status != null ? pp.Status.StatusName : "Không xác định",
+                    PaymentDate = pp.CreatedAt
+                })
+                .ToListAsync();
+
+            return recentPayments;
         }
     }
 }

@@ -29,6 +29,9 @@ namespace ProjectEXE.Controllers
             ViewData["TotalProductsCount"] = await _userService.GetTotalProductsCountAsync(); // <== LẤY TỔNG SỐ SẢN PHẨM
 
             ViewData["TotalRevenue"] = await _userService.GetTotalPackagePaymentsRevenueAsync(); // <== LẤY TỔNG DOANH THU
+                                                                                                 // Lấy thêm danh sách thanh toán gần đây
+            var recentPayments = await _adminService.GetRecentPackagePaymentsAsync(5); // Lấy 5 mục cho dashboard
+            ViewBag.RecentPackagePayments = recentPayments;
 
             List<ServicePackage> services = await _adminService.getAllService();
             List<RBMDto> RBM = await _adminService.getRevenueByMonth();

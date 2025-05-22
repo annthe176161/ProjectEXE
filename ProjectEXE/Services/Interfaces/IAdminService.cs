@@ -1,5 +1,6 @@
 ﻿using ProjectEXE.DTO;
 using ProjectEXE.Models;
+using ProjectEXE.ViewModel;
 
 namespace ProjectEXE.Services.Interfaces
 {
@@ -11,5 +12,7 @@ namespace ProjectEXE.Services.Interfaces
         Task<bool> deleteServiceById(int id);
         Task<bool> addPackage(ServicePackage package);
         Task<bool> editPackage(ServicePackage package);
+
+        Task<IEnumerable<RecentPackagePaymentDto>> GetRecentPackagePaymentsAsync(int count);
     }
 }
