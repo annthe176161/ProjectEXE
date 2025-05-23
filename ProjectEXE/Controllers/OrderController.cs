@@ -62,10 +62,14 @@ namespace ProjectEXE.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CancelOrder(int orderId, string reason)
+        public async Task<IActionResult> CancelOrder(int orderId, string reason, string otherReason)
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var result = await _orderService.CancelOrderAsync(orderId, userId, reason);
+
+            // Sử dụng lý do khác nếu được chọn
+            var cancelReason = reason == "Khác" && !string.IsNullOrEmpty(otherReason) ? otherReason : reason;
+
+            var result = await _orderService.CancelOrderAsync(orderId, userId, cancelReason);
 
             if (result)
             {

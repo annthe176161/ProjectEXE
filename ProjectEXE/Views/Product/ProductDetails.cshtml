@@ -121,16 +121,13 @@
 
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <form asp-controller="Order" asp-action="CreateOrder" method="post" class="d-inline">
-                            <input type="hidden" name="productId" value="@Model.ProductId" />
-                            <button type="submit" class="btn btn-outline-primary btn-lg">
-                                <i class="fas fa-shopping-bag me-2"></i> Mua hàng
-                            </button>
-                        </form>
+                        <a asp-controller="Product" asp-action="ConfirmPurchase" asp-route-id="@Model.ProductId" class="btn btn-outline-primary btn-lg ms-2">
+                            <i class="fas fa-shopping-bag me-2"></i> Mua hàng
+                        </a>
                     }
                     else
                     {
-                        <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("ProductDetails", "Product", new { id = Model.ProductId })" class="btn btn-outline-primary btn-lg">
+                        <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("ConfirmPurchase", "Product", new { id = Model.ProductId })" class="btn btn-outline-primary btn-lg ms-2">
                             <i class="fas fa-shopping-bag me-2"></i> Mua hàng
                         </a>
                     }
