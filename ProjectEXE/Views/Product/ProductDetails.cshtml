@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="~/css/productdetails.css" />
 }
 
-<main class="container py-4">
+<main class="container py-4 product-detail-page">
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
+        <ol class="breadcrumb fade-in">
             <li class="breadcrumb-item"><a href="/">Trang Chủ</a></li>
             <li class="breadcrumb-item"><a asp-controller="Product" asp-action="ProductList">Sản Phẩm</a></li>
             <li class="breadcrumb-item"><a asp-controller="Product" asp-action="ProductList" asp-route-SelectedCategoryIds="@Model.CategoryId">@Model.Category</a></li>
@@ -21,11 +21,11 @@
     <div class="row">
         <!-- Phần hình ảnh sản phẩm -->
         <div class="col-lg-6 mb-4">
-            <div class="product-gallery">
+            <div class="product-gallery fade-in">
                 <!-- Hình ảnh chính -->
                 <div class="main-image-container mb-3">
                     <img id="main-product-image" src="@Model.MainImageUrl"
-                         alt="@Model.ProductName" class="img-fluid rounded">
+                         alt="@Model.ProductName" class="img-fluid">
                 </div>
 
                 <!-- Swiper cho gallery -->
@@ -37,8 +37,7 @@
                             {
                                 <div class="swiper-slide thumbnail-item @(image == Model.MainImageUrl ? "active" : "")"
                                      data-img="@image">
-                                    <img src="@image" alt="@Model.ProductName"
-                                         class="img-fluid rounded">
+                                    <img src="@image" alt="@Model.ProductName" class="img-fluid">
                                 </div>
                             }
                         </div>
@@ -51,13 +50,13 @@
 
         <!-- Thông tin sản phẩm -->
         <div class="col-lg-6">
-            <div class="product-info">
-                <div class="product-condition badge bg-primary mb-2">@Model.Condition</div>
-                <h1 class="product-title mb-2">@Model.ProductName</h1>
+            <div class="product-info fade-in">
+                <div class="product-condition badge mb-3">@Model.Condition</div>
+                <h1 class="product-title">@Model.ProductName</h1>
 
-                <div class="shop-info mb-3">
+                <div class="shop-info mb-4">
                     <a href="#" class="shop-link">
-                        <i class="fas fa-store-alt me-1"></i> @Model.Shop.ShopName
+                        <i class="fas fa-store-alt me-2"></i> @Model.Shop.ShopName
                         @if (Model.Shop.IsPremium)
                         {
                             <span class="badge bg-warning text-dark">Premium</span>
@@ -66,7 +65,7 @@
                 </div>
 
                 <div class="product-price mb-4">
-                    <span class="current-price">@Model.Price.ToString("N0")₫</span>
+                    <div class="current-price">@Model.Price.ToString("N0")₫</div>
                 </div>
 
                 <div class="product-specs mb-4">
@@ -124,20 +123,20 @@
                     {
                         <form asp-controller="Order" asp-action="CreateOrder" method="post" class="d-inline">
                             <input type="hidden" name="productId" value="@Model.ProductId" />
-                            <button type="submit" class="btn btn-outline-primary btn-lg ms-2">
+                            <button type="submit" class="btn btn-outline-primary btn-lg">
                                 <i class="fas fa-shopping-bag me-2"></i> Mua hàng
                             </button>
                         </form>
                     }
                     else
                     {
-                        <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("ProductDetails", "Product", new { id = Model.ProductId })" class="btn btn-outline-primary btn-lg ms-2">
+                        <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("ProductDetails", "Product", new { id = Model.ProductId })" class="btn btn-outline-primary btn-lg">
                             <i class="fas fa-shopping-bag me-2"></i> Mua hàng
                         </a>
                     }
                 </div>
 
-                <div class="contact-seller mb-4">
+                <div class="contact-seller">
                     <button class="btn btn-outline-secondary w-100">
                         <i class="fas fa-comments me-2"></i> Liên hệ người bán
                     </button>
@@ -148,7 +147,7 @@
 
     <!-- Mô tả sản phẩm -->
     <div class="row mt-5">
-        <div class="col-12">
+        <div class="col-12 fade-in">
             <ul class="nav nav-tabs" id="productTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
@@ -164,7 +163,7 @@
                     </button>
                 </li>
             </ul>
-            <div class="tab-content p-4 border border-top-0 rounded-bottom" id="productTabContent">
+            <div class="tab-content" id="productTabContent">
                 <div class="tab-pane fade show active" id="description" role="tabpanel"
                      aria-labelledby="description-tab">
                     <h4>@Model.ProductName</h4>
@@ -203,7 +202,7 @@
     <!-- Sản phẩm liên quan -->
     @if (Model.RelatedProducts.Any())
     {
-        <div class="related-products mt-5">
+        <div class="related-products fade-in">
             <h3 class="section-title mb-4">Sản phẩm liên quan</h3>
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
                 @foreach (var product in Model.RelatedProducts)
@@ -243,6 +242,29 @@
     <script>
         // Khởi tạo Swiper cho gallery
         document.addEventListener('DOMContentLoaded', function() {
+            // Fade-in animation on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Apply fade-in to all elements with fade-in class
+            document.querySelectorAll('.fade-in').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+
             if (document.querySelector('.product-thumbnails')) {
                 const swiper = new Swiper('.product-thumbnails', {
                     slidesPerView: 4,
@@ -278,6 +300,17 @@
                     this.classList.add('active');
                 });
             });
+
+            // Smooth scroll for related products
+            const relatedProducts = document.querySelector('.related-products');
+            if (relatedProducts) {
+                relatedProducts.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                relatedProducts.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            }
         });
     </script>
 }
