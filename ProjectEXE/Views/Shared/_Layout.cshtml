@@ -25,38 +25,56 @@
     <header>
         <div class="top-bar">
             <div class="container">
-                <div class="row">
+                <div class="row align-items-center">
                     <div class="col-md-6">
-                        <span><i class="fas fa-phone"></i> 0123 456 789</span>
-                        <span class="ms-3">
-                            <i class="fas fa-envelope"></i>
-                            lienhe@thoitrangdocu.com
-                        </span>
+                        <div class="contact-info">
+                            <span class="contact-item">
+                                <i class="fas fa-phone"></i> 0123 456 789
+                            </span>
+                            <span class="contact-item ms-3">
+                                <i class="fas fa-envelope"></i>
+                                lienhe@thoitrangdocu.com
+                            </span>
+                        </div>
                     </div>
                     <div class="col-md-6 text-end">
-                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <div class="top-right-section">
+                            <div class="social-links">
+                                <a href="#" class="social-icon" title="Facebook">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="social-icon" title="Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="social-icon" title="Twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                            </div>
 
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <span class="ms-3 user-welcome">
-                                <i class="fas fa-user me-1"></i> @User.Identity.Name
-                            </span>
-                            <a asp-controller="Account" asp-action="LogoutConfirm" class="ms-3 user-logout">
-                                <i class="fas fa-sign-out-alt me-1"></i> Đăng xuất
-                            </a>
-                        }
-                        else
-                        {
-                            <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path" class="ms-3">
-                                <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập
-                            </a>
-                            <span class="mx-1">|</span>
-                            <a asp-controller="Account" asp-action="Register" class="">
-                                <i class="fas fa-user-plus me-1"></i> Đăng ký
-                            </a>
-                        }
+                            <div class="auth-section">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <span class="user-welcome">
+                                        <i class="fas fa-user-circle"></i>
+                                        <span class="user-name">@User.Identity.Name</span>
+                                    </span>
+                                    <a asp-controller="Account" asp-action="LogoutConfirm" class="user-logout">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        <span class="logout-text">Đăng xuất</span>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path" class="auth-link login-link">
+                                        <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                                    </a>
+                                    <span class="auth-divider">|</span>
+                                    <a asp-controller="Account" asp-action="Register" class="auth-link register-link">
+                                        <i class="fas fa-user-plus"></i> Đăng ký
+                                    </a>
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -76,12 +94,14 @@
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link active" asp-controller="Home" asp-action="Index">
-                                <i class="fas fa-home me-1"></i>Trang Chủ
+                                <i class="nav-icon fas fa-home"></i>
+                                <span class="nav-text">Trang Chủ</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Product" asp-action="ProductList">
-                                <i class="fas fa-tshirt me-1"></i>Sản Phẩm
+                                <i class="nav-icon fas fa-tshirt"></i>
+                                <span class="nav-text">Sản Phẩm</span>
                             </a>
                         </li>
 
@@ -89,70 +109,70 @@
                         {
                             @if (User.IsInRole("Seller"))
                             {
-                                <!-- Menu cho Seller -->
                                 <li class="nav-item">
-                                    <a class="nav-link highlight-nav" asp-controller="ShopProfile" asp-action="Index">
-                                        <i class="fas fa-store me-1"></i>Gian hàng của tôi
+                                    <a class="nav-link highlight-nav seller-nav" asp-controller="ShopProfile" asp-action="Index">
+                                        <i class="nav-icon fas fa-store"></i>
+                                        <span class="nav-text">Gian hàng của tôi</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link highlight-nav" asp-controller="ShopOrder" asp-action="Index">
-                                        <i class="fas fa-shopping-bag me-1"></i>Quản lý đơn hàng
+                                    <a class="nav-link highlight-nav seller-nav" asp-controller="ShopOrder" asp-action="Index">
+                                        <i class="nav-icon fas fa-shopping-bag"></i>
+                                        <span class="nav-text">Quản lý đơn hàng</span>
                                     </a>
                                 </li>
                             }
                             else if (User.IsInRole("Admin"))
                             {
-                                <!-- Menu cho Admin -->
                                 <li class="nav-item">
-                                    <a class="nav-link highlight-nav" asp-controller="Admin" asp-action="Dashboard">
-                                        <i class="fas fa-tachometer-alt me-1"></i>Bảng điều khiển
+                                    <a class="nav-link highlight-nav admin-nav" asp-controller="Admin" asp-action="Dashboard">
+                                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                                        <span class="nav-text">Bảng điều khiển</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link highlight-nav" asp-controller="Admin" asp-action="UserManagement">
-                                        <i class="fas fa-users-cog me-1"></i>Quản lý người dùng
+                                    <a class="nav-link highlight-nav admin-nav" asp-controller="Admin" asp-action="UserManagement">
+                                        <i class="nav-icon fas fa-users-cog"></i>
+                                        <span class="nav-text">Quản lý người dùng</span>
                                     </a>
                                 </li>
                             }
                             else
                             {
-                                <!-- Menu cho Buyer thông thường -->
                                 <li class="nav-item">
-                                    <a class="nav-link highlight-nav" asp-controller="Account" asp-action="Profile">
-                                        <i class="fas fa-user-circle me-1"></i>Tài khoản của tôi
+                                    <a class="nav-link highlight-nav buyer-nav" asp-controller="Account" asp-action="Profile">
+                                        <i class="nav-icon fas fa-user-circle"></i>
+                                        <span class="nav-text">Tài khoản của tôi</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link highlight-nav" asp-controller="Shop" asp-action="Create">
-                                        <i class="fas fa-store-alt me-1"></i>Tạo gian hàng
+                                    <a class="nav-link" asp-controller="Order" asp-action="OrderList">
+                                        <i class="nav-icon fas fa-receipt"></i>
+                                        <span class="nav-text">Đơn hàng của tôi</span>
                                     </a>
                                 </li>
                             }
-
-                            <!-- Menu chung cho tất cả người dùng đã đăng nhập -->
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Order" asp-action="OrderList">
-                                    <i class="fas fa-receipt me-1"></i>Đơn hàng của tôi
-                                </a>
-                            </li>
                         }
                     </ul>
 
-                    <form class="d-flex me-2">
-                        <div class="input-group">
-                            <input class="form-control" type="search" placeholder="Tìm kiếm sản phẩm..." />
-                            <button class="btn btn-search" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </form>
+                    <div class="navbar-actions">
+                        <form class="search-form">
+                            <div class="input-group">
+                                <input class="form-control search-input" type="search" placeholder="Tìm kiếm sản phẩm..." />
+                                <button class="btn btn-search" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
 
-                    <div class="cart-icon">
-                        <a href="#" class="position-relative">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span class="cart-count">0</span>
-                        </a>
+                        <div class="cart-wrapper">
+                            <a href="#" class="cart-link">
+                                <div class="cart-icon">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span class="cart-count">0</span>
+                                </div>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
