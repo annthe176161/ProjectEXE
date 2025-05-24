@@ -1,0 +1,261 @@
+﻿@model ProjectEXE.ViewModel.OrderViewModel.OrderListViewModel
+@{
+    ViewData["Title"] = "Danh sách đơn hàng";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/orderlist.css">
+}
+
+<div class="order-list-page">
+    <!-- Header Section -->
+    <div class="page-header">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb breadcrumb-header">
+                    <li class="breadcrumb-item">
+                        <a href="/" class="text-white text-decoration-none">
+                            <i class="fas fa-home me-1"></i>Trang chủ
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active text-light" aria-current="page">
+                        Đơn hàng của tôi
+                    </li>
+                </ol>
+            </nav>
+
+            <div class="header-content">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <h1 class="page-title">
+                            <i class="fas fa-shopping-bag me-3"></i>
+                            Danh sách đơn hàng của bạn
+                        </h1>
+                        <p class="page-subtitle">
+                            Quản lý và theo dõi tất cả đơn hàng của bạn tại đây
+                        </p>
+                    </div>
+                    <div class="col-lg-4 text-lg-end">
+                        <div class="stats-summary">
+                            <div class="stat-item">
+                                <div class="stat-number">@Model.Orders.Count()</div>
+                                <div class="stat-label">Tổng đơn hàng</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <!-- Alert Messages -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success-custom alert-dismissible fade show" role="alert">
+                <div class="alert-content">
+                    <i class="fas fa-check-circle alert-icon"></i>
+                    <div class="alert-text">
+                        <strong>Thành công!</strong>
+                        <span>@TempData["SuccessMessage"]</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger-custom alert-dismissible fade show" role="alert">
+                <div class="alert-content">
+                    <i class="fas fa-exclamation-triangle alert-icon"></i>
+                    <div class="alert-text">
+                        <strong>Lỗi!</strong>
+                        <span>@TempData["ErrorMessage"]</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (Model.Orders.Any())
+        {
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <div class="search-box">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="searchOrders" class="form-control" placeholder="Tìm kiếm theo mã đơn, sản phẩm, shop...">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="filter-controls">
+                            <select id="statusFilter" class="form-select">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="1">Chờ xác nhận</option>
+                                <option value="2">Đã xác nhận</option>
+                                <option value="3">Đang giao hàng</option>
+                                <option value="4">Hoàn thành</option>
+                                <option value="5">Đã hủy</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Grid -->
+            <div class="orders-grid" id="ordersContainer">
+                @foreach (var order in Model.Orders)
+                {
+                    <div class="order-card" data-order-id="@order.OrderId" 
+                         data-status="@order.OrderStatusId" 
+                         data-search="@order.OrderId @order.ProductName @order.ShopName">
+                        
+                        <!-- Order Header -->
+                        <div class="order-header">
+                            <div class="order-info">
+                                <div class="order-id">
+                                    <i class="fas fa-receipt me-2"></i>
+                                    Đơn hàng #@order.OrderId
+                                </div>
+                                <div class="order-date">
+                                    <i class="fas fa-calendar-alt me-1"></i>
+                                    @order.OrderDate.ToString("dd/MM/yyyy HH:mm")
+                                </div>
+                            </div>
+                            <div class="order-status">
+                                <span class="status-badge @(order.OrderStatusId switch {
+                                    1 => "status-pending",
+                                    2 => "status-confirmed", 
+                                    3 => "status-shipping",
+                                    4 => "status-completed",
+                                    5 => "status-cancelled",
+                                    _ => "status-pending"
+                                })">
+                                    <i class="@(order.OrderStatusId switch {
+                                        1 => "fas fa-clock",
+                                        2 => "fas fa-check-circle",
+                                        3 => "fas fa-shipping-fast",
+                                        4 => "fas fa-trophy",
+                                        5 => "fas fa-times-circle",
+                                        _ => "fas fa-question-circle"
+                                    }) me-1"></i>
+                                    @order.OrderStatus
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Order Content -->
+                        <div class="order-content">
+                            <div class="product-section">
+                                <div class="product-image-wrapper">
+                                    <img src="@order.ProductImageUrl" alt="@order.ProductName" class="product-image">
+                                    <div class="image-overlay">
+                                        <i class="fas fa-search-plus"></i>
+                                    </div>
+                                </div>
+                                <div class="product-details">
+                                    <h5 class="product-name">@order.ProductName</h5>
+                                    <div class="shop-info">
+                                        <i class="fas fa-store-alt"></i>
+                                        <span>@order.ShopName</span>
+                                    </div>
+                                </div>
+                                <div class="price-section">
+                                    <div class="price-amount">
+                                        @order.Price.ToString("N0")₫
+                                    </div>
+                                    <div class="price-label">Giá sản phẩm</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order Actions -->
+                        <div class="order-actions">
+                            <a asp-action="OrderDetails" asp-route-id="@order.OrderId" class="btn btn-primary-custom">
+                                <i class="fas fa-eye me-2"></i>
+                                Xem chi tiết
+                            </a>
+                            
+                            @if (order.OrderStatusId == 1)
+                            {
+                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="cancelOrder(@order.OrderId)">
+                                    <i class="fas fa-times me-1"></i>
+                                    Hủy đơn
+                                </button>
+                            }
+                            
+                            @if (order.OrderStatusId == 4)
+                            {
+                                <button type="button" class="btn btn-outline-warning btn-sm">
+                                    <i class="fas fa-star me-1"></i>
+                                    Đánh giá
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Pagination -->
+            @if (Model.TotalPages > 1)
+            {
+                <div class="pagination-wrapper">
+                    <nav aria-label="Order pagination">
+                        <ul class="pagination pagination-custom justify-content-center">
+                            @if (Model.CurrentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="OrderList" asp-route-page="@(Model.CurrentPage - 1)">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                </li>
+                            }
+
+                            @for (int i = Math.Max(1, Model.CurrentPage - 2); i <= Math.Min(Model.TotalPages, Model.CurrentPage + 2); i++)
+                            {
+                                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                    <a class="page-link" asp-action="OrderList" asp-route-page="@i">@i</a>
+                                </li>
+                            }
+
+                            @if (Model.CurrentPage < Model.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="OrderList" asp-route-page="@(Model.CurrentPage + 1)">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                    
+                    <div class="pagination-info">
+                        Hiển thị trang @Model.CurrentPage / @Model.TotalPages
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <!-- Empty State -->
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <h3>Chưa có đơn hàng nào</h3>
+                <p>Bạn chưa thực hiện đơn hàng nào. Hãy khám phá các sản phẩm tuyệt vời của chúng tôi!</p>
+                <a asp-controller="Product" asp-action="ProductList" class="btn btn-primary-custom btn-lg">
+                    <i class="fas fa-shopping-cart me-2"></i>
+                    Mua sắm ngay
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/orderlist.js"></script>
+}

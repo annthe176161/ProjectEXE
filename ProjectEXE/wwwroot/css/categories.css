@@ -1,0 +1,172 @@
+﻿/* Styles cho phần danh mục sản phẩm */
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    position: relative;
+    color: #333;
+}
+
+.section-subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Thẻ danh mục chung */
+.category-card {
+    position: relative;
+    display: block;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s ease;
+    height: 100%;
+}
+
+    .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .category-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.8s ease;
+    }
+
+    .category-card:hover img {
+        transform: scale(1.05);
+    }
+
+    .category-card .card-img-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.4);
+        color: white;
+        transition: background-color 0.3s ease;
+        z-index: 2;
+    }
+
+    .category-card:hover .card-img-overlay {
+        background: rgba(0, 0, 0, 0.6);
+    }
+
+/* Thẻ danh mục theo giới tính */
+.gender-card {
+    height: 300px;
+}
+
+    .gender-card h3 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
+    }
+
+    .gender-card:hover h3 {
+        transform: translateY(-5px);
+    }
+
+    .gender-card .btn-explore {
+        padding: 0.5rem 1.5rem;
+        background-color: rgba(255, 255, 255, 0.2);
+        border: 2px solid white;
+        border-radius: 30px;
+        font-weight: 600;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.4s ease;
+    }
+
+    .gender-card:hover .btn-explore {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+/* Thẻ danh mục theo loại sản phẩm */
+.product-type-card {
+    height: 200px;
+}
+
+    .product-type-card h4 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
+    }
+
+    .product-type-card:hover h4 {
+        transform: scale(1.1);
+    }
+
+/* Nút xem tất cả */
+.btn-outline-primary {
+    border-width: 2px;
+    font-weight: 600;
+    padding: 0.7rem 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+    .btn-outline-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+    }
+
+/* Responsive */
+@media (max-width: 992px) {
+    .gender-card {
+        height: 250px;
+    }
+
+        .gender-card h3 {
+            font-size: 1.8rem;
+        }
+
+    .product-type-card {
+        height: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .gender-card h3 {
+        font-size: 1.6rem;
+    }
+
+    .product-type-card h4 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .gender-card {
+        height: 200px;
+    }
+
+    .product-type-card {
+        height: 150px;
+    }
+
+    .gender-card .btn-explore {
+        padding: 0.4rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}

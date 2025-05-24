@@ -2,7 +2,1111 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<link rel="stylesheet" href="~/css/banner.css" />
+<link rel="stylesheet" href="~/css/categories.css" />
+<link rel="stylesheet" href="~/css/how-it-works.css" />
+<link rel="stylesheet" href="~/css/sustainability.css" />
+<link rel="stylesheet" href="~/css/blog.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Phần Banner Chính --> 
+<section class="hero-banner">
+    <!-- Carousel Slider -->
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+        <!-- Indicators -->
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+
+        <!-- Slides -->
+        <div class="carousel-inner">
+            <!-- Slide 1 -->
+            <div class="carousel-item active">
+                <img src="~/images/Slider1.jpeg" class="d-block w-100" alt="Thời trang bền vững">
+                <div class="carousel-caption">
+                    <h1 class="display-4 fw-bold">Thời Trang Bền Vững</h1>
+                    <p class="lead">Lựa chọn thông minh cho tủ đồ của bạn và cho cả hành tinh</p>
+                    <div class="hero-buttons">
+                        <a asp-controller="Product" asp-action="ProductList" class="btn btn-primary btn-lg">Khám Phá Ngay</a>
+                        <a href="#categories" class="btn btn-outline-light btn-lg ms-2">Xem Danh Mục</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="carousel-item">
+                <img src="~/images/Slider2.jpg" class="d-block w-100" alt="Thời trang vintage">
+                <div class="carousel-caption">
+                    <h1 class="display-4 fw-bold">Phong Cách Vintage Độc Đáo</h1>
+                    <p class="lead">Tìm kiếm những món đồ có một không hai với giá cả phải chăng</p>
+                    <div class="hero-buttons">
+                        <a asp-controller="Product" asp-action="ProductList" class="btn btn-primary btn-lg">Bắt Đầu Mua Sắm</a>
+                        <a asp-controller="Home" asp-action="HowItWorks" class="btn btn-outline-light btn-lg ms-2">Cách Thức Hoạt Động</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="carousel-item">
+                <img src="~/images/Slider3.jpg" class="d-block w-100" alt="Thời trang tiết kiệm">
+                <div class="carousel-caption">
+                    <h1 class="display-4 fw-bold">Tiết Kiệm Hơn, Phong Cách Hơn</h1>
+                    <p class="lead">Giảm đến 70% cho các thương hiệu yêu thích của bạn</p>
+                    <div class="hero-buttons">
+                        <a asp-controller="Product" asp-action="Deals" class="btn btn-primary btn-lg">Xem Ưu Đãi</a>
+                        <a asp-controller="Shop" asp-action="Create" class="btn btn-success btn-lg ms-2">Bán Ngay</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- Sustainability Badges -->
+    <div class="container-fluid sustainability-badges">
+        <div class="container">
+            <div class="row g-3 text-center">
+                <div class="col-md-3 col-6">
+                    <div class="badge-item">
+                        <i class="fas fa-tshirt"></i>
+                        <h5>Thời Trang Bền Vững</h5>
+                        <p>Giảm 700+ tấn rác thải</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="badge-item">
+                        <i class="fas fa-leaf"></i>
+                        <h5>Thân Thiện Môi Trường</h5>
+                        <p>Tiết kiệm 30% tài nguyên</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="badge-item">
+                        <i class="fas fa-tags"></i>
+                        <h5>Giá Cả Hợp Lý</h5>
+                        <p>Tiết kiệm đến 70%</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="badge-item">
+                        <i class="fas fa-check-circle"></i>
+                        <h5>Chất Lượng Đảm Bảo</h5>
+                        <p>Kiểm tra kỹ trước khi giao</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Phần Danh Mục Sản Phẩm Chính -->
+<section class="categories-section py-5" id="categories">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Danh Mục Sản Phẩm</h2>
+            <p class="section-subtitle">Khám phá thời trang secondhand chất lượng cao theo phong cách của bạn</p>
+        </div>
+
+        <!-- Phân loại theo giới tính -->
+        <div class="row mb-5">
+            <div class="col-md-4 mb-4">
+                <a asp-controller="Product" asp-action="ProductList" asp-route-gender="Nam" class="category-card gender-card">
+                    <div class="card-img-overlay">
+                        <h3>Nam</h3>
+                        <span class="btn-explore">Khám phá ngay</span>
+                    </div>
+                    <img src="~/images/Thoitrangnam.webp" alt="Thời trang nam" class="card-img">
+                </a>
+            </div>
+            <div class="col-md-4 mb-4">
+                <a asp-controller="Product" asp-action="ProductList" asp-route-gender="Nữ" class="category-card gender-card">
+                    <div class="card-img-overlay">
+                        <h3>Nữ</h3>
+                        <span class="btn-explore">Khám phá ngay</span>
+                    </div>
+                    <img src="~/images/Thoitrangnu.webp" alt="Thời trang nữ" class="card-img">
+                </a>
+            </div>
+            <div class="col-md-4 mb-4">
+                <a asp-controller="Product" asp-action="ProductList" asp-route-gender="Unisex" class="category-card gender-card">
+                    <div class="card-img-overlay">
+                        <h3>Unisex</h3>
+                        <span class="btn-explore">Khám phá ngay</span>
+                    </div>
+                    <img src="~/images/Unisex.webp" alt="Thời trang unisex" class="card-img">
+                </a>
+            </div>
+        </div>
+
+        <!-- Phân loại sản phẩm chi tiết -->
+        <h3 class="text-center mb-4">Khám Phá Theo Loại</h3>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-4 col-6">
+                <a asp-controller="Product" asp-action="ProductList" asp-route-category="Áo" class="category-card product-type-card">
+                    <div class="card-img-overlay">
+                        <h4>Áo</h4>
+                    </div>
+                    <img src="~/images/Ao.webp" alt="Áo" class="card-img">
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <a asp-controller="Product" asp-action="ProductList" asp-route-category="Quần" class="category-card product-type-card">
+                    <div class="card-img-overlay">
+                        <h4>Quần</h4>
+                    </div>
+                    <img src="~/images/Quan.webp" alt="Quần" class="card-img">
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <a asp-controller="Product" asp-action="ProductList" asp-route-category="Váy" class="category-card product-type-card">
+                    <div class="card-img-overlay">
+                        <h4>Váy & Đầm</h4>
+                    </div>
+                    <img src="~/images/Vay.jpg" alt="Váy & Đầm" class="card-img">
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <a asp-controller="Product" asp-action="ProductList" asp-route-category="Áo khoác" class="category-card product-type-card">
+                    <div class="card-img-overlay">
+                        <h4>Áo Khoác</h4>
+                    </div>
+                    <img src="~/images/Aokhoac.webp" alt="Áo khoác" class="card-img">
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <a asp-controller="Product" asp-action="ProductList" asp-route-category="Giày" class="category-card product-type-card">
+                    <div class="card-img-overlay">
+                        <h4>Giày</h4>
+                    </div>
+                    <img src="~/images/Giay.webp" alt="Giày" class="card-img">
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <a asp-controller="Product" asp-action="ProductList" asp-route-category="Túi" class="category-card product-type-card">
+                    <div class="card-img-overlay">
+                        <h4>Túi</h4>
+                    </div>
+                    <img src="~/images/Tui.jpg" alt="Túi" class="card-img">
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <a asp-controller="Product" asp-action="ProductList" asp-route-category="Phụ kiện" class="category-card product-type-card">
+                    <div class="card-img-overlay">
+                        <h4>Phụ Kiện</h4>
+                    </div>
+                    <img src="~/images/Phukien.jpg" alt="Phụ kiện" class="card-img">
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <a asp-controller="Product" asp-action="ProductList" asp-route-category="Đồ thể thao" class="category-card product-type-card">
+                    <div class="card-img-overlay">
+                        <h4>Đồ Thể Thao</h4>
+                    </div>
+                    <img src="~/images/Dothethao.jpg" alt="Đồ thể thao" class="card-img">
+                </a>
+            </div>
+        </div>
+
+        <!-- Nút xem tất cả danh mục -->
+        <div class="text-center mt-5">
+            <a asp-controller="Product" asp-action="Categories" class="btn btn-outline-primary btn-lg">Xem Tất Cả Danh Mục</a>
+        </div>
+    </div>
+</section>
+
+<!-- Cách thức hoạt động -->
+<section class="how-it-works-section py-5" id="cach-thuc-hoat-dong">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Cách Thức Hoạt Động</h2>
+            <p class="section-subtitle">Tìm hiểu quy trình đơn giản để mua và bán quần áo cũ trên nền tảng REVA</p>
+        </div>
+
+        <!-- Tab Navigation -->
+        <ul class="nav nav-pills mb-5 justify-content-center process-tabs" id="processTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="buy-tab" data-bs-toggle="pill" data-bs-target="#buy-process" type="button" role="tab">
+                    <i class="fas fa-shopping-cart me-2"></i>Quy Trình Mua Hàng
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="sell-tab" data-bs-toggle="pill" data-bs-target="#sell-process" type="button" role="tab">
+                    <i class="fas fa-tag me-2"></i>Quy Trình Đăng Bán
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="quality-tab" data-bs-toggle="pill" data-bs-target="#quality-process" type="button" role="tab">
+                    <i class="fas fa-check-circle me-2"></i>Kiểm Tra Chất Lượng
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="processTabContent">
+            <!-- Quy Trình Mua Hàng -->
+            <div class="tab-pane fade show active" id="buy-process" role="tabpanel">
+                <div class="row process-steps">
+                    <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                        <div class="process-step">
+                            <div class="step-number">1</div>
+                            <div class="step-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h4>Tìm Kiếm</h4>
+                            <p>Duyệt qua các danh mục sản phẩm và tìm món đồ yêu thích từ các thương hiệu hàng đầu.</p>
+                            <a asp-controller="Product" asp-action="ProductList" class="btn-more">
+                                Khám phá 14+ danh mục sản phẩm <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                        <div class="process-step">
+                            <div class="step-number">2</div>
+                            <div class="step-icon">
+                                <i class="fas fa-shopping-bag"></i>
+                            </div>
+                            <h4>Đặt Hàng</h4>
+                            <p>Đặt mua sản phẩm, theo dõi trạng thái đơn hàng từ <strong>"Chờ xác nhận"</strong> đến <strong>"Đã giao"</strong>.</p>
+                            <a asp-controller="Order" asp-action="MyOrders" class="btn-more">
+                                Xem đơn hàng của bạn <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                        <div class="process-step">
+                            <div class="step-number">3</div>
+                            <div class="step-icon">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <h4>Giao Hàng</h4>
+                            <p>Nhận sản phẩm và kiểm tra trước khi xác nhận hoàn thành đơn hàng.</p>
+                            <a asp-controller="Home" asp-action="Shipping" class="btn-more">
+                                Chính sách giao hàng <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                        <div class="process-step">
+                            <div class="step-number">4</div>
+                            <div class="step-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <h4>Đánh Giá</h4>
+                            <p>Chia sẻ trải nghiệm mua sắm của bạn và giúp cộng đồng REVA phát triển.</p>
+                            <a asp-controller="Home" asp-action="Reviews" class="btn-more">
+                                Xem đánh giá từ cộng đồng <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-status-info mt-5">
+                    <h4 class="text-center mb-4">Theo Dõi Trạng Thái Đơn Hàng</h4>
+                    <div class="status-timeline">
+                        <div class="status-item">
+                            <div class="status-icon">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <div class="status-text">
+                                <h5>Chờ xác nhận</h5>
+                                <p>Đơn hàng đã được tạo, đang chờ người bán xác nhận</p>
+                            </div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-icon">
+                                <i class="fas fa-thumbs-up"></i>
+                            </div>
+                            <div class="status-text">
+                                <h5>Đã xác nhận</h5>
+                                <p>Người bán đã xác nhận đơn hàng, hai bên có thể trao đổi thông tin liên hệ</p>
+                            </div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-icon">
+                                <i class="fas fa-shipping-fast"></i>
+                            </div>
+                            <div class="status-text">
+                                <h5>Đang giao hàng</h5>
+                                <p>Sản phẩm đang được giao đến người mua</p>
+                            </div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="status-text">
+                                <h5>Đã giao - Hoàn thành</h5>
+                                <p>Đơn hàng đã được giao thành công, giao dịch hoàn tất</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quy Trình Đăng Bán -->
+            <div class="tab-pane fade" id="sell-process" role="tabpanel">
+                <div class="row process-steps">
+                    <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                        <div class="process-step">
+                            <div class="step-number">1</div>
+                            <div class="step-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <h4>Đăng Ký Bán</h4>
+                            <p>Đăng ký tài khoản với vai trò <strong>Seller</strong> và tạo cửa hàng của riêng bạn.</p>
+                            <a asp-controller="Account" asp-action="Register" asp-route-role="Seller" class="btn-more">
+                                Đăng ký làm người bán <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                        <div class="process-step">
+                            <div class="step-number">2</div>
+                            <div class="step-icon">
+                                <i class="fas fa-store"></i>
+                            </div>
+                            <h4>Tạo Cửa Hàng</h4>
+                            <p>Thiết lập cửa hàng với tên shop, mô tả và hình ảnh để thu hút khách hàng.</p>
+                            <a asp-controller="Shop" asp-action="Create" class="btn-more">
+                                Tạo cửa hàng của bạn <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                        <div class="process-step">
+                            <div class="step-number">3</div>
+                            <div class="step-icon">
+                                <i class="fas fa-tshirt"></i>
+                            </div>
+                            <h4>Đăng Sản Phẩm</h4>
+                            <p>Đăng các sản phẩm với hình ảnh chất lượng, mô tả chi tiết và phân loại phù hợp.</p>
+                            <a asp-controller="ShopProduct" asp-action="AddProduct" class="btn-more">
+                                Đăng sản phẩm mới <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                        <div class="process-step">
+                            <div class="step-number">4</div>
+                            <div class="step-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <h4>Quản Lý Đơn Hàng</h4>
+                            <p>Xác nhận đơn hàng, liên hệ với khách hàng và hoàn tất giao dịch.</p>
+                            <a asp-controller="ShopOrder" asp-action="Index" class="btn-more">
+                                Quản lý đơn hàng <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="shop-packages mt-5">
+                    <h4 class="text-center mb-4">Nâng Cấp Cửa Hàng Với Gói Dịch Vụ</h4>
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <div class="package-card basic">
+                                <div class="package-name">Khởi Nghiệp Nhanh</div>
+                                <div class="package-price">
+                                    <span class="original-price">99.000đ</span>
+                                    <span class="current-price">49.500đ</span>
+                                </div>
+                                <div class="package-feature">
+                                    <i class="fas fa-tshirt"></i>
+                                    <span>Đăng tối đa 50 sản phẩm</span>
+                                </div>
+                                <div class="package-cta">
+                                    <a asp-controller="Package" asp-action="Details" asp-route-id="1" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="package-card premium">
+                                <div class="package-name">Shop Xịn Sò</div>
+                                <div class="package-price">
+                                    <span class="original-price">199.000đ</span>
+                                    <span class="current-price">99.500đ</span>
+                                </div>
+                                <div class="package-feature">
+                                    <i class="fas fa-tshirt"></i>
+                                    <span>Đăng tối đa 200 sản phẩm</span>
+                                </div>
+                                <div class="package-cta">
+                                    <a asp-controller="Package" asp-action="Details" asp-route-id="2" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="package-card pro">
+                                <div class="package-name">Kinh Doanh Bứt Phá</div>
+                                <div class="package-price">
+                                    <span class="original-price">349.000đ</span>
+                                    <span class="current-price">174.500đ</span>
+                                </div>
+                                <div class="package-feature">
+                                    <i class="fas fa-tshirt"></i>
+                                    <span>Đăng tối đa 1000 sản phẩm</span>
+                                </div>
+                                <div class="package-cta">
+                                    <a asp-controller="Package" asp-action="Details" asp-route-id="3" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quy Trình Kiểm Tra Chất Lượng -->
+            <div class="tab-pane fade" id="quality-process" role="tabpanel">
+                <div class="quality-check-info mb-5">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 mb-4 mb-lg-0">
+                            <img src="~/images/Kiemtrachatluong.webp" alt="Kiểm tra chất lượng" class="img-fluid rounded-3 shadow">
+                        </div>
+                        <div class="col-lg-6">
+                            <h3 class="mb-4">Tiêu Chuẩn Chất Lượng REVA</h3>
+                            <p>Tại <strong>REVA</strong>, chúng tôi cam kết mang đến những sản phẩm secondhand có chất lượng đảm bảo. Mỗi sản phẩm trên nền tảng đều được người bán phân loại theo 5 cấp độ chất lượng rõ ràng.</p>
+                            <div class="quality-badges mt-4">
+                                <div class="quality-badge">
+                                    <i class="fas fa-eye"></i>
+                                    <span>Thông tin minh bạch</span>
+                                </div>
+                                <div class="quality-badge">
+                                    <i class="fas fa-tshirt"></i>
+                                    <span>Phân loại chi tiết</span>
+                                </div>
+                                <div class="quality-badge">
+                                    <i class="fas fa-tag"></i>
+                                    <span>Giá cả hợp lý</span>
+                                </div>
+                                <div class="quality-badge">
+                                    <i class="fas fa-exchange-alt"></i>
+                                    <span>Chính sách đổi trả</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quality-levels">
+                    <h4 class="text-center mb-4">Phân Loại Chất Lượng Sản Phẩm</h4>
+                    <div class="row g-4">
+                        <div class="col-md-4 mb-4">
+                            <div class="quality-level-card">
+                                <div class="quality-level-header level-new">
+                                    <h5>Mới</h5>
+                                </div>
+                                <div class="quality-level-body">
+                                    <p>Sản phẩm còn mới 100%, chưa qua sử dụng.</p>
+                                    <ul>
+                                        <li>Còn nguyên tem mác</li>
+                                        <li>Chưa qua sử dụng</li>
+                                        <li>Còn đầy đủ bao bì</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="quality-level-card">
+                                <div class="quality-level-header level-like-new">
+                                    <h5>Như mới</h5>
+                                </div>
+                                <div class="quality-level-body">
+                                    <p>Sản phẩm đã sử dụng nhưng còn rất tốt, gần như mới.</p>
+                                    <ul>
+                                        <li>Đã qua sử dụng ít</li>
+                                        <li>Không có dấu hiệu hư hại</li>
+                                        <li>Còn rất mới</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="quality-level-card">
+                                <div class="quality-level-header level-good">
+                                    <h5>Tốt</h5>
+                                </div>
+                                <div class="quality-level-body">
+                                    <p>Sản phẩm đã sử dụng nhưng còn tốt, không lỗi, không hỏng.</p>
+                                    <ul>
+                                        <li>Đã qua sử dụng</li>
+                                        <li>Còn tốt, không hư hỏng</li>
+                                        <li>Có thể có dấu hiệu sử dụng nhẹ</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="quality-level-card">
+                                <div class="quality-level-header level-fair">
+                                    <h5>Khá</h5>
+                                </div>
+                                <div class="quality-level-body">
+                                    <p>Sản phẩm đã sử dụng, có vài dấu hiệu sử dụng.</p>
+                                    <ul>
+                                        <li>Có dấu hiệu sử dụng rõ ràng</li>
+                                        <li>Vẫn hoạt động tốt, không hư hỏng</li>
+                                        <li>Có thể có vết bạc màu hoặc phai nhẹ</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="quality-level-card">
+                                <div class="quality-level-header level-used">
+                                    <h5>Đã qua sử dụng</h5>
+                                </div>
+                                <div class="quality-level-body">
+                                    <p>Sản phẩm đã qua sử dụng nhiều, có dấu hiệu sử dụng rõ rệt.</p>
+                                    <ul>
+                                        <li>Đã qua sử dụng nhiều</li>
+                                        <li>Có dấu hiệu sử dụng rõ ràng</li>
+                                        <li>Giá cực kỳ hấp dẫn</li>
+                                        <li>Vẫn có thể sử dụng tốt</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <p class="text-muted">Lưu ý: Nếu sản phẩm nhận được không đúng với mô tả về tình trạng, bạn có quyền yêu cầu hoàn tiền hoặc đổi trả.</p>
+                    </div>
+                </div>
+
+                <div class="category-list mt-5">
+                    <h4 class="text-center mb-4">Danh Mục Sản Phẩm REVA</h4>
+                    <div class="row">
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="category-item">
+                                <i class="fas fa-tshirt"></i>
+                                <span>Áo</span>
+                                <small>Áo thun, Áo sơ mi, Áo khoác, Áo len</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="category-item">
+                                <i class="fas fa-socks"></i>
+                                <span>Quần</span>
+                                <small>Quần jeans, Quần kaki, Quần short, Quần tây</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="category-item">
+                                <i class="fas fa-female"></i>
+                                <span>Váy đầm</span>
+                                <small>Đầm dài, Váy ngắn, Chân váy</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="category-item">
+                                <i class="fas fa-shoe-prints"></i>
+                                <span>Giày dép</span>
+                                <small>Giày thể thao, Giày cao gót, Sandal</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Đăng ký hoặc Mua hàng -->
+        <div class="get-started-cta mt-5 text-center">
+            <h3>Sẵn sàng khám phá và mua sắm?</h3>
+            <div class="cta-buttons mt-4">
+                <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-3">
+                    <i class="fas fa-user-plus me-2"></i>Đăng Ký Ngay
+                </a>
+                <a asp-controller="Product" asp-action="ProductList" class="btn btn-success btn-lg">
+                    <i class="fas fa-shopping-bag me-2"></i>Bắt Đầu Mua Sắm
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Câu chuyện bền vững -->
+<section class="sustainability-section py-5" id="cau-chuyen-ben-vung">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Câu Chuyện Bền Vững</h2>
+            <p class="section-subtitle">Mỗi món đồ được tái sử dụng là một bước tiến nhỏ hướng tới tương lai bền vững hơn</p>
+        </div>
+
+        <!-- Banner bền vững -->
+        <div class="sustainability-banner mb-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="banner-content p-4">
+                        <h3 class="mb-3">Thời Trang Tái Sinh</h3>
+                        <p class="lead mb-4">Mỗi năm, ngành công nghiệp thời trang thải ra hơn 92 triệu tấn rác và tiêu thụ 79 nghìn tỷ lít nước. Cùng REVA kiến tạo tương lai bền vững cho thời trang.</p>
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="eco-icon me-3">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Tái sử dụng, tái tạo, tái sinh</h5>
+                                <p class="mb-0">Nền tảng REVA giúp kéo dài tuổi thọ của quần áo, giảm lượng rác thải thời trang.</p>
+                            </div>
+                        </div>
+                        <a asp-controller="Home" asp-action="AboutSustainability" class="btn btn-outline-success">Tìm hiểu thêm</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="banner-image">
+                        <img src="~/images/Thoitrangbenvung.jpg" alt="Thời trang bền vững" class="img-fluid rounded-3">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Số liệu thống kê tác động -->
+        <div class="impact-stats mb-5">
+            <div class="section-heading text-center mb-4">
+                <h3>Tác Động Tích Cực</h3>
+                <p>Cùng nhau, chúng ta đang tạo ra sự thay đổi</p>
+            </div>
+            <div class="row g-4 text-center">
+                <div class="col-md-3 col-6">
+                    <div class="impact-stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tshirt"></i>
+                        </div>
+                        <div class="stat-number" data-count="10000">0</div>
+                        <div class="stat-text">món đồ được tái sử dụng</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="impact-stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-water"></i>
+                        </div>
+                        <div class="stat-number" data-count="3500">0</div>
+                        <div class="stat-text">nghìn lít nước tiết kiệm</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="impact-stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="stat-number" data-count="12500">0</div>
+                        <div class="stat-text">kWh điện năng tiết kiệm</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="impact-stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tree"></i>
+                        </div>
+                        <div class="stat-number" data-count="85">0</div>
+                        <div class="stat-text">% giảm carbon footprint</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tiết kiệm tài nguyên -->
+        <div class="resource-savings mb-5">
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-4 mb-md-0">
+                    <div class="resource-image">
+                        <img src="~/images/Tietkiemtainguyen.jpg" alt="Tiết kiệm tài nguyên" class="img-fluid rounded-3">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="resource-content">
+                        <h3 class="mb-4">Tiết Kiệm Tài Nguyên</h3>
+                        <p class="mb-4">Sản xuất một chiếc áo thun cotton mới tiêu tốn hơn 2,700 lít nước - tương đương với lượng nước một người uống trong 2.5 năm.</p>
+
+                        <div class="resource-item mb-3">
+                            <div class="resource-icon">
+                                <i class="fas fa-tint"></i>
+                            </div>
+                            <div class="resource-text">
+                                <h5>Tiết kiệm nước</h5>
+                                <p>Mua 1 món đồ cũ thay vì mới giúp tiết kiệm trung bình 700 - 2000 lít nước.</p>
+                            </div>
+                        </div>
+
+                        <div class="resource-item mb-3">
+                            <div class="resource-icon">
+                                <i class="fas fa-smog"></i>
+                            </div>
+                            <div class="resource-text">
+                                <h5>Giảm ô nhiễm</h5>
+                                <p>Giảm 4kg khí thải CO2 cho mỗi món đồ được tái sử dụng thay vì sản xuất mới.</p>
+                            </div>
+                        </div>
+
+                        <div class="resource-item">
+                            <div class="resource-icon">
+                                <i class="fas fa-seedling"></i>
+                            </div>
+                            <div class="resource-text">
+                                <h5>Bảo tồn đất đai</h5>
+                                <p>Giảm nhu cầu trồng bông mới, giúp bảo tồn đất và giảm sử dụng hóa chất nông nghiệp.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cam kết bền vững -->
+        <div class="sustainability-commitment">
+            <div class="commitment-header text-center mb-4">
+                <div class="eco-badge mb-3">
+                    <i class="fas fa-leaf"></i> CAM KẾT BỀN VỮNG
+                </div>
+                <h3>Cam Kết Của REVA</h3>
+                <p>Chúng tôi không chỉ xây dựng một nền tảng mà còn là một phong trào</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="commitment-card">
+                        <div class="commitment-icon">
+                            <i class="fas fa-recycle"></i>
+                        </div>
+                        <h4>Gói hàng thân thiện</h4>
+                        <p>100% bao bì đóng gói sử dụng vật liệu tái chế hoặc có thể phân hủy sinh học.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="commitment-card">
+                        <div class="commitment-icon">
+                            <i class="fas fa-hand-holding-heart"></i>
+                        </div>
+                        <h4>Quyên góp quần áo</h4>
+                        <p>Với mỗi 100 món đồ được bán, REVA quyên góp 10 món đồ cho những người có hoàn cảnh khó khăn.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="commitment-card">
+                        <div class="commitment-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h4>Giáo dục cộng đồng</h4>
+                        <p>Tổ chức hội thảo và chia sẻ kiến thức về thời trang bền vững và tiêu dùng có trách nhiệm.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <a asp-controller="Home" asp-action="SustainableImpact" class="btn btn-success btn-lg">
+                    <i class="fas fa-leaf me-2"></i>Khám Phá Tác Động Bền Vững
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Script cho phần đếm số -->
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const statElements = document.querySelectorAll('.stat-number');
+                        statElements.forEach(element => {
+                            const targetCount = element.getAttribute('data-count');
+                            const duration = 2000; // 2 seconds
+                            const frameDuration = 1000 / 60; // 60fps
+                            const totalFrames = Math.round(duration / frameDuration);
+                            const incrementPerFrame = targetCount / totalFrames;
+
+                            let currentCount = 0;
+                            let frame = 0;
+
+                            const counter = setInterval(() => {
+                                frame++;
+                                currentCount += incrementPerFrame;
+
+                                if (frame === totalFrames) {
+                                    clearInterval(counter);
+                                    element.textContent = targetCount;
+                                } else {
+                                    element.textContent = Math.floor(currentCount);
+                                }
+                            }, frameDuration);
+                        });
+
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            observer.observe(document.querySelector('.impact-stats'));
+        });
+    </script>
+}
+
+<!-- Blog/Nội dung hữu ích -->
+<section class="blog-section py-5" id="blog-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Khám Phá Kiến Thức Thời Trang</h2>
+            <p class="section-subtitle">Tham khảo các bài viết hữu ích để nâng tầm phong cách thời trang bền vững của bạn</p>
+        </div>
+
+        <!-- Bài viết nổi bật -->
+        <div class="featured-post mb-5">
+            <div class="row g-0 align-items-stretch">
+                <div class="col-lg-6">
+                    <div class="featured-post-image h-100">
+                        <img src="~/images/Phoido.jpg" alt="5 cách phối đồ secondhand sang trọng" class="img-fluid h-100 w-100 object-fit-cover">
+                        <div class="category-badge">
+                            <span>Cách Phối Đồ</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="featured-post-content">
+                        <div class="post-meta">
+                            <span class="post-date"><i class="far fa-calendar-alt me-1"></i> 15/05/2025</span>
+                            <span class="post-author"><i class="far fa-user me-1"></i> Minh Trang</span>
+                        </div>
+                        <h3 class="post-title">5 Cách Phối Đồ Secondhand Sang Trọng Như Đồ Hiệu</h3>
+                        <p class="post-excerpt">Khám phá các bí quyết giúp bạn biến những món đồ secondhand thành outfit sang trọng, thời thượng không kém gì những bộ trang phục đắt tiền từ các thương hiệu cao cấp.</p>
+                        <div class="post-tags mb-4">
+                            <span class="tag">Thời trang</span>
+                            <span class="tag">Phối đồ</span>
+                            <span class="tag">Secondhand</span>
+                        </div>
+                        <a asp-controller="Blog" asp-action="Details" asp-route-id="1" class="btn btn-outline-primary">Đọc Tiếp <i class="fas fa-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Danh mục bài viết -->
+        <div class="blog-categories mb-4">
+            <ul class="nav nav-pills justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Tất cả</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Blog" asp-action="Category" asp-route-category="phoi-do">Cách phối đồ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Blog" asp-action="Category" asp-route-category="bao-quan">Mẹo bảo quản</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Blog" asp-action="Category" asp-route-category="xu-huong">Xu hướng thời trang</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Blog" asp-action="Category" asp-route-category="mua-sam">Mẹo mua sắm</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Các bài viết -->
+        <div class="row g-4 mb-5">
+            <!-- Bài viết 1: Cách phối đồ -->
+            <div class="col-lg-4 col-md-6">
+                <div class="blog-card">
+                    <div class="blog-card-img">
+                        <a asp-controller="Blog" asp-action="Details" asp-route-id="2">
+                            <img src="~/images/Vintage.jpg" alt="Phối đồ vintage" class="img-fluid">
+                        </a>
+                        <div class="category-badge">
+                            <span>Cách Phối Đồ</span>
+                        </div>
+                    </div>
+                    <div class="blog-card-body">
+                        <div class="post-meta">
+                            <span class="post-date"><i class="far fa-calendar-alt me-1"></i> 10/05/2025</span>
+                        </div>
+                        <h4 class="post-title">
+                            <a asp-controller="Blog" asp-action="Details" asp-route-id="2">Phối đồ vintage cho phong cách retro độc đáo</a>
+                        </h4>
+                        <p class="post-excerpt">Hướng dẫn chi tiết cách phối những món đồ vintage từ thập niên 70-90 để tạo nên phong cách retro độc đáo, thu hút mọi ánh nhìn.</p>
+                        <div class="post-footer">
+                            <a asp-controller="Blog" asp-action="Details" asp-route-id="2" class="read-more">Đọc tiếp <i class="fas fa-long-arrow-alt-right ms-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bài viết 2: Mẹo bảo quản -->
+            <div class="col-lg-4 col-md-6">
+                <div class="blog-card">
+                    <div class="blog-card-img">
+                        <a asp-controller="Blog" asp-action="Details" asp-route-id="3">
+                            <img src="~/images/Baoquanquanao.jpg" alt="Bảo quản quần áo" class="img-fluid">
+                        </a>
+                        <div class="category-badge">
+                            <span>Mẹo Bảo Quản</span>
+                        </div>
+                    </div>
+                    <div class="blog-card-body">
+                        <div class="post-meta">
+                            <span class="post-date"><i class="far fa-calendar-alt me-1"></i> 05/05/2025</span>
+                        </div>
+                        <h4 class="post-title">
+                            <a asp-controller="Blog" asp-action="Details" asp-route-id="3">7 bí quyết bảo quản quần áo secondhand bền đẹp như mới</a>
+                        </h4>
+                        <p class="post-excerpt">Những mẹo đơn giản giúp quần áo secondhand của bạn luôn giữ được vẻ đẹp và độ bền theo thời gian, tránh phai màu và hư hỏng.</p>
+                        <div class="post-footer">
+                            <a asp-controller="Blog" asp-action="Details" asp-route-id="3" class="read-more">Đọc tiếp <i class="fas fa-long-arrow-alt-right ms-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bài viết 3: Xu hướng thời trang -->
+            <div class="col-lg-4 col-md-6">
+                <div class="blog-card">
+                    <div class="blog-card-img">
+                        <a asp-controller="Blog" asp-action="Details" asp-route-id="4">
+                            <img src="~/images/Xuhuongthoitrangbenvung.webp" alt="Xu hướng thời trang bền vững" class="img-fluid">
+                        </a>
+                        <div class="category-badge">
+                            <span>Xu Hướng</span>
+                        </div>
+                    </div>
+                    <div class="blog-card-body">
+                        <div class="post-meta">
+                            <span class="post-date"><i class="far fa-calendar-alt me-1"></i> 01/05/2025</span>
+                        </div>
+                        <h4 class="post-title">
+                            <a asp-controller="Blog" asp-action="Details" asp-route-id="4">Xu hướng thời trang bền vững nổi bật 2025</a>
+                        </h4>
+                        <p class="post-excerpt">Cập nhật những xu hướng thời trang bền vững đang làm mưa làm gió trong năm 2025, từ vật liệu thân thiện đến thiết kế tái chế sáng tạo.</p>
+                        <div class="post-footer">
+                            <a asp-controller="Blog" asp-action="Details" asp-route-id="4" class="read-more">Đọc tiếp <i class="fas fa-long-arrow-alt-right ms-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bài viết 4: Cách phối đồ -->
+            <div class="col-lg-4 col-md-6">
+                <div class="blog-card">
+                    <div class="blog-card-img">
+                        <a asp-controller="Blog" asp-action="Details" asp-route-id="5">
+                            <img src="~/images/Docongso.jpg" alt="Đồ công sở secondhand" class="img-fluid">
+                        </a>
+                        <div class="category-badge">
+                            <span>Cách Phối Đồ</span>
+                        </div>
+                    </div>
+                    <div class="blog-card-body">
+                        <div class="post-meta">
+                            <span class="post-date"><i class="far fa-calendar-alt me-1"></i> 25/04/2025</span>
+                        </div>
+                        <h4 class="post-title">
+                            <a asp-controller="Blog" asp-action="Details" asp-route-id="5">10 outfit công sở thanh lịch từ đồ secondhand</a>
+                        </h4>
+                        <p class="post-excerpt">Gợi ý 10 bộ trang phục công sở lịch sự, chuyên nghiệp hoàn toàn từ quần áo secondhand với chi phí tiết kiệm đáng ngạc nhiên.</p>
+                        <div class="post-footer">
+                            <a asp-controller="Blog" asp-action="Details" asp-route-id="5" class="read-more">Đọc tiếp <i class="fas fa-long-arrow-alt-right ms-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bài viết 5: Mẹo bảo quản -->
+            <div class="col-lg-4 col-md-6">
+                <div class="blog-card">
+                    <div class="blog-card-img">
+                        <a asp-controller="Blog" asp-action="Details" asp-route-id="6">
+                            <img src="~/images/Baoquanquanjean.jpg" alt="Bảo quản quần jeans" class="img-fluid">
+                        </a>
+                        <div class="category-badge">
+                            <span>Mẹo Bảo Quản</span>
+                        </div>
+                    </div>
+                    <div class="blog-card-body">
+                        <div class="post-meta">
+                            <span class="post-date"><i class="far fa-calendar-alt me-1"></i> 20/04/2025</span>
+                        </div>
+                        <h4 class="post-title">
+                            <a asp-controller="Blog" asp-action="Details" asp-route-id="6">Cách bảo quản quần jeans secondhand bền đẹp</a>
+                        </h4>
+                        <p class="post-excerpt">Hướng dẫn chi tiết cách giặt, phơi và bảo quản quần jeans secondhand để giữ được màu sắc, form dáng và độ bền lâu dài.</p>
+                        <div class="post-footer">
+                            <a asp-controller="Blog" asp-action="Details" asp-route-id="6" class="read-more">Đọc tiếp <i class="fas fa-long-arrow-alt-right ms-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bài viết 6: Xu hướng thời trang -->
+            <div class="col-lg-4 col-md-6">
+                <div class="blog-card">
+                    <div class="blog-card-img">
+                        <a asp-controller="Blog" asp-action="Details" asp-route-id="7">
+                            <img src="~/images/y2k.jpg" alt="Xu hướng Y2K" class="img-fluid">
+                        </a>
+                        <div class="category-badge">
+                            <span>Xu Hướng</span>
+                        </div>
+                    </div>
+                    <div class="blog-card-body">
+                        <div class="post-meta">
+                            <span class="post-date"><i class="far fa-calendar-alt me-1"></i> 15/04/2025</span>
+                        </div>
+                        <h4 class="post-title">
+                            <a asp-controller="Blog" asp-action="Details" asp-route-id="7">Trào lưu Y2K quay trở lại: Săn đồ vintage đúng điệu</a>
+                        </h4>
+                        <p class="post-excerpt">Khám phá làn sóng Y2K đang quay trở lại mạnh mẽ và cách tìm kiếm những món đồ vintage chính hiệu từ thập niên 2000.</p>
+                        <div class="post-footer">
+                            <a asp-controller="Blog" asp-action="Details" asp-route-id="7" class="read-more">Đọc tiếp <i class="fas fa-long-arrow-alt-right ms-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="blog-newsletter">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="newsletter-content text-center">
+                        <div class="newsletter-icon mb-3">
+                            <i class="far fa-envelope"></i>
+                        </div>
+                        <h3 class="mb-3">Cập nhật tin tức thời trang</h3>
+                        <p class="mb-4">Đăng ký nhận bản tin để không bỏ lỡ các bài viết mới nhất về thời trang bền vững và các mẹo phối đồ secondhand.</p>
+                        <form class="newsletter-form">
+                            <div class="input-group">
+                                <input type="email" class="form-control" placeholder="Email của bạn" required>
+                                <button class="btn btn-primary" type="submit">Đăng ký</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Xem thêm bài viết -->
+        <div class="text-center mt-5">
+            <a asp-controller="Blog" asp-action="Index" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-book-open me-2"></i>Khám Phá Thêm Bài Viết
+            </a>
+        </div>
+    </div>
+</section>
+
+

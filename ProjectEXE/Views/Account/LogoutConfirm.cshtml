@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Xác nhận đăng xuất";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h4>Xác nhận đăng xuất</h4>
+                </div>
+                <div class="card-body">
+                    <p>Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?</p>
+                    <form asp-controller="Account" asp-action="Logout" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="d-flex justify-content-between">
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Hủy</a>
+                            <button type="submit" class="btn btn-danger">Đăng xuất</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

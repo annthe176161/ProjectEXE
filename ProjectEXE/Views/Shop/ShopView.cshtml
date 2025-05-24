@@ -1,0 +1,240 @@
+﻿@model ProjectEXE.ViewModel.ProductViewModel.ShopDetailViewModel
+@{
+    ViewData["Title"] = $"Shop {Model.ShopName}";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/shop-details.css">
+}
+
+<div class="shop-details-page">
+    <!-- Hero Section -->
+    <div class="shop-hero-section">
+        <div class="hero-background">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="container">
+            <nav aria-label="breadcrumb" class="breadcrumb-hero mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/" class="text-white text-decoration-none">
+                            <i class="fas fa-home me-1"></i>Trang chủ
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-controller="Product" asp-action="ProductList" class="text-white text-decoration-none">
+                            <i class="fas fa-box me-1"></i>Sản phẩm
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active text-light" aria-current="page">
+                        Shop @Model.ShopName
+                    </li>
+                </ol>
+            </nav>
+
+            <!-- Shop Profile Card -->
+            <div class="shop-profile-card animate__animated animate__fadeInUp">
+                <div class="row align-items-center">
+                    <div class="col-lg-3 text-center">
+                        <div class="shop-avatar-wrapper">
+                            <img src="@Model.ProfileImage" alt="@Model.ShopName" class="shop-avatar">
+                            <div class="avatar-ring"></div>
+                            @if (Model.IsPremium)
+                            {
+                                <div class="premium-crown">
+                                    <i class="fas fa-crown"></i>
+                                </div>
+                            }
+                        </div>
+                        @if (Model.IsPremium)
+                        {
+                            <div class="premium-badge">
+                                <i class="fas fa-crown me-2"></i>
+                                Shop Premium
+                            </div>
+                        }
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="shop-header">
+                            <h1 class="shop-name">@Model.ShopName</h1>
+                            <p class="shop-seller">Được vận hành bởi <strong>@Model.SellerName</strong></p>
+                        </div>
+                        
+                        <div class="shop-stats">
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <span class="stat-label">Địa chỉ</span>
+                                    <span class="stat-value">@Model.Location</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <span class="stat-label">Tham gia</span>
+                                    <span class="stat-value">@Model.CreatedAt.ToString("dd/MM/yyyy")</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <span class="stat-label">Sản phẩm</span>
+                                    <span class="stat-value">@Model.ProductCount</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <!-- Shop Description -->
+        <div class="shop-description-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+            <div class="section-header">
+                <h3 class="section-title">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Giới thiệu shop
+                </h3>
+            </div>
+            <div class="description-content">
+                <p>@Model.Description</p>
+            </div>
+        </div>
+
+        <!-- Products Section -->
+        <div class="products-section animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
+            <div class="section-header">
+                <h3 class="section-title">
+                    <i class="fas fa-shopping-bag me-2"></i>
+                    Sản phẩm của shop
+                    <span class="product-count">(@Model.ProductCount sản phẩm)</span>
+                </h3>
+                <div class="section-actions">
+                    <div class="view-toggle">
+                        <button class="toggle-btn active" data-view="grid">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                        <button class="toggle-btn" data-view="list">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.Products.Any())
+            {
+                <div class="products-grid" id="productsContainer">
+                    @foreach (var product in Model.Products)
+                    {
+                        <div class="product-card-wrapper">
+                            <div class="product-card">
+                                <div class="product-image-container">
+                                    <img src="@product.MainImageUrl" class="product-image" alt="@product.ProductName">
+                                    <div class="product-overlay">
+                                        <div class="overlay-actions">
+                                            <button class="action-btn quick-view" data-id="@product.ProductId">
+                                                <i class="fas fa-eye"></i>
+                                                <span class="tooltip">Xem nhanh</span>
+                                            </button>
+                                            <button class="action-btn add-to-cart" data-id="@product.ProductId">
+                                                <i class="fas fa-cart-plus"></i>
+                                                <span class="tooltip">Thêm giỏ hàng</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    @if (product.IsNew)
+                                    {
+                                        <div class="product-badge new-badge">
+                                            <i class="fas fa-star me-1"></i>Mới
+                                        </div>
+                                    }
+                                </div>
+                                
+                                <div class="product-content">
+                                    <div class="product-meta">
+                                        <span class="product-condition">@product.Condition</span>
+                                        <span class="product-category">@product.Category</span>
+                                    </div>
+                                    <h5 class="product-title">@product.ProductName</h5>
+                                    <div class="product-price">@product.Price.ToString("N0")₫</div>
+                                    <div class="product-actions">
+                                        <a asp-controller="Product" asp-action="ProductDetails" asp-route-id="@product.ProductId" 
+                                           class="btn btn-outline-primary btn-detail">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            Chi tiết
+                                        </a>
+                                        <button class="btn btn-primary btn-cart" data-id="@product.ProductId">
+                                            <i class="fas fa-cart-plus me-1"></i>
+                                            Thêm vào giỏ
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Pagination -->
+                @if (Model.Pagination.TotalPages > 1)
+                {
+                    <div class="pagination-wrapper">
+                        <nav aria-label="Phân trang sản phẩm">
+                            <ul class="custom-pagination">
+                                @if (Model.Pagination.CurrentPage > 1)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" asp-action="Details" asp-route-id="@Model.ShopId" asp-route-page="@(Model.Pagination.CurrentPage - 1)">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                }
+                                
+                                @for (int i = 1; i <= Model.Pagination.TotalPages; i++)
+                                {
+                                    <li class="page-item @(i == Model.Pagination.CurrentPage ? "active" : "")">
+                                        <a class="page-link" asp-action="Details" asp-route-id="@Model.ShopId" asp-route-page="@i">@i</a>
+                                    </li>
+                                }
+                                
+                                @if (Model.Pagination.CurrentPage < Model.Pagination.TotalPages)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" asp-action="Details" asp-route-id="@Model.ShopId" asp-route-page="@(Model.Pagination.CurrentPage + 1)">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-products">
+                    <div class="empty-icon">
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <h4>Shop chưa có sản phẩm</h4>
+                    <p>Shop này hiện tại chưa có sản phẩm nào để hiển thị. Hãy quay lại sau nhé!</p>
+                    <a asp-controller="Product" asp-action="ProductList" class="btn btn-primary">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Xem sản phẩm khác
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/shop-details.js"></script>
+}
