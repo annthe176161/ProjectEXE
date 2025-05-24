@@ -1,0 +1,266 @@
+﻿.hero-banner {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    width: 100vw; /* Chiều rộng toàn viewport */
+    margin-left: calc(-50vw + 50%); /* Căn giữa và mở rộng toàn màn hình */
+    margin-right: calc(-50vw + 50%);
+    overflow: hidden;
+}
+
+/* Carousel Styling - ENHANCED FOR FULL WIDTH */
+#heroCarousel {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.carousel-item {
+    height: 75vh;
+    min-height: 500px;
+    background: no-repeat center center scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    position: relative;
+    width: 100%;
+}
+
+    .carousel-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.7);
+        display: block;
+    }
+
+.carousel-caption {
+    bottom: 30%;
+    text-align: center;
+    max-width: 80%;
+    margin: 0 auto;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+}
+
+    .carousel-caption h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        animation: fadeInDown 1s;
+        color: white;
+    }
+
+    .carousel-caption p {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+        animation: fadeInUp 1s;
+        color: white;
+    }
+
+.hero-buttons {
+    animation: fadeIn 1.5s;
+}
+
+    .hero-buttons .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+
+    .hero-buttons .btn-primary {
+        background-color: #ff6b6b;
+        border-color: #ff6b6b;
+    }
+
+        .hero-buttons .btn-primary:hover {
+            background-color: #ff5252;
+            border-color: #ff5252;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+    .hero-buttons .btn-outline-light:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+    }
+
+/* Carousel Controls - ENHANCED */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+    color: white;
+}
+
+.carousel-indicators {
+    bottom: 10px;
+}
+
+    .carousel-indicators button {
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+
+        .carousel-indicators button.active {
+            background-color: #ff6b6b;
+        }
+
+/* Sustainability Badges - ADJUSTED FOR FULL WIDTH */
+.sustainability-badges {
+    margin-top: -50px;
+    position: relative;
+    z-index: 10;
+    background: transparent;
+    padding: 0;
+}
+
+    .sustainability-badges .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+
+.badge-item {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1.5rem 1rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+    .badge-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .badge-item i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #ff6b6b;
+    }
+
+    .badge-item h5 {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .badge-item p {
+        color: #6c757d;
+        margin-bottom: 0;
+        font-size: 0.9rem;
+    }
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 50px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translate3d(0, -50px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .carousel-caption h1 {
+        font-size: 2.5rem;
+    }
+
+    .carousel-caption {
+        bottom: 20%;
+    }
+}
+
+@media (max-width: 768px) {
+    .carousel-item {
+        height: 60vh;
+        min-height: 400px;
+    }
+
+    .carousel-caption h1 {
+        font-size: 2rem;
+    }
+
+    .carousel-caption p {
+        font-size: 1rem;
+    }
+
+    .sustainability-badges {
+        margin-top: 1rem;
+    }
+
+    .badge-item {
+        padding: 1rem 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+        .badge-item i {
+            font-size: 2rem;
+        }
+}
+
+@media (max-width: 576px) {
+    .carousel-item {
+        height: 50vh;
+        min-height: 350px;
+    }
+
+    .carousel-caption {
+        bottom: 10%;
+    }
+
+        .carousel-caption h1 {
+            font-size: 1.75rem;
+        }
+
+    .hero-buttons .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .hero-buttons .btn-lg {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Additional fixes for edge cases */
+body {
+    overflow-x: hidden; /* Ngăn scroll ngang */
+}
+
+.hero-banner * {
+    box-sizing: border-box;
+}
+
+</style >

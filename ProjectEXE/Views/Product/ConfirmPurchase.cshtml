@@ -1,0 +1,381 @@
+﻿@model ProjectEXE.ViewModel.OrderViewModel.OrderConfirmationViewModel
+@{
+    ViewData["Title"] = "Xác nhận yêu cầu mua hàng";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/confirmpurchase.css">
+}
+
+<main class="py-4 order-confirmation-page">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Product" asp-action="ProductList">Sản Phẩm</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Product" asp-action="ProductDetails" asp-route-id="@Model.Product.ProductId">@Model.Product.ProductName</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Xác nhận mua hàng</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Header Section -->
+            <div class="confirmation-header text-center mb-4">
+                <div class="header-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h1 class="page-title">Xác nhận yêu cầu mua hàng</h1>
+                <p class="page-subtitle">Vui lòng xác nhận thông tin và gửi yêu cầu đến người bán</p>
+            </div>
+
+            <!-- Platform Notice -->
+            <div class="platform-notice mb-4">
+                <div class="notice-content">
+                    <div class="notice-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="notice-text">
+                        <h5>REVA là nền tảng kết nối người mua và người bán</h5>
+                        <p>Sau khi bạn gửi yêu cầu, người bán sẽ liên hệ trực tiếp với bạn để thống nhất về phương thức thanh toán và giao nhận.</p>
+                    </div>
+                </div>
+            </div>
+
+            <form asp-action="ConfirmPurchase" method="post" class="order-form">
+                <input type="hidden" asp-for="ProductId" />
+                <input type="hidden" asp-for="BuyerId" />
+                <input type="hidden" asp-for="SellerId" />
+
+                <!-- Product Summary -->
+                <div class="product-summary-card mb-4">
+                    <div class="card-header">
+                        <h5><i class="fas fa-box me-2"></i>Thông tin sản phẩm</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <div class="product-image">
+                                    <img src="@Model.Product.MainImageUrl" alt="@Model.Product.ProductName" class="img-fluid rounded">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="product-details">
+                                    <h6 class="product-name">@Model.Product.ProductName</h6>
+                                    <div class="product-specs">
+                                        @if (!string.IsNullOrEmpty(Model.Product.Brand))
+                                        {
+                                            <span class="spec-item"><i class="fas fa-tag"></i> @Model.Product.Brand</span>
+                                        }
+                                        @if (!string.IsNullOrEmpty(Model.Product.Size))
+                                        {
+                                            <span class="spec-item"><i class="fas fa-ruler"></i> Size @Model.Product.Size</span>
+                                        }
+                                        @if (!string.IsNullOrEmpty(Model.Product.Color))
+                                        {
+                                            <span class="spec-item"><i class="fas fa-palette"></i> @Model.Product.Color</span>
+                                        }
+                                    </div>
+                                    <div class="condition-badge">
+                                        <span class="badge">@Model.Product.Condition</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <div class="product-price">
+                                    <span class="price-amount">@Model.Product.Price.ToString("N0")₫</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shop Information -->
+                <div class="shop-info-card mb-4">
+                    <div class="card-header">
+                        <h5><i class="fas fa-store me-2"></i>Thông tin người bán</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <div class="shop-avatar">
+                                    <img src="@Model.Shop.ProfileImage" alt="@Model.Shop.ShopName" class="img-fluid rounded-circle">
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="shop-details">
+                                    <h6 class="shop-name">
+                                        @Model.Shop.ShopName
+                                        @if (Model.Shop.IsPremium)
+                                        {
+                                            <span class="badge bg-warning text-dark">Premium</span>
+                                        }
+                                    </h6>
+                                    <p class="shop-stats">
+                                        <i class="fas fa-calendar-alt me-1"></i> Tham gia từ @Model.Shop.CreatedAt.ToString("MM/yyyy")
+                                        <span class="ms-3"><i class="fas fa-box me-1"></i> @Model.Shop.ProductCount sản phẩm</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buyer Contact Information - CHỈ HIỂN THỊ -->
+                <div class="contact-info-card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-0"><i class="fas fa-user me-2"></i>Thông tin liên hệ của bạn</h5>
+                            <small class="text-muted">Người bán sẽ sử dụng thông tin này để liên hệ với bạn</small>
+                        </div>
+                        <a asp-controller="Account" asp-action="Profile" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-edit me-1"></i>Chỉnh sửa
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <!-- Kiểm tra thông tin có đầy đủ không -->
+                        @{
+                            bool hasCompleteInfo = !string.IsNullOrWhiteSpace(Model.BuyerName) &&
+                            !string.IsNullOrWhiteSpace(Model.BuyerPhone) &&
+                            !string.IsNullOrWhiteSpace(Model.BuyerAddress);
+                        }
+
+                        @if (!hasCompleteInfo)
+                        {
+                            <div class="alert alert-warning" role="alert">
+                                <h6><i class="fas fa-exclamation-triangle me-2"></i>Thông tin liên hệ chưa đầy đủ</h6>
+                                <p class="mb-2">Để có thể gửi yêu cầu mua hàng, bạn cần cập nhật đầy đủ thông tin liên hệ bao gồm:</p>
+                                <ul class="mb-2">
+                                    @if (string.IsNullOrWhiteSpace(Model.BuyerName))
+                                    {
+                                        <li>Họ và tên</li>
+                                    }
+                                    @if (string.IsNullOrWhiteSpace(Model.BuyerPhone))
+                                    {
+                                        <li>Số điện thoại</li>
+                                    }
+                                    @if (string.IsNullOrWhiteSpace(Model.BuyerAddress))
+                                    {
+                                        <li>Địa chỉ</li>
+                                    }
+                                </ul>
+                                <p class="mb-0">
+                                    <a asp-controller="Account" asp-action="Profile" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-user-edit me-1"></i>Cập nhật thông tin ngay
+                                    </a>
+                                </p>
+                            </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <strong>Họ và tên:</strong>
+                                </label>
+                                <div class="contact-info-display">
+                                    <i class="fas fa-user text-muted me-2"></i>
+                                    <span class="@(string.IsNullOrWhiteSpace(Model.BuyerName) ? "text-muted fst-italic" : "")">
+                                        @(string.IsNullOrWhiteSpace(Model.BuyerName) ? "Chưa cập nhật" : Model.BuyerName)
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <strong>Số điện thoại:</strong>
+                                </label>
+                                <div class="contact-info-display">
+                                    <i class="fas fa-phone text-muted me-2"></i>
+                                    <span class="@(string.IsNullOrWhiteSpace(Model.BuyerPhone) ? "text-muted fst-italic" : "")">
+                                        @(string.IsNullOrWhiteSpace(Model.BuyerPhone) ? "Chưa cập nhật" : Model.BuyerPhone)
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <strong>Email:</strong>
+                                </label>
+                                <div class="contact-info-display">
+                                    <i class="fas fa-envelope text-muted me-2"></i>
+                                    <span class="@(string.IsNullOrWhiteSpace(Model.BuyerEmail) ? "text-muted fst-italic" : "")">
+                                        @(string.IsNullOrWhiteSpace(Model.BuyerEmail) ? "Chưa cập nhật" : Model.BuyerEmail)
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <strong>Địa chỉ:</strong>
+                                </label>
+                                <div class="contact-info-display">
+                                    <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                                    <span class="@(string.IsNullOrWhiteSpace(Model.BuyerAddress) ? "text-muted fst-italic" : "")">
+                                        @(string.IsNullOrWhiteSpace(Model.BuyerAddress) ? "Chưa cập nhật" : Model.BuyerAddress)
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (hasCompleteInfo)
+                        {
+                            <div class="alert alert-success" role="alert">
+                                <i class="fas fa-check-circle me-2"></i>
+                                Thông tin liên hệ đã đầy đủ. Bạn có thể gửi yêu cầu mua hàng.
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Process Flow Information -->
+                <div class="process-flow-card mb-4">
+                    <div class="card-header">
+                        <h5><i class="fas fa-route me-2"></i>Quy trình tiếp theo</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="process-steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h6>Gửi yêu cầu</h6>
+                                    <p>Bạn xác nhận và gửi yêu cầu mua hàng</p>
+                                </div>
+                            </div>
+                            <div class="step-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h6>Người bán xác nhận</h6>
+                                    <p>Người bán sẽ liên hệ với bạn trong 24 giờ</p>
+                                </div>
+                            </div>
+                            <div class="step-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h6>Thống nhất giao dịch</h6>
+                                    <p>Hai bên thỏa thuận về thanh toán và giao nhận</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="terms-section mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                        <label class="form-check-label" for="agreeTerms">
+                            Tôi đã đọc và đồng ý với
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">điều khoản sử dụng</a>
+                            của REVA
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <a asp-controller="Product" asp-action="ProductDetails" asp-route-id="@Model.Product.ProductId" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>Quay lại
+                    </a>
+
+                    @if (hasCompleteInfo)
+                    {
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-paper-plane me-2"></i>Gửi yêu cầu mua hàng
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-secondary btn-lg" disabled data-bs-toggle="tooltip" title="Vui lòng cập nhật đầy đủ thông tin liên hệ">
+                            <i class="fas fa-paper-plane me-2"></i>Gửi yêu cầu mua hàng
+                        </button>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Terms Modal -->
+    <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="termsModalLabel">
+                        <i class="fas fa-file-contract me-2"></i>Điều khoản sử dụng REVA
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="terms-content">
+                        <h6>1. Vai trò của REVA</h6>
+                        <p>REVA là nền tảng kết nối người mua và người bán. Chúng tôi không trực tiếp tham gia vào quá trình giao dịch, thanh toán hay vận chuyển.</p>
+
+                        <h6>2. Trách nhiệm của người mua</h6>
+                        <ul>
+                            <li>Cung cấp thông tin liên hệ chính xác</li>
+                            <li>Liên hệ và thương lượng trực tiếp với người bán</li>
+                            <li>Tự chịu trách nhiệm về quyết định mua hàng</li>
+                        </ul>
+
+                        <h6>3. Trách nhiệm của người bán</h6>
+                        <ul>
+                            <li>Mô tả sản phẩm chính xác, trung thực</li>
+                            <li>Liên hệ với người mua trong thời gian hợp lý</li>
+                            <li>Thực hiện giao dịch theo thỏa thuận</li>
+                        </ul>
+
+                        <h6>4. Giải quyết tranh chấp</h6>
+                        <p>Mọi tranh chấp giữa người mua và người bán cần được giải quyết trực tiếp giữa hai bên. REVA có thể hỗ trợ làm trung gian khi cần thiết.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="acceptTerms" data-bs-dismiss="modal">
+                        <i class="fas fa-check me-2"></i>Tôi đồng ý
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+
+            // Terms modal accept button
+            $('#acceptTerms').click(function() {
+                $('#agreeTerms').prop('checked', true);
+            });
+
+            // Form validation - ĐƠN GIẢN HÓA
+            $('.order-form').on('submit', function(e) {
+                console.log('Form submit triggered');
+
+                if (!$('#agreeTerms').is(':checked')) {
+                    e.preventDefault();
+                    alert('Vui lòng đồng ý với điều khoản sử dụng');
+                    return false;
+                }
+
+                console.log('Form validation passed - allowing submit');
+
+                // Show loading state
+                var submitBtn = $(this).find('button[type="submit"]');
+                submitBtn.prop('disabled', true)
+                         .html('<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...');
+
+                return true;
+            });
+        });
+    </script>
+}

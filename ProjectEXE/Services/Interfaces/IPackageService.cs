@@ -1,5 +1,5 @@
 ﻿using ProjectEXE.Models;
-using ProjectEXE.ViewModel.ServicePackageViewModel;
+using ProjectEXE.ViewModel.ServicePackages;
 
 namespace ProjectEXE.Services.Interfaces
 {

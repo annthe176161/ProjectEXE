@@ -1,4 +1,4 @@
-﻿namespace ProjectEXE.ViewModel.ServicePackageViewModel
+﻿namespace ProjectEXE.ViewModel.ServicePackages
 {
     public class PaymentCompletionViewModel
     {

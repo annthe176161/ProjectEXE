@@ -29,7 +29,10 @@ namespace ProjectEXE.ViewModel.ShopOrderViewModel
         public DateTime UpdatedAt { get; set; }
         public string CancelReason { get; set; }
 
-        // Lịch sử trạng thái (nếu bạn có bảng theo dõi lịch sử)
+        // Danh sách trạng thái có thể chuyển đổi
+        public Dictionary<int, string> AvailableStatuses { get; set; } = new Dictionary<int, string>();
+
+        // Lịch sử trạng thái
         public List<OrderStatusHistoryViewModel> StatusHistory { get; set; } = new List<OrderStatusHistoryViewModel>();
     }
 }

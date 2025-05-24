@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectEXE.Services.Interfaces;
 using ProjectEXE.ViewModel.ShopViewModel;
@@ -6,14 +6,16 @@ using System.Security.Claims;
 
 namespace ProjectEXE.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class ShopController : Controller
     {
         private readonly IShopService _shopService;
+        private readonly ICloudinaryService _cloudinaryService;
 
-        public ShopController(IShopService shopService)
+        public ShopController(IShopService shopService, ICloudinaryService cloudinaryService)
         {
             _shopService = shopService;
+            _cloudinaryService = cloudinaryService;
         }
 
         public async Task<IActionResult> Details(int id, int page = 1)
@@ -28,6 +30,30 @@ namespace ProjectEXE.Controllers
             return View("ShopView", shopViewModel);
         }
 
+        public ActionResult ActiveShop(int id)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> ActiveShop(ShopView shopModel)
+        {
+            string imageUrl = await _cloudinaryService.UploadImageAsync(shopModel.ImagePath);
+            if (await _shopService.ActiveShop(shopModel, imageUrl))
+            {
+                TempData["Success"] = "Bạn đã kích hoạt gian hàng thành công!";
+            }
+            else
+            {
+                TempData["Error"] = "Tên Shop đã tồn tại, hãy chọn tên khác";
+                return View();
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+        
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -37,11 +63,9 @@ namespace ProjectEXE.Controllers
             {
                 return RedirectToAction("Index", "ShopProfile");
             }
-
             return View();
         }
 
-        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateShopViewModel model)
         {
@@ -69,5 +93,6 @@ namespace ProjectEXE.Controllers
             ModelState.AddModelError(string.Empty, "Không thể tạo gian hàng. Tên gian hàng có thể đã được sử dụng.");
             return View(model);
         }
+
     }
 }

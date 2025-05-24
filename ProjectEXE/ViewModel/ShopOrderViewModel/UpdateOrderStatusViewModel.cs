@@ -1,16 +1,19 @@
-﻿namespace ProjectEXE.ViewModel.ShopOrderViewModel
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ProjectEXE.ViewModel.ShopOrderViewModel
 {
     public class UpdateOrderStatusViewModel
     {
+        [Required(ErrorMessage = "OrderId là bắt buộc")]
         public int OrderId { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Trạng thái đơn hàng là bắt buộc")]
+        [Required(ErrorMessage = "Trạng thái đơn hàng là bắt buộc")]
+        [Range(1, 5, ErrorMessage = "Trạng thái không hợp lệ")]
         public int StatusId { get; set; }
 
-        [System.ComponentModel.DataAnnotations.StringLength(200, ErrorMessage = "Ghi chú không được vượt quá 200 ký tự")]
-        public string Notes { get; set; }
+        // Bỏ trường Notes vì không có trong database
 
-        [System.ComponentModel.DataAnnotations.StringLength(255, ErrorMessage = "Lý do hủy không được vượt quá 255 ký tự")]
-        public string CancelReason { get; set; }
+        [StringLength(500, ErrorMessage = "Lý do hủy không được vượt quá 500 ký tự")]
+        public string? CancelReason { get; set; }
     }
 }
