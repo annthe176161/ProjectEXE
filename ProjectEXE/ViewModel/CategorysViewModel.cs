@@ -1,6 +1,6 @@
 ﻿namespace ProjectEXE.ViewModel
 {
-    public class CategoryViewModel
+    public class CategorysViewModel
     {
         public int categoryId { get; set; }
         public string categoryName { get; set; }

@@ -2,7 +2,7 @@
 
 namespace ProjectEXE.ViewModel
 {
-    public class ProductViewModel
+    public class ProductsViewModel
     {
         public int productId { get; set; }
         public string productName { get; set; }
