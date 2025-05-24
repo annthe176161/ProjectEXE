@@ -89,20 +89,6 @@
                             <option value="popular" selected="@(Model.Filter.SortBy == "popular")">Phổ biến nhất</option>
                         </select>
                     </div>
-                    
-                    <div class="filter-section">
-                        <h5>Tùy Chọn Khác</h5>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" 
-                                value="true" 
-                                id="premiumOnly" 
-                                name="ShowPremiumOnly" 
-                                @(Model.Filter.ShowPremiumOnly ? "checked" : "")>
-                            <label class="form-check-label" for="premiumOnly">
-                                <span class="badge bg-warning text-dark me-1">Premium</span> Chỉ hiển thị sản phẩm từ cửa hàng cao cấp
-                            </label>
-                        </div>
-                    </div>
 
                     <button type="submit" class="btn btn-primary w-100 mt-3">
                         <i class="fas fa-search me-1"></i> Áp Dụng Bộ Lọc
