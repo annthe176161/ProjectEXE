@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Xác thực email thất bại";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">Xác thực email thất bại</h3>
+                </div>
+                <div class="card-body text-center">
+                    <i class="fas fa-exclamation-circle fa-4x mb-3 text-danger"></i>
+                    <h4>Không thể xác thực email của bạn</h4>
+                    <p>Liên kết xác thực có thể đã hết hạn hoặc không hợp lệ.</p>
+                    <p>Vui lòng yêu cầu một liên kết xác thực mới.</p>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <a asp-action="Login" class="btn btn-outline-primary">Về trang đăng nhập</a>
+                    <a asp-action="ResendEmailConfirmation" class="btn btn-primary">Gửi lại email xác nhận</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

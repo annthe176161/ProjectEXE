@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Email đã xác thực";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">Xác thực email thành công</h3>
+                </div>
+                <div class="card-body text-center">
+                    <i class="fas fa-check-circle fa-4x mb-3 text-success"></i>
+                    <h4>Email của bạn đã được xác thực!</h4>
+                    <p>Tài khoản của bạn đã được kích hoạt thành công. Bạn có thể bắt đầu sử dụng tất cả các tính năng ngay bây giờ.</p>
+                </div>
+                <div class="card-footer">
+                    <div class="d-grid gap-2">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-success">Đi đến trang chủ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

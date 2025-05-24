@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using ProjectEXE.Models;
+using ProjectEXE.Services;
 using ProjectEXE.Services.Implementations;
 using ProjectEXE.Services.Interfaces;
 
@@ -26,6 +27,7 @@ namespace ProjectEXE
             builder.Services.AddScoped<IShopOrderService, ShopOrderService>();
             builder.Services.AddScoped<IPackageService, PackageService>();
             builder.Services.AddScoped<IAdminPackageService, AdminPackageService>();
+            builder.Services.AddTransient<EmailService>();
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -42,6 +44,7 @@ namespace ProjectEXE
     });
 
             var app = builder.Build();
+           
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

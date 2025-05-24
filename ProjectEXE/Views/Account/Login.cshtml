@@ -12,9 +12,8 @@
                 </div>
                 <div class="card-body">
                     <form asp-action="Login" method="post">
-                        @* Đảm bảo ReturnUrl được truyền vào *@
-                        <input type="hidden" asp-for="ReturnUrl" />
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="ReturnUrl" />
 
                         <div class="mb-3">
                             <label asp-for="Email" class="form-label"></label>
@@ -24,17 +23,26 @@
 
                         <div class="mb-3">
                             <label asp-for="Password" class="form-label"></label>
-                            <input asp-for="Password" class="form-control" placeholder="Nhập mật khẩu của bạn" />
+                            <input asp-for="Password" class="form-control" placeholder="Nhập mật khẩu" />
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
 
-                        <div class="mb-3 form-check">
-                            <input asp-for="RememberMe" class="form-check-input" />
-                            <label asp-for="RememberMe" class="form-check-label"></label>
+                        <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <div class="form-check">
+                                <input asp-for="RememberMe" class="form-check-input" />
+                                <label asp-for="RememberMe" class="form-check-label"></label>
+                            </div>
+                            <div>
+                                <a asp-action="ForgotPassword">Quên mật khẩu?</a>
+                            </div>
                         </div>
 
-                        <div class="d-grid gap-2">
+                        <div class="d-grid gap-2 mb-3">
                             <button type="submit" class="btn btn-primary">Đăng nhập</button>
+                        </div>
+
+                        <div class="text-center">
+                            <p>Không nhận được email xác nhận? <a asp-action="ResendEmailConfirmation">Gửi lại</a></p>
                         </div>
                     </form>
                 </div>
