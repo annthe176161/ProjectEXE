@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectEXE.Models;
 using ProjectEXE.Services.Interfaces;
 using ProjectEXE.ViewModel;
+using ProjectEXE.ViewModel.ProductViewModel;
 
 namespace ProjectEXE.Services.Implementations
 {
@@ -12,9 +13,11 @@ namespace ProjectEXE.Services.Implementations
     public class ProductService : IProductService
     {
         private readonly RevaContext _context;
-        public ProductService(RevaContext context)
+        private readonly IShopService _shopService;
+        public ProductService(RevaContext context, IShopService shopService)
         {
             _context = context;
+            _shopService = shopService;
         }
         public async Task<List<Product>> GetProducts(int page = 1, int limit = 10)
         {
@@ -54,7 +57,7 @@ namespace ProjectEXE.Services.Implementations
             return TotalPages;
         }
 
-        public async Task<List<ProductViewModel>> GetProductsWithSearch(string search, int page = 1, int limit = 10)
+        public async Task<List<ProductsViewModel>> GetProductsWithSearch(string search, int page = 1, int limit = 10)
         {
             if (page < 1)
             {
@@ -69,7 +72,7 @@ namespace ProjectEXE.Services.Implementations
             .Where(p => p.ProductName.Contains(search))
             .Skip((page - 1) * limit)
             .Take(limit)
-            .Select(p => new ProductViewModel
+            .Select(p => new ProductsViewModel
             {
                 productId = p.ProductId,
                 productName = p.ProductName,
@@ -82,29 +85,29 @@ namespace ProjectEXE.Services.Implementations
             .ToListAsync();
         }
 
-        public async Task<List<CategoryViewModel>> GetCategories()
+        public async Task<List<CategorysViewModel>> GetCategories()
         {
-            return await _context.Categories.Select(c => new CategoryViewModel
+            return await _context.Categories.Select(c => new CategorysViewModel
             {
                 categoryId = c.CategoryId,
                 categoryName = c.CategoryName,
             }).ToListAsync();
         }
 
-        public async Task<List<ShopViewModel>> GetShops()
+        public async Task<List<ShopsViewModel>> GetShops()
         {
-            return await _context.Shops.Select(s => new ShopViewModel
+            return await _context.Shops.Select(s => new ShopsViewModel
             {
                 shopId = s.ShopId,
                 shopName = s.ShopName,
             }).ToListAsync();
         }
 
-        public async Task<ProductViewModel> GetProductById(int id)
+        public async Task<ProductsViewModel> GetProductById(int id)
         {
             return await _context.Products.Include(p => p.ProductImages).Include(p => p.Category).Include(p => p.Shop)
             .Where(p => p.ProductId == id)
-            .Select(p => new ProductViewModel
+            .Select(p => new ProductsViewModel
             {
                 productId = p.ProductId,
                 productName = p.ProductName,
@@ -135,26 +138,7 @@ namespace ProjectEXE.Services.Implementations
             int TotalPages = (int)Math.Ceiling(_context.Products.Where(p => p.ProductName.Contains(search)).Count() / (double)limit);
             return TotalPages;
         }
-    }
-}
-=======
-﻿using Microsoft.EntityFrameworkCore;
-using ProjectEXE.Models;
-using ProjectEXE.Services.Interfaces;
-using ProjectEXE.ViewModel.ProductViewModel;
 
-namespace ProjectEXE.Services.Implementations
-{
-    public class ProductService : IProductService
-    {
-        private readonly RevaContext _context;
-        private readonly IShopService _shopService;
-
-        public ProductService(RevaContext context, IShopService shopService)
-        {
-            _context = context;
-            _shopService = shopService;
-        }
 
         public async Task<ProductListViewModel> GetProductListAsync(ProductFilterViewModel filter, int page = 1, int pageSize = 6)
         {

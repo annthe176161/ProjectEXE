@@ -133,7 +133,7 @@ namespace ProjectEXE.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProduct([FromBody] ProductViewModel dto)
+        public async Task<IActionResult> EditProduct([FromBody] ProductsViewModel dto)
         {
             var Product = new Product
             {

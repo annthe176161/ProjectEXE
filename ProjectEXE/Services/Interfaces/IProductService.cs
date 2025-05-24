@@ -2,6 +2,7 @@
 
 using ProjectEXE.Models;
 using ProjectEXE.ViewModel;
+using ProjectEXE.ViewModel.ProductViewModel;
 
 namespace ProjectEXE.Services.Interfaces
 {
@@ -9,24 +10,15 @@ namespace ProjectEXE.Services.Interfaces
     public interface IProductService
     {
         public Task<List<Product>> GetProducts(int page = 1, int limit = 10);
-        public Task<List<ProductViewModel>> GetProductsWithSearch(string search, int page = 1, int limit = 10);
+        public Task<List<ProductsViewModel>> GetProductsWithSearch(string search, int page = 1, int limit = 10);
         public Task<int> getTotalPages(int limit = 10);
         public Task<int> getTotalPagesWithSearch(string search, int limit = 10);
         public Task<bool> deleteProductById(int id);
-        public Task<List<ShopViewModel>> GetShops();
-        public Task<List<CategoryViewModel>> GetCategories();
-        public Task<ProductViewModel> GetProductById(int id);
+        public Task<List<ShopsViewModel>> GetShops();
+        public Task<List<CategorysViewModel>> GetCategories();
+        public Task<ProductsViewModel> GetProductById(int id);
         Task<bool> editProduct(Product product);
-    }
-}
-=======
-﻿using ProjectEXE.ViewModel.ProductViewModel;
 
-namespace ProjectEXE.Services.Interfaces
-{
-    public interface IProductService
-    {
-        // Product List
         Task<ProductListViewModel> GetProductListAsync(ProductFilterViewModel filter, int page = 1, int pageSize = 12);
         Task<ProductViewModels> GetProductByIdAsync(int id);
         Task<List<CategoryViewModel>> GetAllCategoriesAsync();
@@ -36,3 +28,4 @@ namespace ProjectEXE.Services.Interfaces
         Task<List<ProductViewModels>> GetRelatedProductsAsync(int productId, string category, int count = 4);
     }
 }
+

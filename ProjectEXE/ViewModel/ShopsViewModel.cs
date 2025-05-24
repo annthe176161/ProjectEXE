@@ -1,6 +1,6 @@
 ﻿namespace ProjectEXE.ViewModel
 {
-    public class ShopViewModel
+    public class ShopsViewModel
     {
         public int shopId { get; set; }
         public string shopName { get; set; }
