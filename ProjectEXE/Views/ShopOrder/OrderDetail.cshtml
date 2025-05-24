@@ -4,115 +4,362 @@
     ViewData["Title"] = "Chi tiết đơn hàng #" + Model.OrderId;
 }
 
-<div class="container-fluid py-4">
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="ShopOrder" asp-action="Index">Quản lý đơn hàng shop</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Chi tiết đơn hàng #@Model.OrderId</li>
-        </ol>
-    </nav>
+@section Styles {
+    <link rel="stylesheet" href="~/css/shop-order-details.css">
+}
 
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
+<div class="shop-order-details-page">
+    <!-- Header Section -->
+    <div class="order-page-header">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb breadcrumb-header">
+                    <li class="breadcrumb-item">
+                        <a asp-controller="ShopOrder" asp-action="Index" class="text-white text-decoration-none">
+                            <i class="fas fa-store me-1"></i>Quản lý đơn hàng shop
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active text-light" aria-current="page">
+                        Chi tiết đơn hàng #@Model.OrderId
+                    </li>
+                </ol>
+            </nav>
 
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fas fa-exclamation-circle me-2"></i> @TempData["ErrorMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-
-    <div class="row">
-        <!-- Thông tin đơn hàng -->
-        <div class="col-lg-8">
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Thông tin đơn hàng #@Model.OrderId</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <p><strong>Ngày đặt hàng:</strong> @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
-                            <p><strong>Cập nhật lần cuối:</strong> @Model.UpdatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+            <div class="header-content">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <h1 class="order-page-title">
+                            <i class="fas fa-file-invoice-dollar me-3"></i>
+                            Chi tiết đơn hàng #@Model.OrderId
+                        </h1>
+                        <p class="order-page-subtitle">
+                            Quản lý và cập nhật trạng thái đơn hàng của shop
+                        </p>
+                    </div>
+                    <div class="col-lg-4 text-lg-end">
+                        <div class="order-status-display">
+                            <div class="status-label">Trạng thái hiện tại</div>
+                            <div class="status-badge @(Model.StatusId switch {
+                                1 => "status-pending",
+                                2 => "status-confirmed", 
+                                3 => "status-shipping",
+                                4 => "status-completed",
+                                5 => "status-cancelled",
+                                _ => "status-pending"
+                            })">
+                                <i class="@(Model.StatusId switch {
+                                    1 => "fas fa-clock",
+                                    2 => "fas fa-check-circle",
+                                    3 => "fas fa-shipping-fast",
+                                    4 => "fas fa-trophy",
+                                    5 => "fas fa-times-circle",
+                                    _ => "fas fa-question-circle"
+                                }) me-2"></i>
+                                @Model.StatusName
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <p><strong>Trạng thái:</strong> <span class="badge @Model.StatusClass">@Model.StatusName</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <!-- Alert Messages -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success-custom alert-dismissible fade show animate__animated animate__fadeInDown" role="alert">
+                <div class="alert-content">
+                    <i class="fas fa-check-circle alert-icon"></i>
+                    <div class="alert-text">
+                        <strong>Thành công!</strong>
+                        <span>@TempData["SuccessMessage"]</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger-custom alert-dismissible fade show animate__animated animate__fadeInDown" role="alert">
+                <div class="alert-content">
+                    <i class="fas fa-exclamation-triangle alert-icon"></i>
+                    <div class="alert-text">
+                        <strong>Lỗi!</strong>
+                        <span>@TempData["ErrorMessage"]</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <div class="row">
+            <!-- Main Order Information -->
+            <div class="col-lg-8">
+                <!-- Order Info Card -->
+                <div class="info-card animate__animated animate__fadeInUp">
+                    <div class="card-header-green">
+                        <i class="fas fa-file-invoice me-2"></i>
+                        Thông tin đơn hàng #@Model.OrderId
+                    </div>
+                    <div class="card-body">
+                        <!-- Order Meta Information -->
+                        <div class="order-meta-grid">
+                            <div class="meta-item">
+                                <div class="meta-icon">
+                                    <i class="fas fa-calendar-plus"></i>
+                                </div>
+                                <div class="meta-content">
+                                    <span class="meta-label">Ngày đặt hàng</span>
+                                    <span class="meta-value">@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</span>
+                                </div>
+                            </div>
+                            <div class="meta-item">
+                                <div class="meta-icon">
+                                    <i class="fas fa-sync-alt"></i>
+                                </div>
+                                <div class="meta-content">
+                                    <span class="meta-label">Cập nhật lần cuối</span>
+                                    <span class="meta-value">@Model.UpdatedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                                </div>
+                            </div>
                             @if (Model.StatusId == 5 && !string.IsNullOrEmpty(Model.CancelReason))
                             {
-                                <p><strong>Lý do hủy:</strong> @Model.CancelReason</p>
+                                <div class="meta-item cancel-reason">
+                                    <div class="meta-icon">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <div class="meta-content">
+                                        <span class="meta-label">Lý do hủy</span>
+                                        <span class="meta-value">@Model.CancelReason</span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Product Section -->
+                        <div class="section-divider">
+                            <h5 class="section-title">
+                                <i class="fas fa-box-open me-2"></i>
+                                Thông tin sản phẩm
+                            </h5>
+                        </div>
+
+                        <div class="product-display">
+                            <div class="product-image-wrapper">
+                                <img src="@Model.ProductImageUrl" alt="@Model.ProductName" class="product-image">
+                                <div class="image-overlay">
+                                    <i class="fas fa-search-plus"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="product-details">
+                                <h5 class="product-name">@Model.ProductName</h5>
+                                <div class="product-meta">
+                                    <div class="meta-row">
+                                        <i class="fas fa-tags"></i>
+                                        <span>Danh mục: <strong>@Model.Category</strong></span>
+                                    </div>
+                                    <div class="meta-row">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span>Tình trạng: <strong>@Model.Condition</strong></span>
+                                    </div>
+                                </div>
+                                <div class="product-actions">
+                                    <a asp-controller="Product" asp-action="ProductDetails" asp-route-id="@Model.ProductId" 
+                                       target="_blank" class="btn btn-outline-green">
+                                        <i class="fas fa-external-link-alt me-2"></i>
+                                        Xem chi tiết sản phẩm
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <div class="price-display">
+                                <div class="price-amount">@Model.Price.ToString("N0")₫</div>
+                                <div class="price-label">Giá bán</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Timeline -->
+                <div class="info-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                    <div class="card-header-green">
+                        <i class="fas fa-route me-2"></i>
+                        Tiến trình đơn hàng
+                    </div>
+                    <div class="card-body">
+                        <div class="order-timeline">
+                            <div class="timeline-step @(Model.StatusId >= 1 ? "completed" : "pending")">
+                                <div class="step-icon">
+                                    <i class="fas fa-plus-circle"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h6>Đơn hàng được tạo</h6>
+                                    <p>Khách hàng đã đặt hàng thành công</p>
+                                </div>
+                                <div class="timeline-connector @(Model.StatusId >= 2 ? "active" : "")"></div>
+                            </div>
+                            
+                            <div class="timeline-step @(Model.StatusId >= 2 ? "completed" : Model.StatusId == 1 ? "current" : "pending")">
+                                <div class="step-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h6>Xác nhận đơn hàng</h6>
+                                    <p>Shop xác nhận và chuẩn bị hàng</p>
+                                </div>
+                                <div class="timeline-connector @(Model.StatusId >= 3 ? "active" : "")"></div>
+                            </div>
+                            
+                            <div class="timeline-step @(Model.StatusId >= 3 ? "completed" : Model.StatusId == 2 ? "current" : "pending")">
+                                <div class="step-icon">
+                                    <i class="fas fa-shipping-fast"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h6>Đang giao hàng</h6>
+                                    <p>Sản phẩm đang được vận chuyển</p>
+                                </div>
+                                <div class="timeline-connector @(Model.StatusId >= 4 ? "active" : "")"></div>
+                            </div>
+                            
+                            <div class="timeline-step @(Model.StatusId >= 4 ? "completed" : Model.StatusId == 3 ? "current" : "pending")">
+                                <div class="step-icon">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h6>Hoàn thành</h6>
+                                    <p>Khách hàng đã nhận hàng thành công</p>
+                                </div>
+                            </div>
+
+                            @if (Model.StatusId == 5)
+                            {
+                                <div class="timeline-step cancelled">
+                                    <div class="step-icon">
+                                        <i class="fas fa-times-circle"></i>
+                                    </div>
+                                    <div class="step-content">
+                                        <h6>Đơn hàng đã hủy</h6>
+                                        <p>Đơn hàng đã bị hủy bỏ</p>
+                                    </div>
+                                </div>
                             }
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <h5 class="border-bottom pb-2 mb-3">Sản phẩm</h5>
-                    <div class="d-flex mb-4">
-                        <img src="@Model.ProductImageUrl" class="rounded me-3" style="width: 100px; height: 100px; object-fit: cover;">
-                        <div>
-                            <h5 class="mb-1">@Model.ProductName</h5>
-                            <p class="text-danger fw-bold mb-1">@Model.Price.ToString("N0")₫</p>
-                            <p class="text-muted small mb-0">Danh mục: @Model.Category | Tình trạng: @Model.Condition</p>
-                            <a asp-controller="Product" asp-action="ProductDetails" asp-route-id="@Model.ProductId" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
-                                <i class="fas fa-external-link-alt me-1"></i>Xem sản phẩm
-                            </a>
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Customer Information -->
+                <div class="info-card animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
+                    <div class="card-header-green">
+                        <i class="fas fa-user-circle me-2"></i>
+                        Thông tin khách hàng
+                    </div>
+                    <div class="card-body">
+                        <div class="customer-info">
+                            <div class="customer-avatar">
+                                @Model.BuyerName.First()
+                            </div>
+                            <div class="customer-details">
+                                <h6>@Model.BuyerName</h6>
+                                <div class="contact-info">
+                                    <div class="contact-item">
+                                        <i class="fas fa-phone-alt"></i>
+                                        <span>@Model.BuyerPhone</span>
+                                    </div>
+                                    <div class="contact-item">
+                                        <i class="fas fa-envelope"></i>
+                                        <span>@Model.BuyerEmail</span>
+                                    </div>
+                                    <div class="contact-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>@Model.BuyerAddress</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Thông tin khách hàng và cập nhật trạng thái -->
-        <div class="col-lg-4">
-            <div class="card mb-4">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">Thông tin khách hàng</h5>
+                <!-- Status Update Form -->
+                <div class="info-card animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
+                    <div class="card-header-green">
+                        <i class="fas fa-edit me-2"></i>
+                        Cập nhật trạng thái
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="UpdateStatus" method="post" id="statusUpdateForm">
+                            <input type="hidden" name="OrderId" value="@Model.OrderId" />
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-flag me-1"></i>
+                                    Trạng thái đơn hàng
+                                </label>
+                                <select class="form-select" name="StatusId" id="statusSelect">
+                                    @foreach (var status in await new ProjectEXE.Services.Implementations.ShopOrderService(new RevaContext(new DbContextOptions<RevaContext>())).GetOrderStatusesAsync())
+                                    {
+                                        <option value="@status.Key" selected="@(Model.StatusId == status.Key)">@status.Value</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-sticky-note me-1"></i>
+                                    Ghi chú
+                                </label>
+                                <textarea class="form-control" name="Notes" rows="3" 
+                                          placeholder="Nhập ghi chú hoặc lưu ý cho đơn hàng này..."></textarea>
+                            </div>
+
+                            <div id="cancelReasonGroup" class="form-group @(Model.StatusId == 5 ? "" : "d-none")">
+                                <label class="form-label">
+                                    <i class="fas fa-exclamation-triangle me-1"></i>
+                                    Lý do hủy đơn
+                                </label>
+                                <textarea class="form-control" name="CancelReason" rows="3" 
+                                          placeholder="Nhập chi tiết lý do hủy đơn hàng...">@Model.CancelReason</textarea>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary-custom btn-lg w-100" id="updateButton">
+                                    <i class="fas fa-save me-2"></i>
+                                    Cập nhật trạng thái
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p><i class="fas fa-user me-2"></i><strong>Họ tên:</strong> @Model.BuyerName</p>
-                    <p><i class="fas fa-phone-alt me-2"></i><strong>Số điện thoại:</strong> @Model.BuyerPhone</p>
-                    <p><i class="fas fa-envelope me-2"></i><strong>Email:</strong> @Model.BuyerEmail</p>
-                    <p><i class="fas fa-map-marker-alt me-2"></i><strong>Địa chỉ:</strong> @Model.BuyerAddress</p>
-                </div>
-            </div>
 
-            <div class="card">
-                <div class="card-header bg-warning text-dark">
-                    <h5 class="mb-0">Cập nhật trạng thái</h5>
-                </div>
-                <div class="card-body">
-                    <form asp-action="UpdateStatus" method="post">
-                        <input type="hidden" name="OrderId" value="@Model.OrderId" />
-                        @Html.AntiForgeryToken()
-
-                        <div class="mb-3">
-                            <label class="form-label">Trạng thái đơn hàng</label>
-                            <select class="form-select" name="StatusId" id="statusSelect">
-                                @foreach (var status in await new ProjectEXE.Services.Implementations.ShopOrderService(new RevaContext(new DbContextOptions<RevaContext>())).GetOrderStatusesAsync())
-                                {
-                                    <option value="@status.Key" selected="@(Model.StatusId == status.Key)">@status.Value</option>
-                                }
-                            </select>
+                <!-- Quick Actions -->
+                <div class="info-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
+                    <div class="card-header-green">
+                        <i class="fas fa-bolt me-2"></i>
+                        Thao tác nhanh
+                    </div>
+                    <div class="card-body">
+                        <div class="quick-actions">
+                            <a href="tel:@Model.BuyerPhone" class="quick-action-btn call">
+                                <i class="fas fa-phone"></i>
+                                <span>Gọi khách hàng</span>
+                            </a>
+                            <a href="mailto:@Model.BuyerEmail" class="quick-action-btn email">
+                                <i class="fas fa-envelope"></i>
+                                <span>Gửi email</span>
+                            </a>
+                            <button type="button" class="quick-action-btn print" onclick="window.print()">
+                                <i class="fas fa-print"></i>
+                                <span>In đơn hàng</span>
+                            </button>
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Ghi chú</label>
-                            <textarea class="form-control" name="Notes" rows="2" placeholder="Nhập ghi chú nếu có"></textarea>
-                        </div>
-
-                        <div id="cancelReasonGroup" class="mb-3 @(Model.StatusId == 5 ? "" : "d-none")">
-                            <label class="form-label">Lý do hủy đơn</label>
-                            <textarea class="form-control" name="CancelReason" rows="2" placeholder="Nhập lý do hủy đơn hàng">@Model.CancelReason</textarea>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-save me-2"></i>Cập nhật trạng thái
-                        </button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -120,17 +367,5 @@
 </div>
 
 @section Scripts {
-    <script>
-        $(document).ready(function() {
-            // Hiển thị/ẩn trường lý do hủy dựa trên trạng thái
-            $('#statusSelect').on('change', function() {
-                var statusId = $(this).val();
-                if (statusId == 5) {
-                    $('#cancelReasonGroup').removeClass('d-none');
-                } else {
-                    $('#cancelReasonGroup').addClass('d-none');
-                }
-            });
-        });
-    </script>
+    <script src="~/js/shop-order-details.js"></script>
 }
