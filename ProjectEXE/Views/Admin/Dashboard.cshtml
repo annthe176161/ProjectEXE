@@ -788,10 +788,10 @@
                     </li>
                         @for (int i = 0; i < (int)ViewData["ProductPages"]; i++)
                         {
-                            <li class="page-item @(i == 0 ? "active" : "")" @(i != 0 ? "onclick='loadProducts("+(i+1)+")'" : "")><a class="page-link" href="#">@(i + 1)</a></li>
+                            <li class="page-item @(i == 0 ? "active" : "")" @(i != 0 ? "onclick=loadProducts("+(i+1)+")" : "")><a class="page-link" href="#">@(i + 1)</a></li>
                         }
                     <li class="page-item @((int)ViewData["ProductPages"] > 1 ? "" : "disabled")">
-                            <a class="page-link" href="#" @((int)ViewData["ProductPages"] > 1 ? "onclick='loadProducts(2)'" : "")">Sau</a>
+                            <a class="page-link" href="#" @((int)ViewData["ProductPages"] > 1 ? "onclick=loadProducts(2)" : "")">Sau</a>
                     </li>
                 </ul>
             </nav>
@@ -1253,6 +1253,7 @@
 
 <script>
         function loadProducts(page = 1) {
+            event.preventDefault();
             const keyword = $('#productSearch').val();
 
             $.ajax({
