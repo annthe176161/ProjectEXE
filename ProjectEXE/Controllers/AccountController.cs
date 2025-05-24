@@ -46,12 +46,8 @@ namespace ProjectEXE.Controllers
 
                 if (user != null && isPasswordValid)
                 {
-                    // Kiểm tra email đã được xác thực chưa
-                    if (await TokenStore.IsEmailVerifiedAsync(user.Email) == false)
-                    {
-                        ModelState.AddModelError("", "Vui lòng xác nhận email của bạn trước khi đăng nhập.");
-                        return View(model);
-                    }
+        
+                  
 
                     var principal = _userService.CreateClaimsPrincipal(user);
 
