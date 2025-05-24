@@ -4,16 +4,23 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectEXE.Services.Interfaces;
 using ProjectEXE.ViewModel.AccountViewModel;
+using ProjectEXE.Services;
+using ProjectEXE.Services.TokenStorage;
+using System;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace ProjectEXE.Controllers
 {
     public class AccountController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IEmailService _emailService;
 
-        public AccountController(IUserService userService)
+        public AccountController(IUserService userService, IEmailService emailService)
         {
             _userService = userService;
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -39,6 +46,13 @@ namespace ProjectEXE.Controllers
 
                 if (user != null && isPasswordValid)
                 {
+                    // Kiểm tra email đã được xác thực chưa
+                    if (await TokenStore.IsEmailVerifiedAsync(user.Email) == false)
+                    {
+                        ModelState.AddModelError("", "Vui lòng xác nhận email của bạn trước khi đăng nhập.");
+                        return View(model);
+                    }
+
                     var principal = _userService.CreateClaimsPrincipal(user);
 
                     await HttpContext.SignInAsync(
@@ -50,20 +64,12 @@ namespace ProjectEXE.Controllers
                             ExpiresUtc = DateTime.UtcNow.AddDays(model.RememberMe ? 30 : 1)
                         });
 
-                    // Kiểm tra nếu là admin (RoleId = 1), chuyển hướng đến trang quản lý gói dịch vụ
-                    if (user.RoleId == 1) // RoleId 1 là Admin
-                    {
-                        return RedirectToAction("Index", "AdminPackageManagement");
-                    }
-
-                    // Kiểm tra và xử lý ReturnUrl cho người dùng không phải admin
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                     {
                         return Redirect(model.ReturnUrl);
                     }
                     else
                     {
-                        // Luôn chuyển hướng về trang chủ nếu không có ReturnUrl
                         return RedirectToAction("Index", "Home");
                     }
                 }
@@ -71,7 +77,6 @@ namespace ProjectEXE.Controllers
                 ModelState.AddModelError(string.Empty, "Email hoặc mật khẩu không chính xác");
             }
 
-            // Chỉ hiển thị form đăng nhập lại nếu có lỗi
             return View(model);
         }
 
@@ -98,6 +103,7 @@ namespace ProjectEXE.Controllers
                     return View(model);
                 }
 
+                // Create the user
                 var user = await _userService.CreateUserAsync(
                     model.Email,
                     model.Password,
@@ -107,6 +113,49 @@ namespace ProjectEXE.Controllers
                     model.RoleId
                 );
 
+                if (user != null)
+                {
+                    // Generate a verification token
+                    string token = GenerateRandomToken();
+
+                    // Store the token
+                    await TokenStore.StoreTokenAsync(model.Email, token, "EmailVerification");
+
+                    // Send verification email
+                    await _emailService.SendVerificationEmailAsync(model.Email, token);
+
+                    // Redirect to confirmation page
+                    return RedirectToAction("RegisterConfirmation");
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult RegisterConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> VerifyEmail(string email, string token)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+            {
+                return BadRequest("Email hoặc token không hợp lệ");
+            }
+
+            // Validate the token
+            bool isValid = await TokenStore.ValidateTokenAsync(email, token, "EmailVerification");
+
+            if (isValid)
+            {
+                // Mark the email as verified
+                await TokenStore.MarkEmailAsVerifiedAsync(email);
+
+                // Get the user and sign in automatically
+                var user = await _userService.GetUserByEmailAsync(email);
                 if (user != null)
                 {
                     var principal = _userService.CreateClaimsPrincipal(user);
@@ -119,9 +168,91 @@ namespace ProjectEXE.Controllers
                             IsPersistent = true,
                             ExpiresUtc = DateTime.UtcNow.AddDays(30)
                         });
-
-                    return RedirectToAction("Index", "Home");
                 }
+
+                return View("EmailVerified");
+            }
+
+            return View("EmailVerificationFailed");
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userService.GetUserByEmailAsync(model.Email);
+
+                if (user != null)
+                {
+                    // Generate token
+                    string token = GenerateRandomToken();
+
+                    // Store the token
+                    await TokenStore.StoreTokenAsync(model.Email, token, "PasswordReset");
+
+                    // Send email
+                    await _emailService.SendPasswordResetEmailAsync(model.Email, token);
+                }
+
+                // Always show success page (even if email doesn't exist) to prevent email enumeration
+                return View("ForgotPasswordConfirmation");
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string email, string token)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+            {
+                return BadRequest("Email hoặc token không hợp lệ");
+            }
+
+            var model = new ResetPasswordViewModel
+            {
+                Email = email,
+                Token = token
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Validate token
+                bool isValid = await TokenStore.ValidateTokenAsync(
+                    model.Email, model.Token, "PasswordReset");
+
+                if (isValid)
+                {
+                    // Get the user
+                    var user = await _userService.GetUserByEmailAsync(model.Email);
+
+                    if (user != null)
+                    {
+                        // Update password
+                        user.PasswordHash = _userService.HashPassword(model.Password);
+                        await _userService.UpdateUserAsync(user);
+
+                        return View("ResetPasswordConfirmation");
+                    }
+                }
+
+                // If we get here, something failed
+                ModelState.AddModelError("", "Đặt lại mật khẩu không thành công. Token không hợp lệ hoặc đã hết hạn.");
             }
 
             return View(model);
@@ -132,10 +263,6 @@ namespace ProjectEXE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            // Thêm thông báo debug nếu cần
-            Console.WriteLine("Logging out user");
-
-            // Đảm bảo đúng scheme xác thực
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             // Xóa tất cả cookies
@@ -143,9 +270,6 @@ namespace ProjectEXE.Controllers
             {
                 Response.Cookies.Delete(cookie);
             }
-
-            // Thêm thông báo tạm thời để hiển thị sau khi đăng xuất
-            TempData["SuccessMessage"] = "Bạn đã đăng xuất thành công!";
 
             return RedirectToAction("Index", "Home");
         }
@@ -160,6 +284,52 @@ namespace ProjectEXE.Controllers
         public IActionResult LogoutConfirm()
         {
             return View();
+        }
+
+        // Helper method to generate random token
+        private string GenerateRandomToken()
+        {
+            var randomBytes = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomBytes);
+            return Convert.ToBase64String(randomBytes)
+                .Replace("+", "-")
+                .Replace("/", "_")
+                .Replace("=", "");
+        }
+
+        // Thêm phương thức để gửi lại email xác nhận
+        [HttpGet]
+        public IActionResult ResendEmailConfirmation()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResendEmailConfirmation(EmailViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userService.GetUserByEmailAsync(model.Email);
+
+            if (user != null && !await TokenStore.IsEmailVerifiedAsync(model.Email))
+            {
+                // Generate a new verification token
+                string token = GenerateRandomToken();
+
+                // Store the token
+                await TokenStore.StoreTokenAsync(model.Email, token, "EmailVerification");
+
+                // Send verification email
+                await _emailService.SendVerificationEmailAsync(model.Email, token);
+            }
+
+            // Always show success message
+            return View("ResendEmailConfirmationConfirmation");
         }
     }
 }

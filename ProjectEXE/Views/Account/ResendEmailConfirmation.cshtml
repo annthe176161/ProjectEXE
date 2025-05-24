@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Email xác nhận đã được gửi lại";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h3 class="mb-0">Kiểm tra email của bạn</h3>
+                </div>
+                <div class="card-body text-center">
+                    <i class="fas fa-paper-plane fa-4x mb-3 text-info"></i>
+                    <h4>Email xác nhận đã được gửi lại</h4>
+                    <p>Nếu bạn đã đăng ký với email này trước đó và chưa xác nhận, chúng tôi đã gửi một liên kết xác nhận mới.</p>
+                    <p>Vui lòng kiểm tra hộp thư đến (và thư mục spam) của bạn.</p>
+                </div>
+                <div class="card-footer">
+                    <div class="d-grid gap-2">
+                        <a asp-action="Login" class="btn btn-primary">Quay lại trang đăng nhập</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

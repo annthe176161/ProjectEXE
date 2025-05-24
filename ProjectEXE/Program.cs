@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using ProjectEXE.Hubs;
 using ProjectEXE.Models;
+using ProjectEXE.Services;
 using ProjectEXE.Services.Implementations;
 using ProjectEXE.Services.Interfaces;
 
@@ -35,6 +36,7 @@ namespace ProjectEXE
             builder.Services.AddScoped<IAdminService, AdminService>();
             builder.Services.AddScoped<IPayOsService, PayOsService>();
             builder.Services.AddScoped<IOrderConfirmationService, OrderConfirmationService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                             .AddCookie(options =>
@@ -51,6 +53,7 @@ namespace ProjectEXE
                             });
 
             var app = builder.Build();
+           
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
