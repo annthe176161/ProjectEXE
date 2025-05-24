@@ -14,11 +14,12 @@ namespace ProjectEXE.Controllers
     {
         private readonly IAdminService _adminService;
         private readonly IUserService _userService;
-        public AdminController(IAdminService adminService, IUserService userService)
+        private readonly IProductService _productService;
+        public AdminController(IAdminService adminService, IUserService userService, IProductService productService)
         {
             _adminService = adminService;
             _userService = userService;
-
+            _productService = productService;
         }
 
         public async Task<IActionResult> Dashboard()
@@ -29,18 +30,61 @@ namespace ProjectEXE.Controllers
             ViewData["TotalProductsCount"] = await _userService.GetTotalProductsCountAsync(); // <== LẤY TỔNG SỐ SẢN PHẨM
 
             ViewData["TotalRevenue"] = await _userService.GetTotalPackagePaymentsRevenueAsync(); // <== LẤY TỔNG DOANH THU
+                                                                                                 // Lấy thêm danh sách thanh toán gần đây
+            var recentPayments = await _adminService.GetRecentPackagePaymentsAsync(5); // Lấy 5 mục cho dashboard
+            ViewBag.RecentPackagePayments = recentPayments;
 
             List<ServicePackage> services = await _adminService.getAllService();
             List<RBMDto> RBM = await _adminService.getRevenueByMonth();
             List<RBPDto> RBP = await _adminService.getRevenueByPackage();
+            List<Product> products = await _productService.GetProducts();
+            ViewData["ProductPages"] = await _productService.getTotalPages();
             var viewModel = new DashboardViewModel
             {
                 RBMDtos = RBM,
                 ServicePackages = services,
                 RBPDtos = RBP,
-                userViewModels = userViewModels
+                userViewModels = userViewModels,
+                Products = products
             };
             return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProductById(int id)
+        {
+            var product = await _productService.GetProductById(id);
+            var shops = await _productService.GetShops();
+            var categories = await _productService.GetCategories();
+            return Json(new
+            {
+                shops = shops,
+                categories = categories,
+                product = product
+            });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProducts(string search = "", int page = 1, int limit = 10)
+        {
+            var products = await _productService.GetProductsWithSearch(search, page, limit);
+            var total = await _productService.getTotalPagesWithSearch(search);
+            if (page < 1) page = 1;
+            if(page > total) page = total;
+            return Json(new
+            {
+                currentPage = page,
+                totalPages = total,
+                products = products
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            bool success = await _productService.deleteProductById(id);
+
+            return RedirectToAction("Dashboard");
         }
 
         [HttpPost]
@@ -87,8 +131,28 @@ namespace ProjectEXE.Controllers
             return Ok();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProduct([FromBody] ProductsViewModel dto)
+        {
+            var Product = new Product
+            {
+                ProductId = dto.productId,
+                ProductName = dto.productName,
+                Price = dto.price,
+                IsVisible = dto.isVisible,
+                ShopId = dto.shopId ?? 1,
+                CategoryId = dto.categoryId ?? 1
 
-        // GET: Users/Edit/5
+            };
+            bool success = await _productService.editProduct(Product);
+            if (!success) return NotFound();
+
+            return Ok();
+        }
+
+
+        // GET: Admin/Dashboard/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -122,7 +186,7 @@ namespace ProjectEXE.Controllers
             return View(viewModel);
         }
 
-        // POST: Users/Edit/5
+        // POST: Admin/Dashboard/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, UserEditViewModel model)
@@ -168,7 +232,7 @@ namespace ProjectEXE.Controllers
             return View(model);
         }
 
-        // POST: Users/Ban/5
+        // POST: Admin/Dashboard/Ban/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Ban(int id)
@@ -185,7 +249,7 @@ namespace ProjectEXE.Controllers
             return RedirectToAction(nameof(Dashboard));
         }
 
-        // POST: Users/Unban/5
+        // POST: Admin/Dashboard/Unban/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Unban(int id)

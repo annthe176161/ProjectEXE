@@ -1,7 +1,15 @@
 ﻿@model ProjectEXE.ViewModel.DashboardViewModel
+
+
+
 @{
     ViewData["Title"] = "Admin Dashboard";
+    // Lấy danh sách thanh toán gần đây từ ViewBag
+    var recentPaymentsList = ViewBag.RecentPackagePayments as IEnumerable<ProjectEXE.ViewModel.RecentPackagePaymentDto>;
+    // Lưu ý: Namespace của RecentPackagePaymentDto là ProjectEXE.ViewModel (số ít) theo code bạn cung cấp.
 }
+
+
 @Html.AntiForgeryToken()
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -471,99 +479,83 @@
             </div>
         </div>
 
+
+
         <!-- Recent Payments Table -->
         <div class="table-responsive">
-            <h3>Thanh toán gói dịch vụ gần đây</h3>
-            <table class="table dashboard-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Người dùng</th>
-                        <th>Gói dịch vụ</th>
-                        <th>Số tiền</th>
-                        <th>Ngày thanh toán</th>
-                        <th>Trạng thái</th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>#12345</td>
-                        <td>Nguyễn Văn A</td>
-                        <td>Khởi Nghiệp Nhanh</td>
-                        <td>99.000đ</td>
-                        <td>15/05/2025</td>
-                        <td><span class="status-badge badge-active">Đã xác nhận</span></td>
-                        <td>
-                            <button class="btn btn-action btn-view"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-action btn-edit"><i class="fas fa-edit"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#12344</td>
-                        <td>Trần Thị B</td>
-                        <td>Shop Xịn Sò</td>
-                        <td>199.000đ</td>
-                        <td>14/05/2025</td>
-                        <td><span class="status-badge badge-active">Đã xác nhận</span></td>
-                        <td>
-                            <button class="btn btn-action btn-view"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-action btn-edit"><i class="fas fa-edit"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#12343</td>
-                        <td>Lê Văn C</td>
-                        <td>Kinh Doanh Bứt Phá</td>
-                        <td>349.000đ</td>
-                        <td>13/05/2025</td>
-                        <td><span class="status-badge badge-pending">Chờ xác nhận</span></td>
-                        <td>
-                            <button class="btn btn-action btn-view"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-action btn-edit"><i class="fas fa-edit"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#12342</td>
-                        <td>Phạm Thị D</td>
-                        <td>Shop Xịn Sò</td>
-                        <td>199.000đ</td>
-                        <td>12/05/2025</td>
-                        <td><span class="status-badge badge-active">Đã xác nhận</span></td>
-                        <td>
-                            <button class="btn btn-action btn-view"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-action btn-edit"><i class="fas fa-edit"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#12341</td>
-                        <td>Hoàng Văn E</td>
-                        <td>Khởi Nghiệp Nhanh</td>
-                        <td>99.000đ</td>
-                        <td>11/05/2025</td>
-                        <td><span class="status-badge badge-active">Đã xác nhận</span></td>
-                        <td>
-                            <button class="btn btn-action btn-view"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-action btn-edit"><i class="fas fa-edit"></i></button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">Trước</a>
-                    </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Sau</a>
-                    </li>
-                </ul>
-            </nav>
+            <h3 class="mb-3">Thanh toán gói dịch vụ gần đây</h3> @* Thêm class mb-3 cho khoảng cách *@
+            @if (recentPaymentsList != null && recentPaymentsList.Any())
+            {
+                <table class="table table-hover dashboard-table">
+                    @* Thêm table-hover *@
+                    <thead>
+                        <tr>
+                            <th>ID</th> @* Đổi thành ID Thanh Toán *@
+                            <th>Người dùng</th>
+                            <th>Gói dịch vụ</th>
+                            <th class="text-end">Số tiền</th> @* Căn phải cho số tiền *@
+                            <th>Trạng thái</th>
+                            <th class="text-center">Ngày thanh toán</th> @* Căn giữa trạng thái *@
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in recentPaymentsList)
+                        {
+                            <tr>
+                                <td>#@item.PaymentId</td>
+                                <td>@Html.DisplayFor(modelItem => item.UserFullName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.PackageName)</td>
+                                <td class="text-end">@item.PricePaid.ToString("N0") VNĐ</td>
+                                <td class="text-center">
+                                    @if (item.PaymentStatus.Equals("Confirmed", StringComparison.OrdinalIgnoreCase) || item.PaymentStatus.Contains("Đã xác nhận", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <span class="status-badge badge-active">@item.PaymentStatus</span> @* Sử dụng class CSS tùy chỉnh của bạn *@
+                                    }
+                                    else if (item.PaymentStatus.Equals("Pending", StringComparison.OrdinalIgnoreCase) || item.PaymentStatus.Contains("Chờ xác nhận", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <span class="status-badge badge-pending">@item.PaymentStatus</span> @* Sử dụng class CSS tùy chỉnh của bạn *@
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge">@item.PaymentStatus</span> @* Class mặc định hoặc class cho các trạng thái khác *@
+                                    }
+                                </td>
+                                <td>@item.PaymentDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td class="text-center">
+                                    @* Nút Xem Chi Tiết - Cần Action tương ứng *@
+                                    @* <a asp-controller="Admin" asp-action="PaymentDetails" asp-route-id="@item.PaymentId" class="btn btn-sm btn-action btn-view" title="Xem chi tiết"><i class="fas fa-eye"></i></a> *@
+
+                                    @* Nút Sửa Thanh Toán (thường ít khi có, hoặc rất hạn chế) - Cần Action tương ứng *@
+                                    @* <a asp-controller="Admin" asp-action="EditPayment" asp-route-id="@item.PaymentId" class="btn btn-sm btn-action btn-edit" title="Sửa"><i class="fas fa-edit"></i></a> *@
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                @* Phần phân trang (hiện tại là HTML tĩnh, cần logic backend) *@
+                <nav aria-label="Page navigation" class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Trước</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Sau</a>
+                        </li>
+                    </ul>
+                </nav>
+            }
+            else
+            {
+                <div class="alert alert-light text-center" role="alert">
+                    Không có thanh toán nào gần đây.
+                </div>
+            }
         </div>
-    </div>
 
     <!-- Users Section -->
     <div id="users-section" class="mb-4">
@@ -617,8 +609,8 @@
                             <button class="btn btn-primary">Tìm</button>
                         </div>
                     </div>
-                    @if (Model != null && Model.userViewModels.Any())
-                    {
+                        @if (Model.userViewModels != null && Model.userViewModels.Any())
+                        {
                         <table class="table table-bordered table-hover dashboard-table" id="dataTableUsers" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
@@ -734,106 +726,72 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3>Danh sách sản phẩm</h3>
                 <div class="d-flex">
-                    <input type="text" class="form-control me-2" placeholder="Tìm kiếm...">
-                    <button class="btn btn-primary">Tìm</button>
+                    <input id="productSearch" type="text" class="form-control me-2" placeholder="Tìm kiếm...">
+                        <button onclick="loadProducts(1)" class="btn btn-primary">Tìm</button>
                 </div>
             </div>
-            <table class="table dashboard-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Hình ảnh</th>
-                        <th>Tên sản phẩm</th>
-                        <th>Danh mục</th>
-                        <th>Người bán</th>
-                        <th>Giá</th>
-                        <th>Trạng thái</th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>#2001</td>
-                        <td><img src="https://via.placeholder.com/40x40" alt="Sản phẩm" class="img-thumbnail"></td>
-                        <td>Áo Sơ Mi Nam Vintage</td>
-                        <td>Áo</td>
-                        <td>Shop ABC</td>
-                        <td>350.000đ</td>
-                        <td><span class="status-badge badge-active">Hiển thị</span></td>
-                        <td>
-                            <button class="btn btn-action btn-view"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-action btn-edit"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-action btn-delete"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#2002</td>
-                        <td><img src="https://via.placeholder.com/40x40" alt="Sản phẩm" class="img-thumbnail"></td>
-                        <td>Váy Hoa Nữ Vintage</td>
-                        <td>Váy đầm</td>
-                        <td>Shop XYZ</td>
-                        <td>420.000đ</td>
-                        <td><span class="status-badge badge-active">Hiển thị</span></td>
-                        <td>
-                            <button class="btn btn-action btn-view"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-action btn-edit"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-action btn-delete"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#2003</td>
-                        <td><img src="https://via.placeholder.com/40x40" alt="Sản phẩm" class="img-thumbnail"></td>
-                        <td>Quần Jeans Nam Rách Gối</td>
-                        <td>Quần</td>
-                        <td>Shop 123</td>
-                        <td>380.000đ</td>
-                        <td><span class="status-badge badge-expired">Ẩn</span></td>
-                        <td>
-                            <button class="btn btn-action btn-view"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-action btn-edit"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-action btn-delete"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#2004</td>
-                        <td><img src="https://via.placeholder.com/40x40" alt="Sản phẩm" class="img-thumbnail"></td>
-                        <td>Áo Khoác Bomber Vintage</td>
-                        <td>Áo</td>
-                        <td>Shop VIP</td>
-                        <td>550.000đ</td>
-                        <td><span class="status-badge badge-active">Hiển thị</span></td>
-                        <td>
-                            <button class="btn btn-action btn-view"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-action btn-edit"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-action btn-delete"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#2005</td>
-                        <td><img src="https://via.placeholder.com/40x40" alt="Sản phẩm" class="img-thumbnail"></td>
-                        <td>Túi Xách Nữ Da Thật</td>
-                        <td>Túi xách</td>
-                        <td>Shop Luxury</td>
-                        <td>850.000đ</td>
-                        <td><span class="status-badge badge-active">Hiển thị</span></td>
-                        <td>
-                            <button class="btn btn-action btn-view"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-action btn-edit"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-action btn-delete"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                @if (Model.Products != null && Model.Products.Any())
+                {
+                    <table id="products" class="table dashboard-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Hình ảnh</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Danh mục</th>
+                                <th>Người bán</th>
+                                <th>Giá</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Products)
+                            {
+                                <tr>
+                                    <td>#@item.ProductId</td>
+                                    <td><img src="@item.ProductImages.FirstOrDefault()?.ImageUrl" alt="Sản phẩm" class="img-thumbnail"></td>
+                                    <td>@item.ProductName</td>
+                                    <td>@item.Category.CategoryName</td>
+                                    <td>@item.Shop.ShopName</td>
+                                    <td>@item.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN"))đ</td>
+                                    <td><span class="status-badge @(item.IsVisible ? "badge-active" : "badge-expired")">@(item.IsVisible ? "Hiển thị" : "Ẩn")</span></td>
+                                    <td>
+                                        @*
+                                <button class="btn btn-action btn-view"><i class="fas fa-eye"></i></button>
+                                        *@
+                                        <button class="btn btn-action btn-edit" onclick="editProduct(@item.ProductId)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-action btn-delete" onclick="showDeleteModal(@item.ProductId, '@Url.Action("DeleteProduct", "Admin")', 'Xác nhận xóa sản phẩm', 'Bạn có chắc muốn xóa sản phẩm này?')"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                } else
+                {
+                    <table id="products" class="table dashboard-table">
+                        <thead>
+                            <tr>
+                                <th>
+                        <div class="alert alert-info text-center">
+                            Không tìm thấy sản phẩm nào phù hợp.
+                        </div>
+                        </th>
+                        </tr>
+                        </thead>
+                    </table>
+                }
             <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
+                    <ul id="product-pagination" class="pagination justify-content-center">
                     <li class="page-item disabled">
                         <a class="page-link" href="#" tabindex="-1">Trước</a>
                     </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Sau</a>
+                        @for (int i = 0; i < (int)ViewData["ProductPages"]; i++)
+                        {
+                            <li class="page-item @(i == 0 ? "active" : "")" @(i != 0 ? "onclick=loadProducts("+(i+1)+")" : "")><a class="page-link" href="#">@(i + 1)</a></li>
+                        }
+                    <li class="page-item @((int)ViewData["ProductPages"] > 1 ? "" : "disabled")">
+                            <a class="page-link" href="#" @((int)ViewData["ProductPages"] > 1 ? "onclick=loadProducts(2)" : "")">Sau</a>
                     </li>
                 </ul>
             </nav>
@@ -878,7 +836,7 @@
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn btn-action btn-delete"
-                                        onclick="showDeleteModal(@service.PackageId, '@Url.Action("Delete", "Admin")')">
+                                            onclick="showDeleteModal(@service.PackageId, '@Url.Action("Delete", "Admin")', 'Xác Nhận Xóa Gói', 'Bạn có chắc chắn muốn xóa gói này?')">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
@@ -1041,23 +999,23 @@
     const packageCtx = document.getElementById('packageChart').getContext('2d');
     const packageChart = new Chart(packageCtx, {
         type: 'doughnut',
-        data: {
-            labels: packageLabels,
-            datasets: [{
-                data: packageRevenues,
-                backgroundColor: [
-                    'rgba(46, 139, 87, 0.7)',
-                    'rgba(60, 179, 113, 0.7)',
-                    'rgba(34, 139, 34, 0.7)'
-                ],
-                borderColor: [
-                    'rgba(46, 139, 87, 1)',
-                    'rgba(60, 179, 113, 1)',
-                    'rgba(34, 139, 34, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
+            data: {
+                labels: packageLabels,
+                datasets: [{
+                    data: packageRevenues,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)', // Đỏ hồng
+                        'rgba(54, 162, 235, 0.7)', // Xanh dương
+                        'rgba(255, 206, 86, 0.7)'  // Vàng
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
         options: {
             responsive: true,
             plugins: {
@@ -1156,19 +1114,72 @@
                 <h5 class="modal-title" id="deleteModalLabel">Xác Nhận Xóa Gói</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+                <div id="deleteModalContent" class="modal-body">
                 Bạn có chắc chắn muốn xóa gói này?
             </div>
             <div class="modal-footer">
                 <form id="deleteForm" method="post">
                     <input type="hidden" name="id" id="deleteItemId" />
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                    <button type="submit" class="btn btn-danger">Xóa Gói</button>
+                    <button type="submit" class="btn btn-danger">Xác Nhận</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+
+    <!-- Modal Chỉnh Sửa Sản Phẩm -->
+    <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProductModalLabel">Chỉnh sửa sản phẩm</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProductForm">
+                        <input type="hidden" id="editProductId">
+                        <div class="mb-3">
+                            <label for="editProductName" class="form-label">Tên sản phẩm</label>
+                            <input type="text" class="form-control" id="editProductName" required>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editProductCategory" class="form-label">Danh mục</label>
+                                <select id="editProductCategory" class="form-control">
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editProductShop" class="form-label">Người bán</label>
+                                <select id="editProductShop" class="form-control">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editProductPrice" class="form-label">Giá</label>
+                                <input type="number" class="form-control" id="editProductPrice" min="0" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editProductStatus" class="form-label">Trạng Thái</label>
+                                <select id="editProductStatus" class="form-control">
+                                    <option value="true">Hiển Thị</option>
+                                    <option value="false">Ẩn</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="updateProduct">Cập nhật</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 <script>
     // Handle Add New Package
@@ -1241,11 +1252,181 @@
 </script>
 
 <script>
-    function showDeleteModal(itemId, actionUrl) {
+        function loadProducts(page = 1) {
+            event.preventDefault();
+            const keyword = $('#productSearch').val();
+
+            $.ajax({
+                url: 'GetProducts',
+                type: 'GET',
+                data: { search: keyword, page: page },
+                success: function (response) {
+                    console.log(response);
+                    renderProducts(response.products);
+                    renderProductsPagination(response.currentPage, response.totalPages, keyword);
+                },
+                error: function () {
+                    console.log('Đã xảy ra lỗi khi tải danh sách sản phẩm.');
+                }
+            });
+        }
+
+        function renderProducts(products) {
+            let tbody = '';
+            if (products.length === 0) {
+                tbody = `<thead>
+                                <tr><th><div class="alert alert-info text-center">
+                                    Không tìm thấy sản phẩm nào phù hợp.
+                                </div></th></tr>
+                                </thead>`;
+            } else {
+                tbody = `
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Hình ảnh</th>
+                                        <th>Tên sản phẩm</th>
+                                        <th>Danh mục</th>
+                                        <th>Người bán</th>
+                                        <th>Giá</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+                for (let i = 0; i < products.length; i++) {
+                    let p = products[i];
+                    tbody += `
+                        <tr>
+                            <td>#${p.productId}</td>
+                            <td><img src="${p.imageUrl || '/placeholder.png'}" alt="Sản phẩm" class="img-thumbnail"></td>
+                            <td>${p.productName}</td>
+                            <td>${p.category}</td>
+                            <td>${p.shop}</td>
+                            <td>${p.price.toLocaleString('vi-VN')}đ</td>
+                            <td><span class="status-badge ${p.isVisible ? 'badge-active' : 'badge-expired'}">${p.isVisible ? 'Hiển thị' : 'Ẩn'}</span></td>
+                            <td>
+                                <button class="btn btn-action btn-edit" onclick="editProduct(${p.productId})"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-action btn-delete" onclick="showDeleteModal(${p.productId}, '@Url.Action("DeleteProduct", "Admin")', 'Xác nhận xóa sản phẩm', 'Bạn có chắc muốn xóa sản phẩm này?')"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                }
+                tbody += `</tbody>`;
+            }
+            console.log(tbody);
+            $('#products').html(tbody);
+        }
+
+        function renderProductsPagination(currentPage, totalPages, search) {
+            let pagination = '';
+            for (let i = 1; i <= totalPages; i++) {
+                pagination += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+                    <a class="page-link" href="#" onclick="loadProducts(${i})">${i}</a>
+                </li>`;
+            }
+
+            $('#product-pagination').html(`
+                <li class="page-item ${currentPage <= 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="loadProducts(${currentPage - 1})">Trước</a>
+                </li>
+                ${pagination}
+                <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="loadProducts(${currentPage + 1})">Sau</a>
+                </li>
+            `);
+        }
+        function showDeleteModal(itemId, actionUrl, deleteModalLabel = null, deleteModalContent = null) {
         const form = document.getElementById("deleteForm");
         form.action = actionUrl;
         document.getElementById("deleteItemId").value = itemId;
+            if (deleteModalLabel != null) {
+                document.getElementById("deleteModalLabel").innerHTML = deleteModalLabel;
+            }
+            if (deleteModalContent != null) {
+                document.getElementById("deleteModalContent").innerHTML = deleteModalContent;
+            }
         const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
         deleteModal.show();
     }
+</script>
+<script>
+        function editProduct(id) {
+            $.ajax({
+                url: 'GetProductById',
+                type: 'GET',
+                data: { id: id },
+                success: function (response) {
+                    console.log(response);
+                    var data = response;
+
+                    const product = data.product;
+
+                    // Fill product fields
+                    document.getElementById("editProductId").value = product.productId;
+                    document.getElementById("editProductName").value = product.productName;
+                    document.getElementById("editProductPrice").value = product.price;
+                    document.getElementById("editProductStatus").value = product.isVisible.toString();
+
+                    // Populate categories
+                    const categorySelect = document.getElementById("editProductCategory");
+                    categorySelect.innerHTML = ''; // Clear existing options
+                    data.categories.forEach(cat => {
+                        const option = document.createElement("option");
+                        option.value = cat.categoryId;
+                        option.textContent = cat.categoryName;
+                        if (cat.categoryId === product.categoryId) {
+                            option.selected = true;
+                        }
+                        categorySelect.appendChild(option);
+                    });
+
+                    // Populate shops
+                    const shopSelect = document.getElementById("editProductShop");
+                    shopSelect.innerHTML = ''; // Clear existing options
+                    data.shops.forEach(shop => {
+                        const option = document.createElement("option");
+                        option.value = shop.shopId;
+                        option.textContent = shop.shopName;
+                        if (shop.shopId === product.shopId) {
+                            option.selected = true;
+                        }
+                        shopSelect.appendChild(option);
+                    });
+
+                    // Show the modal
+                    const modal = new bootstrap.Modal(document.getElementById("editProductModal"));
+                    modal.show();
+                },
+                error: function () {
+                    console.log('Đã xảy ra lỗi khi tải dữ liệu sản phẩm.');
+                }
+            });
+    }
+        document.getElementById('updateProduct').addEventListener('click', function () {
+            const productData = {
+                ProductId: document.getElementById('editProductId').value,
+                ProductName: document.getElementById('editProductName').value,
+                CategoryId: parseInt(document.getElementById('editProductCategory').value),
+                ShopId: parseInt(document.getElementById('editProductShop').value),
+                Price: parseInt(document.getElementById('editProductPrice').value),
+                IsVisible: document.getElementById('editProductStatus').value === 'true'
+            };
+
+            fetch('/Admin/EditProduct', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify(productData)
+            })
+                .then(res => {
+                    if (res.ok) {
+                        location.reload();
+                    } else {
+                        alert("Không thể cập nhật sản phẩm.");
+                    }
+                });
+        });
 </script>

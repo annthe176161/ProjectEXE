@@ -9,6 +9,7 @@ namespace ProjectEXE.ViewModel
         public List<RBPDto> RBPDtos { get; set; }
         public List<ServicePackage> ServicePackages { get; set; }
         public IEnumerable<UserViewModel> userViewModels { get; set; }
-        
+        public List<Product> Products { get; set; }
+
     }
 }
