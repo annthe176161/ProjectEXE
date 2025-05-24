@@ -50,6 +50,36 @@ namespace ProjectEXE.Services.Implementations
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<int> CreatePackageSubscription(int shopId, int packegeId)
+        {
+            var subscription = new PackageSubscription
+            {
+                ShopId = shopId,
+                PackageId = packegeId,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(30),
+                StatusId = 1, // Active
+                CreatedAt = DateTime.Now
+            };
+            _context.PackageSubscriptions.Add(subscription);
+            _context.SaveChanges();
+
+            return subscription.SubscriptionId;
+        }
+
+        public async Task ActivePackagePayment(PackagePayment packagePayment)
+        {
+            await _context.PackagePayments.AddAsync(packagePayment);
+            await _context.SaveChangesAsync();  
+        }
+
+        public async Task<int> GetShopIdByUserId(int userId)
+        {
+            var shop = await _context.Shops.FirstOrDefaultAsync(s => s.UserId == userId);
+            return shop.ShopId;
+        }
+
         public async Task<bool> IsShopPremiumAsync(int shopId)
         {
             var activeSubscription = await _context.PackageSubscriptions

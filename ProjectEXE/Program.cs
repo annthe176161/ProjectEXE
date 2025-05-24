@@ -32,7 +32,6 @@ namespace ProjectEXE
             builder.Services.AddScoped<IPackageService, PackageService>();
             builder.Services.AddScoped<IAdminPackageService, AdminPackageService>();
             builder.Services.AddScoped<IShopProductService, ShopProductService>();
-            builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAdminService, AdminService>();
             builder.Services.AddScoped<IPayOsService, PayOsService>();
             builder.Services.AddScoped<IOrderConfirmationService, OrderConfirmationService>();

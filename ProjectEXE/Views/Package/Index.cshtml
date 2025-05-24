@@ -61,16 +61,21 @@
                         </ul>
 
                         <div class="d-grid">
-                            <a asp-action="Select" asp-route-id="@package.PackageId" class="btn @(Model.CurrentPackageId == package.PackageId ? "btn-outline-primary" : "btn-primary") btn-lg">
-                                @if (Model.CurrentPackageId == package.PackageId)
-                                {
-                                    <span><i class="fas fa-sync-alt me-2"></i>Gia hạn gói</span>
-                                }
-                                else
-                                {
-                                    <span><i class="fas fa-shopping-cart me-2"></i>Chọn gói này</span>
-                                }
-                            </a>
+                            <form asp-controller="Payment" asp-action="ProcessPayment" method="post" style="display:inline;">
+                                <input type="hidden" name="packageId" value="@package.PackageId" />
+                                <input type="hidden" name="paymentMethod" value="PayOs" />
+                                <button type="submit" class="btn @(Model.CurrentPackageId == package.PackageId ? "btn-outline-primary" : "btn-primary") btn-lg">
+                                    @if (Model.CurrentPackageId == package.PackageId)
+                                    {
+                                        <span><i class="fas fa-sync-alt me-2"></i>Gia hạn gói</span>
+                                    }
+                                    else
+                                    {
+                                        <span><i class="fas fa-shopping-cart me-2"></i>Chọn gói này</span>
+                                    }
+                                </button>
+                            </form>
+
                         </div>
                     </div>
                 </div>
