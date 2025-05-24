@@ -95,6 +95,25 @@
             </div>
         }
 
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger-custom alert-dismissible fade show" role="alert">
+                <div class="alert-content">
+                    <i class="fas fa-exclamation-triangle alert-icon"></i>
+                    <div class="alert-text">
+                        <strong>Lỗi validation!</strong>
+                        <ul class="mb-0 mt-2">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
         <div class="row">
             <!-- Main Order Information -->
             <div class="col-lg-8">
@@ -244,6 +263,10 @@
                                     <div class="step-content">
                                         <h6>Đơn hàng đã hủy</h6>
                                         <p>Đơn hàng đã bị hủy bỏ</p>
+                                        @if (!string.IsNullOrEmpty(Model.CancelReason))
+                                        {
+                                            <p class="text-danger mt-2"><strong>Lý do:</strong> @Model.CancelReason</p>
+                                        }
                                     </div>
                                 </div>
                             }
@@ -270,7 +293,7 @@
                                 <div class="contact-info">
                                     <div class="contact-item">
                                         <i class="fas fa-phone-alt"></i>
-                                        <span>@Model.BuyerPhone</span>
+                                        <span>@(Model.BuyerPhone ?? "Chưa cập nhật")</span>
                                     </div>
                                     <div class="contact-item">
                                         <i class="fas fa-envelope"></i>
@@ -278,7 +301,7 @@
                                     </div>
                                     <div class="contact-item">
                                         <i class="fas fa-map-marker-alt"></i>
-                                        <span>@Model.BuyerAddress</span>
+                                        <span>@(Model.BuyerAddress ?? "Chưa cập nhật")</span>
                                     </div>
                                 </div>
                             </div>
@@ -287,56 +310,155 @@
                 </div>
 
                 <!-- Status Update Form -->
-                <div class="info-card animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
-                    <div class="card-header-green">
-                        <i class="fas fa-edit me-2"></i>
-                        Cập nhật trạng thái
-                    </div>
-                    <div class="card-body">
-                        <form asp-action="UpdateStatus" method="post" id="statusUpdateForm">
-                            <input type="hidden" name="OrderId" value="@Model.OrderId" />
-                            @Html.AntiForgeryToken()
+                @if (Model.StatusId != 4 && Model.StatusId != 5) // Chỉ hiển thị form nếu chưa hoàn thành hoặc chưa hủy
+                {
+                    <div class="info-card animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
+                        <div class="card-header-green">
+                            <i class="fas fa-edit me-2"></i>
+                            Cập nhật trạng thái
+                        </div>
+                        <div class="card-body">
+                            <form asp-action="UpdateStatus" method="post" id="statusUpdateForm">
+                                <input type="hidden" name="OrderId" value="@Model.OrderId" />
+                                @Html.AntiForgeryToken()
 
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-flag me-1"></i>
-                                    Trạng thái đơn hàng
-                                </label>
-                                <select class="form-select" name="StatusId" id="statusSelect">
-                                    @foreach (var status in await new ProjectEXE.Services.Implementations.ShopOrderService(new RevaContext(new DbContextOptions<RevaContext>())).GetOrderStatusesAsync())
+                                <div class="form-group mb-3">
+                                    <label class="form-label">
+                                        <i class="fas fa-flag me-1"></i>
+                                        Trạng thái đơn hàng
+                                    </label>
+                                    <select class="form-select" name="StatusId" id="statusSelect" 
+        data-current-status="@Model.StatusId" required>
+    <option value="1" selected="@(Model.StatusId == 1)">Chờ xác nhận</option>
+    <option value="2" selected="@(Model.StatusId == 2)">Đã xác nhận</option>
+    <option value="3" selected="@(Model.StatusId == 3)">Đang giao hàng</option>
+    <option value="4" selected="@(Model.StatusId == 4)">Đã giao - Hoàn thành</option>
+    <option value="5" selected="@(Model.StatusId == 5)">Đã hủy</option>
+</select>
+                                    <div class="form-text" id="statusHelpText">
+                                        @{
+                                            string helpText = Model.StatusId switch
+                                            {
+                                                1 => "Chọn 'Đã xác nhận' để xác nhận đơn hàng hoặc 'Đã hủy' để hủy đơn hàng",
+                                                2 => "Chọn 'Đang giao hàng' để bắt đầu giao hàng hoặc 'Đã hủy' để hủy đơn hàng",
+                                                3 => "Chọn 'Đã giao - Hoàn thành' khi khách hàng đã nhận hàng thành công",
+                                                _ => "Chọn trạng thái mới cho đơn hàng"
+                                            };
+                                        }
+                                        @helpText
+                                    </div>
+                                </div>
+
+                                <!-- Cancel Reason Group - Chỉ hiển thị khi chọn hủy đơn -->
+                                <div id="cancelReasonGroup" class="form-group mb-3 @(Model.StatusId == 5 ? "" : "d-none")">
+                                    <label class="form-label text-danger">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                        Lý do hủy đơn <span class="text-danger">*</span>
+                                    </label>
+                                    <textarea class="form-control" name="CancelReason" id="cancelReasonInput" rows="3" 
+                                              placeholder="Vui lòng nhập chi tiết lý do hủy đơn hàng..." maxlength="500">@(Model.StatusId == 5 ? Model.CancelReason : "")</textarea>
+                                    <div class="form-text text-muted">Tối đa 500 ký tự</div>
+                                    <div class="invalid-feedback" id="cancelReasonError"></div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary-custom btn-lg w-100" id="updateButton">
+                                        <i class="fas fa-save me-2"></i>
+                                        @{
+                                            string buttonText = Model.StatusId switch
+                                            {
+                                                1 => "Xác nhận đơn hàng",
+                                                2 => "Cập nhật trạng thái",
+                                                3 => "Hoàn thành giao hàng",
+                                                _ => "Cập nhật trạng thái"
+                                            };
+                                        }
+                                        @buttonText
+                                    </button>
+                                </div>
+                            </form>
+
+                            <!-- Status Transition Guide -->
+                            <div class="mt-3">
+                                <div class="card border-light">
+                                    <div class="card-header bg-light py-2">
+                                        <small class="text-muted">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            Quy trình xử lý đơn hàng
+                                        </small>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <div class="status-flow">
+                                            <div class='d-flex align-items-center justify-content-between text-center' style='font-size: 0.8rem;'>
+                                                <div class='status-step'>
+                                                    <div class='step-number bg-warning text-dark'>1</div>
+                                                    <small>Chờ xác nhận</small>
+                                                </div>
+                                                <div class='arrow'>→</div>
+                                                <div class='status-step'>
+                                                    <div class='step-number bg-info text-white'>2</div>
+                                                    <small>Đã xác nhận</small>
+                                                </div>
+                                                <div class='arrow'>→</div>
+                                                <div class='status-step'>
+                                                    <div class='step-number bg-primary text-white'>3</div>
+                                                    <small>Đang giao hàng</small>
+                                                </div>
+                                                <div class='arrow'>→</div>
+                                                <div class='status-step'>
+                                                    <div class='step-number bg-success text-white'>4</div>
+                                                    <small>Hoàn thành</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <!-- Order Completed/Cancelled Info -->
+                    <div class="info-card animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
+                        <div class="card-header-green">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Trạng thái đơn hàng
+                        </div>
+                        <div class="card-body text-center">
+                            @if (Model.StatusId == 4)
+                            {
+                                <div class="completed-status">
+                                    <i class="fas fa-check-circle text-success" style="font-size: 3rem;"></i>
+                                    <h5 class="mt-3 text-success">Đơn hàng đã hoàn thành</h5>
+                                    <p class="text-muted">Khách hàng đã nhận hàng thành công</p>
+                                    <div class="alert alert-success mt-3">
+                                        <i class="fas fa-trophy me-2"></i>
+                                        <strong>Chúc mừng!</strong> Giao dịch đã hoàn tất thành công.
+                                    </div>
+                                </div>
+                            }
+                            else if (Model.StatusId == 5)
+                            {
+                                <div class="cancelled-status">
+                                    <i class="fas fa-times-circle text-danger" style="font-size: 3rem;"></i>
+                                    <h5 class="mt-3 text-danger">Đơn hàng đã bị hủy</h5>
+                                    @if (!string.IsNullOrEmpty(Model.CancelReason))
                                     {
-                                        <option value="@status.Key" selected="@(Model.StatusId == status.Key)">@status.Value</option>
+                                        <div class="alert alert-danger mt-3">
+                                            <strong>Lý do hủy:</strong><br>
+                                            @Model.CancelReason
+                                        </div>
                                     }
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-sticky-note me-1"></i>
-                                    Ghi chú
-                                </label>
-                                <textarea class="form-control" name="Notes" rows="3" 
-                                          placeholder="Nhập ghi chú hoặc lưu ý cho đơn hàng này..."></textarea>
-                            </div>
-
-                            <div id="cancelReasonGroup" class="form-group @(Model.StatusId == 5 ? "" : "d-none")">
-                                <label class="form-label">
-                                    <i class="fas fa-exclamation-triangle me-1"></i>
-                                    Lý do hủy đơn
-                                </label>
-                                <textarea class="form-control" name="CancelReason" rows="3" 
-                                          placeholder="Nhập chi tiết lý do hủy đơn hàng...">@Model.CancelReason</textarea>
-                            </div>
-
-                            <div class="form-actions">
-                                <button type="submit" class="btn btn-primary-custom btn-lg w-100" id="updateButton">
-                                    <i class="fas fa-save me-2"></i>
-                                    Cập nhật trạng thái
-                                </button>
-                            </div>
-                        </form>
+                                    <div class="alert alert-warning mt-3">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        Đơn hàng đã bị hủy và không thể thay đổi trạng thái.
+                                    </div>
+                                </div>
+                            }
+                        </div>
                     </div>
-                </div>
+                }
 
                 <!-- Quick Actions -->
                 <div class="info-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
@@ -346,10 +468,13 @@
                     </div>
                     <div class="card-body">
                         <div class="quick-actions">
-                            <a href="tel:@Model.BuyerPhone" class="quick-action-btn call">
-                                <i class="fas fa-phone"></i>
-                                <span>Gọi khách hàng</span>
-                            </a>
+                            @if (!string.IsNullOrEmpty(Model.BuyerPhone))
+                            {
+                                <a href="tel:@Model.BuyerPhone" class="quick-action-btn call">
+                                    <i class="fas fa-phone"></i>
+                                    <span>Gọi khách hàng</span>
+                                </a>
+                            }
                             <a href="mailto:@Model.BuyerEmail" class="quick-action-btn email">
                                 <i class="fas fa-envelope"></i>
                                 <span>Gửi email</span>
@@ -358,6 +483,10 @@
                                 <i class="fas fa-print"></i>
                                 <span>In đơn hàng</span>
                             </button>
+                            <a asp-controller="ShopOrder" asp-action="Index" class="quick-action-btn">
+                                <i class="fas fa-arrow-left"></i>
+                                <span>Quay lại danh sách</span>
+                            </a>
                         </div>
                     </div>
                 </div>
