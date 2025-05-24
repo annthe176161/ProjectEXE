@@ -4,6 +4,7 @@ using ProjectEXE.Hubs;
 using ProjectEXE.Models;
 using ProjectEXE.Services.Implementations;
 using ProjectEXE.Services.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace ProjectEXE
 {
@@ -13,8 +14,7 @@ namespace ProjectEXE
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<RevaContext>(options =>
-                        options.UseSqlServer(builder.Configuration.GetConnectionString("MyCnn")));
+            builder.Services.AddDbContext<RevaContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MyCnn")));
 
 
             // Add services to the container.
@@ -35,6 +35,7 @@ namespace ProjectEXE
             builder.Services.AddScoped<IAdminService, AdminService>();
             builder.Services.AddScoped<IPayOsService, PayOsService>();
             builder.Services.AddScoped<IOrderConfirmationService, OrderConfirmationService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                             .AddCookie(options =>
