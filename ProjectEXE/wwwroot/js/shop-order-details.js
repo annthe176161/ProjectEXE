@@ -1,312 +1,460 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
-    initializeShopOrderDetails();
+﻿/* filepath: wwwroot/js/shop-order-details.js */
+
+document.addEventListener('DOMContentLoaded', function () {
+    initializeOrderDetails();
 });
 
-function initializeShopOrderDetails() {
-    setupStatusSelect();
+function initializeOrderDetails() {
+    setupStatusChangeHandler();
     setupFormValidation();
-    setupImageModal();
-    setupAlertAutoHide();
     setupLoadingStates();
+    showStatusTransitionInfo();
+    setupAlertAutoHide();
 }
 
-function setupStatusSelect() {
+function setupStatusChangeHandler() {
     const statusSelect = document.getElementById('statusSelect');
     const cancelReasonGroup = document.getElementById('cancelReasonGroup');
+    const cancelReasonInput = document.getElementById('cancelReasonInput');
+    const updateButton = document.getElementById('updateButton');
 
-    if (statusSelect && cancelReasonGroup) {
+    if (statusSelect && cancelReasonGroup && cancelReasonInput && updateButton) {
+        // Set initial state
+        toggleCancelReasonField(statusSelect.value);
+        updateButtonText(statusSelect.value);
+        updateHelpText(statusSelect.value);
+
         statusSelect.addEventListener('change', function () {
-            const statusId = this.value;
-
-            if (statusId == 5) {
-                cancelReasonGroup.classList.remove('d-none');
-                cancelReasonGroup.querySelector('textarea').required = true;
-
-                // Add animation
-                cancelReasonGroup.style.animation = 'fadeInUp 0.4s ease forwards';
-            } else {
-                cancelReasonGroup.classList.add('d-none');
-                cancelReasonGroup.querySelector('textarea').required = false;
-                cancelReasonGroup.querySelector('textarea').value = '';
-            }
+            toggleCancelReasonField(this.value);
+            updateButtonText(this.value);
+            updateHelpText(this.value);
+            showTransitionWarning(this.value);
         });
+    }
+}
+
+function toggleCancelReasonField(statusValue) {
+    const cancelReasonGroup = document.getElementById('cancelReasonGroup');
+    const cancelReasonInput = document.getElementById('cancelReasonInput');
+
+    if (statusValue === '5') {
+        // Hiển thị trường lý do hủy
+        cancelReasonGroup.classList.remove('d-none');
+        cancelReasonInput.required = true;
+
+        // Focus vào textarea sau một chút để animation mượt
+        setTimeout(() => {
+            cancelReasonInput.focus();
+        }, 100);
+
+        // Add animation
+        cancelReasonGroup.style.opacity = '0';
+        setTimeout(() => {
+            cancelReasonGroup.style.transition = 'opacity 0.3s ease';
+            cancelReasonGroup.style.opacity = '1';
+        }, 50);
+    } else {
+        // Ẩn trường lý do hủy
+        cancelReasonGroup.classList.add('d-none');
+        cancelReasonInput.required = false;
+        if (statusValue !== '5') {
+            cancelReasonInput.value = '';
+        }
+        clearValidationError('cancelReasonInput');
+    }
+}
+
+function updateButtonText(statusValue) {
+    const updateButton = document.getElementById('updateButton');
+    if (!updateButton) return;
+
+    const buttonTexts = {
+        '1': '<i class="fas fa-clock me-2"></i>Giữ trạng thái chờ',
+        '2': '<i class="fas fa-check-circle me-2"></i>Xác nhận đơn hàng',
+        '3': '<i class="fas fa-shipping-fast me-2"></i>Bắt đầu giao hàng',
+        '4': '<i class="fas fa-trophy me-2"></i>Hoàn thành đơn hàng',
+        '5': '<i class="fas fa-times-circle me-2"></i>Hủy đơn hàng'
+    };
+
+    updateButton.innerHTML = buttonTexts[statusValue] || '<i class="fas fa-save me-2"></i>Cập nhật trạng thái';
+
+    // Thay đổi màu button theo trạng thái
+    updateButton.className = 'btn btn-lg w-100 ' + getButtonClass(statusValue);
+}
+
+function updateHelpText(statusValue) {
+    const helpTextElement = document.getElementById('statusHelpText');
+    if (!helpTextElement) return;
+
+    const helpTexts = {
+        '1': 'Bạn có thể giữ nguyên trạng thái này, xác nhận đơn hàng hoặc hủy đơn hàng',
+        '2': 'Bạn có thể bắt đầu giao hàng hoặc hủy đơn hàng',
+        '3': 'Bạn có thể hoàn thành đơn hàng khi khách hàng đã nhận hàng',
+        '4': 'Hoàn thành đơn hàng - trạng thái cuối cùng',
+        '5': 'Hủy đơn hàng - vui lòng nhập lý do hủy'
+    };
+
+    helpTextElement.textContent = helpTexts[statusValue] || 'Chọn trạng thái mới cho đơn hàng';
+}
+
+function getButtonClass(statusValue) {
+    return {
+        '1': 'btn-warning',
+        '2': 'btn-info',
+        '3': 'btn-primary',
+        '4': 'btn-success',
+        '5': 'btn-danger'
+    }[statusValue] || 'btn-primary-custom';
+}
+
+function showTransitionWarning(statusValue) {
+    // Remove existing warnings
+    const existingWarning = document.querySelector('.status-transition-warning');
+    if (existingWarning) {
+        existingWarning.remove();
+    }
+
+    const currentStatus = getCurrentStatus();
+
+    // Kiểm tra xem có phải là chuyển đổi không hợp lệ không
+    if (!isValidTransition(currentStatus, parseInt(statusValue))) {
+        const warningDiv = document.createElement('div');
+        warningDiv.className = 'alert alert-warning alert-dismissible fade show status-transition-warning mt-3';
+        warningDiv.innerHTML = `
+            <div class="d-flex align-items-center">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <div>${getTransitionWarningMessage(currentStatus, parseInt(statusValue))}</div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+
+        const form = document.getElementById('statusUpdateForm');
+        form.appendChild(warningDiv);
+        return;
+    }
+
+    // Hiển thị thông báo hướng dẫn cho các chuyển đổi hợp lệ
+    const warningMessages = {
+        '2': {
+            type: 'info',
+            message: '📞 Sau khi xác nhận, bạn có thể liên hệ trực tiếp với khách hàng để trao đổi thông tin giao hàng.'
+        },
+        '3': {
+            type: 'warning',
+            message: '🚚 Đảm bảo bạn đã chuẩn bị hàng và sẵn sàng giao hàng cho khách hàng.'
+        },
+        '4': {
+            type: 'success',
+            message: '🎉 Xác nhận hoàn thành giao dịch. Trạng thái này không thể thay đổi sau khi cập nhật.'
+        },
+        '5': {
+            type: 'danger',
+            message: '⚠️ Hủy đơn hàng là hành động không thể hoàn tác. Vui lòng cân nhắc kỹ trước khi thực hiện.'
+        }
+    };
+
+    const warning = warningMessages[statusValue];
+    if (warning && statusValue !== currentStatus.toString()) {
+        const warningDiv = document.createElement('div');
+        warningDiv.className = `alert alert-${warning.type} alert-dismissible fade show status-transition-warning mt-3`;
+        warningDiv.innerHTML = `
+            <div class="d-flex align-items-center">
+                <i class="fas fa-info-circle me-2"></i>
+                <div>${warning.message}</div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+
+        const form = document.getElementById('statusUpdateForm');
+        form.appendChild(warningDiv);
+
+        // Auto hide after 8 seconds
+        setTimeout(() => {
+            if (warningDiv.parentNode) {
+                warningDiv.classList.remove('show');
+            }
+        }, 8000);
+    }
+}
+
+function getCurrentStatus() {
+    const statusSelect = document.getElementById('statusSelect');
+    return parseInt(statusSelect.dataset.currentStatus || statusSelect.value);
+}
+
+function isValidTransition(currentStatus, newStatus) {
+    // Logic validation theo business rules
+    if (currentStatus === 4 || currentStatus === 5) {
+        return currentStatus === newStatus;
+    }
+
+    switch (newStatus) {
+        case 1: return currentStatus === 1;
+        case 2: return currentStatus === 1 || currentStatus === 2;
+        case 3: return currentStatus === 2 || currentStatus === 3;
+        case 4: return currentStatus === 3;
+        case 5: return [1, 2, 3, 5].includes(currentStatus);
+        default: return false;
+    }
+}
+
+function getTransitionWarningMessage(currentStatus, newStatus) {
+    const statusNames = {
+        1: 'Chờ xác nhận',
+        2: 'Đã xác nhận',
+        3: 'Đang giao hàng',
+        4: 'Đã giao - Hoàn thành',
+        5: 'Đã hủy'
+    };
+
+    if (currentStatus === 4) {
+        return '❌ Không thể thay đổi trạng thái đơn hàng đã hoàn thành';
+    }
+
+    if (currentStatus === 5) {
+        return '❌ Không thể thay đổi trạng thái đơn hàng đã hủy';
+    }
+
+    switch (`${currentStatus}-${newStatus}`) {
+        case '1-3': return '❌ Không thể chuyển từ "Chờ xác nhận" sang "Đang giao hàng". Vui lòng xác nhận đơn hàng trước.';
+        case '1-4': return '❌ Không thể chuyển từ "Chờ xác nhận" sang "Hoàn thành". Vui lòng xác nhận và giao hàng trước.';
+        case '2-1': return '❌ Không thể quay lại trạng thái "Chờ xác nhận" sau khi đã xác nhận.';
+        case '2-4': return '❌ Không thể chuyển từ "Đã xác nhận" sang "Hoàn thành". Vui lòng giao hàng trước.';
+        case '3-1': return '❌ Không thể quay lại trạng thái "Chờ xác nhận" khi đang giao hàng.';
+        case '3-2': return '❌ Không thể quay lại trạng thái "Đã xác nhận" khi đang giao hàng.';
+        case '4-5': return '❌ Không thể hủy đơn hàng đã hoàn thành.';
+        default: return `❌ Không thể chuyển từ "${statusNames[currentStatus]}" sang "${statusNames[newStatus]}"`;
     }
 }
 
 function setupFormValidation() {
     const form = document.getElementById('statusUpdateForm');
-    const updateButton = document.getElementById('updateButton');
 
     if (form) {
         form.addEventListener('submit', function (e) {
-            const statusSelect = document.getElementById('statusSelect');
-            const cancelReasonGroup = document.getElementById('cancelReasonGroup');
-            const cancelReasonTextarea = cancelReasonGroup.querySelector('textarea');
+            const isValid = validateForm();
 
-            // Validate cancel reason if status is cancelled
-            if (statusSelect.value == 5 && !cancelReasonTextarea.value.trim()) {
+            if (!isValid) {
                 e.preventDefault();
-                showToast('Vui lòng nhập lý do hủy đơn hàng', 'error');
-                cancelReasonTextarea.focus();
                 return false;
             }
 
+            // Show confirmation for critical actions
+            const statusSelect = document.getElementById('statusSelect');
+            const currentStatus = getCurrentStatus();
+            const newStatus = parseInt(statusSelect.value);
+
+            if ((newStatus === 4 || newStatus === 5) && newStatus !== currentStatus) {
+                const actionText = newStatus === 4 ? 'hoàn thành' : 'hủy';
+                const confirmMessage = `Bạn có chắc chắn muốn ${actionText} đơn hàng này? Hành động này không thể hoàn tác.`;
+
+                if (!confirm(confirmMessage)) {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+
             // Show loading state
-            if (updateButton) {
-                const originalText = updateButton.innerHTML;
-                updateButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang cập nhật...';
-                updateButton.disabled = true;
+            showLoadingState();
 
-                // Re-enable after 10 seconds as fallback
-                setTimeout(() => {
-                    if (updateButton.disabled) {
-                        updateButton.innerHTML = originalText;
-                        updateButton.disabled = false;
-                    }
-                }, 10000);
-            }
+            return true;
         });
+
+        // Real-time validation for cancel reason
+        const cancelReasonInput = document.getElementById('cancelReasonInput');
+        if (cancelReasonInput) {
+            cancelReasonInput.addEventListener('input', function () {
+                validateCancelReason();
+                updateCharacterCounter();
+            });
+
+            cancelReasonInput.addEventListener('blur', function () {
+                validateCancelReason();
+            });
+        }
     }
 }
 
-function setupImageModal() {
-    const productImage = document.querySelector('.product-image');
+function validateForm() {
+    let isValid = true;
 
-    if (productImage) {
-        productImage.addEventListener('click', function () {
-            showImageModal(this.src, this.alt);
-        });
+    const statusSelect = document.getElementById('statusSelect');
+    const cancelReasonInput = document.getElementById('cancelReasonInput');
+    const currentStatus = getCurrentStatus();
+    const newStatus = parseInt(statusSelect.value);
+
+    // Clear previous errors
+    clearAllValidationErrors();
+
+    // Validate status selection
+    if (!statusSelect.value) {
+        showValidationError('statusSelect', 'Vui lòng chọn trạng thái');
+        isValid = false;
+    }
+
+    // Validate status transition
+    if (!isValidTransition(currentStatus, newStatus)) {
+        showValidationError('statusSelect', getTransitionWarningMessage(currentStatus, newStatus));
+        isValid = false;
+    }
+
+    // Validate cancel reason if status is 5 (cancelled)
+    if (statusSelect.value === '5') {
+        if (!cancelReasonInput.value.trim()) {
+            showValidationError('cancelReasonInput', 'Vui lòng nhập lý do hủy đơn hàng');
+            isValid = false;
+        } else if (cancelReasonInput.value.trim().length < 10) {
+            showValidationError('cancelReasonInput', 'Lý do hủy phải có ít nhất 10 ký tự');
+            isValid = false;
+        } else if (cancelReasonInput.value.length > 500) {
+            showValidationError('cancelReasonInput', 'Lý do hủy không được vượt quá 500 ký tự');
+            isValid = false;
+        }
+    }
+
+    return isValid;
+}
+
+function validateCancelReason() {
+    const cancelReasonInput = document.getElementById('cancelReasonInput');
+    const statusSelect = document.getElementById('statusSelect');
+
+    if (statusSelect.value !== '5') return true;
+
+    const value = cancelReasonInput.value.trim();
+
+    if (!value) {
+        showValidationError('cancelReasonInput', 'Vui lòng nhập lý do hủy đơn hàng');
+        return false;
+    }
+
+    if (value.length < 10) {
+        showValidationError('cancelReasonInput', 'Lý do hủy phải có ít nhất 10 ký tự');
+        return false;
+    }
+
+    if (value.length > 500) {
+        showValidationError('cancelReasonInput', 'Lý do hủy không được vượt quá 500 ký tự');
+        return false;
+    }
+
+    clearValidationError('cancelReasonInput');
+    return true;
+}
+
+function updateCharacterCounter() {
+    const cancelReasonInput = document.getElementById('cancelReasonInput');
+    let counterDiv = document.getElementById('cancelReasonCounter');
+
+    if (!counterDiv) {
+        counterDiv = document.createElement('div');
+        counterDiv.className = 'form-text text-end';
+        counterDiv.id = 'cancelReasonCounter';
+        cancelReasonInput.parentNode.appendChild(counterDiv);
+    }
+
+    const current = cancelReasonInput.value.length;
+    const max = 500;
+    counterDiv.textContent = `${current}/${max} ký tự`;
+
+    if (current > max * 0.9) {
+        counterDiv.className = 'form-text text-end text-warning';
+    } else if (current > max) {
+        counterDiv.className = 'form-text text-end text-danger';
+    } else {
+        counterDiv.className = 'form-text text-end text-muted';
     }
 }
 
-function showImageModal(imageSrc, imageAlt) {
-    const modalHtml = `
-        <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content" style="background: transparent; border: none;">
-                    <div class="modal-body p-0">
-                        <img src="${imageSrc}" alt="${imageAlt}" class="img-fluid rounded" style="width: 100%;">
-                        <button type="button" class="btn-close position-absolute top-0 end-0 m-3" 
-                                data-bs-dismiss="modal" aria-label="Close" 
-                                style="background: white; border-radius: 50%; padding: 0.75rem; box-shadow: 0 2px 10px rgba(0,0,0,0.3);"></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
+function showValidationError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
 
-    // Remove existing modal if any
-    const existingModal = document.getElementById('imageModal');
-    if (existingModal) {
-        existingModal.remove();
+    field.classList.add('is-invalid');
+
+    // Find or create error element
+    const errorElementId = fieldId + 'Error';
+    let errorElement = document.getElementById(errorElementId);
+
+    if (!errorElement) {
+        errorElement = document.createElement('div');
+        errorElement.id = errorElementId;
+        errorElement.className = 'invalid-feedback';
+        field.parentNode.appendChild(errorElement);
     }
 
-    // Add new modal
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    errorElement.textContent = message;
+    errorElement.style.display = 'block';
 
-    // Show modal
-    const modal = new bootstrap.Modal(document.getElementById('imageModal'));
-    modal.show();
+    // Scroll to error
+    field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
 
-    // Clean up after modal is hidden
-    document.getElementById('imageModal').addEventListener('hidden.bs.modal', function () {
-        this.remove();
+function clearValidationError(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+
+    field.classList.remove('is-invalid');
+
+    const errorElement = document.getElementById(fieldId + 'Error');
+    if (errorElement) {
+        errorElement.style.display = 'none';
+    }
+}
+
+function clearAllValidationErrors() {
+    const invalidFields = document.querySelectorAll('.is-invalid');
+    invalidFields.forEach(field => {
+        field.classList.remove('is-invalid');
+    });
+
+    const errorElements = document.querySelectorAll('.invalid-feedback');
+    errorElements.forEach(element => {
+        element.style.display = 'none';
     });
 }
 
-function setupAlertAutoHide() {
-    const alerts = document.querySelectorAll('.alert');
-    alerts.forEach(alert => {
-        // Add progress bar
-        const progressBar = document.createElement('div');
-        progressBar.style.cssText = `
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 3px;
-            background: currentColor;
-            opacity: 0.3;
-            animation: alertProgress 5s linear forwards;
-        `;
-        alert.style.position = 'relative';
-        alert.appendChild(progressBar);
-
-        // Auto hide after 5 seconds
-        setTimeout(() => {
-            if (alert.classList.contains('show')) {
-                alert.classList.remove('show');
-                setTimeout(() => {
-                    if (alert.parentNode) {
-                        alert.remove();
-                    }
-                }, 150);
-            }
-        }, 5000);
-    });
-
-    // Add CSS for progress animation if not exists
-    if (!document.getElementById('alert-progress-style')) {
-        const style = document.createElement('style');
-        style.id = 'alert-progress-style';
-        style.textContent = `
-            @keyframes alertProgress {
-                from { width: 100%; }
-                to { width: 0%; }
-            }
-        `;
-        document.head.appendChild(style);
+function showLoadingState() {
+    const submitButton = document.getElementById('updateButton');
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang cập nhật...';
     }
 }
 
 function setupLoadingStates() {
-    // Setup loading states for quick action buttons
-    const quickActionBtns = document.querySelectorAll('.quick-action-btn');
-
-    quickActionBtns.forEach(btn => {
-        if (btn.onclick && btn.onclick.toString().includes('print')) return; // Skip print button
-
-        btn.addEventListener('click', function () {
-            if (this.href && this.href.startsWith('tel:')) {
-                showToast('Đang mở ứng dụng gọi điện...', 'info');
-            } else if (this.href && this.href.startsWith('mailto:')) {
-                showToast('Đang mở ứng dụng email...', 'info');
-            }
-        });
-    });
-}
-
-function showToast(message, type = 'info') {
-    const toastId = 'toast-' + Date.now();
-    const iconClass = {
-        'success': 'fas fa-check-circle',
-        'error': 'fas fa-exclamation-triangle',
-        'warning': 'fas fa-exclamation-circle',
-        'info': 'fas fa-info-circle'
-    }[type] || 'fas fa-info-circle';
-
-    const bgClass = {
-        'success': 'bg-success',
-        'error': 'bg-danger',
-        'warning': 'bg-warning',
-        'info': 'bg-info'
-    }[type] || 'bg-info';
-
-    const toast = document.createElement('div');
-    toast.id = toastId;
-    toast.className = `toast align-items-center text-white ${bgClass} border-0`;
-    toast.setAttribute('role', 'alert');
-    toast.style.cssText = 'min-width: 300px;';
-
-    toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">
-                <i class="${iconClass} me-2"></i>
-                ${message}
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-    `;
-
-    // Add to page
-    let toastContainer = document.querySelector('.toast-container');
-    if (!toastContainer) {
-        toastContainer = document.createElement('div');
-        toastContainer.className = 'toast-container position-fixed bottom-0 end-0 p-3';
-        toastContainer.style.zIndex = '9999';
-        document.body.appendChild(toastContainer);
-    }
-
-    toastContainer.appendChild(toast);
-
-    // Show toast
-    if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
-        const bsToast = new bootstrap.Toast(toast, {
-            autohide: true,
-            delay: 4000
-        });
-        bsToast.show();
-
-        // Remove after hiding
-        toast.addEventListener('hidden.bs.toast', function () {
-            this.remove();
-        });
-    } else {
-        // Fallback without Bootstrap
-        toast.style.display = 'block';
-        setTimeout(() => {
-            toast.style.transition = 'opacity 0.3s ease';
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
-        }, 4000);
+    // Reset loading state if page reloads due to error
+    const submitButton = document.getElementById('updateButton');
+    if (submitButton) {
+        submitButton.disabled = false;
+        // Button text will be updated by updateButtonText function
     }
 }
 
-// Quick action handlers
-function callCustomer(phone) {
-    window.location.href = `tel:${phone}`;
-    showToast('Đang kết nối cuộc gọi...', 'info');
+function showStatusTransitionInfo() {
+    // Show helpful information about status transitions
+    const statusSelect = document.getElementById('statusSelect');
+    if (statusSelect) {
+        updateButtonText(statusSelect.value);
+        updateHelpText(statusSelect.value);
+    }
 }
 
-function emailCustomer(email) {
-    window.location.href = `mailto:${email}`;
-    showToast('Đang mở ứng dụng email...', 'info');
-}
-
-function printOrder() {
-    // Add print-specific styles before printing
-    const printStyle = document.createElement('style');
-    printStyle.id = 'print-styles';
-    printStyle.textContent = `
-        @media print {
-            body * { visibility: hidden; }
-            .shop-order-details-page, .shop-order-details-page * { visibility: visible; }
-            .page-header, .quick-actions, .form-actions, .btn, .alert { display: none !important; }
-            .info-card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; page-break-inside: avoid; }
-            .shop-order-details-page { background: white !important; }
-            .container { max-width: none !important; margin: 0 !important; padding: 0 !important; }
-        }
-    `;
-    document.head.appendChild(printStyle);
-
-    // Print
-    window.print();
-
-    // Remove print styles after printing
-    setTimeout(() => {
-        const printStyleEl = document.getElementById('print-styles');
-        if (printStyleEl) {
-            printStyleEl.remove();
-        }
-    }, 1000);
-
-    showToast('Đã gửi lệnh in đơn hàng', 'success');
-}
-
-// Add smooth scrolling for any anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
-
-// Add loading animation for external links
-document.querySelectorAll('a[target="_blank"]').forEach(link => {
-    link.addEventListener('click', function () {
-        const icon = this.querySelector('i');
-        if (icon) {
-            const originalClass = icon.className;
-            icon.className = 'fas fa-spinner fa-spin';
+function setupAlertAutoHide() {
+    // Handle alert auto-hide
+    const alerts = document.querySelectorAll('.alert:not(.status-transition-warning)');
+    alerts.forEach(alert => {
+        // Auto hide success/info alerts
+        if (alert.classList.contains('alert-success-custom')) {
             setTimeout(() => {
-                icon.className = originalClass;
-            }, 2000);
+                if (alert.parentNode) {
+                    alert.style.transition = 'opacity 0.3s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 300);
+                }
+            }, 5000);
         }
-        showToast('Đang mở trang trong tab mới...', 'info');
     });
-});
+}
