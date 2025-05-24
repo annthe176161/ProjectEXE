@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectEXE.Models;
 using ProjectEXE.Services.Implementations;
 using ProjectEXE.Services.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace ProjectEXE
 {
@@ -17,7 +18,9 @@ namespace ProjectEXE
             builder.Services.AddScoped<IUserService, UserService>(); 
             
             builder.Services.AddScoped<IAdminService, AdminService>();
-            
+
+            builder.Services.AddScoped<IProductService, ProductService>();
+
 
 
             // Add services to the container.
