@@ -15,9 +15,9 @@ namespace ProjectEXE.Controllers
     public class AccountController : Controller
     {
         private readonly IUserService _userService;
-        private readonly EmailService _emailService;
+        private readonly IEmailService _emailService;
 
-        public AccountController(IUserService userService, EmailService emailService)
+        public AccountController(IUserService userService, IEmailService emailService)
         {
             _userService = userService;
             _emailService = emailService;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using ProjectEXE.Services.Interfaces;
 using System;
 using System.Net;
 using System.Net.Mail;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProjectEXE.Services
 {
-    public class EmailService
+    public class EmailService : IEmailService
     {
         private readonly IConfiguration _configuration;
 
@@ -58,6 +59,9 @@ namespace ProjectEXE.Services
             var baseUrl = _configuration["ApplicationUrl"];
             var verificationUrl = $"{baseUrl}/Account/VerifyEmail?email={Uri.EscapeDataString(email)}&token={Uri.EscapeDataString(token)}";
 
+            // Debug - hiển thị URL
+            Console.WriteLine($"Verification URL: {verificationUrl}");
+
             var subject = "Xác nhận địa chỉ email";
             var body = $@"
                 <h2>Xác nhận địa chỉ email</h2>
@@ -73,6 +77,9 @@ namespace ProjectEXE.Services
         {
             var baseUrl = _configuration["ApplicationUrl"];
             var resetUrl = $"{baseUrl}/Account/ResetPassword?email={Uri.EscapeDataString(email)}&token={Uri.EscapeDataString(token)}";
+
+            // Debug - hiển thị URL
+            Console.WriteLine($"Password Reset URL: {resetUrl}");
 
             var subject = "Đặt lại mật khẩu";
             var body = $@"
