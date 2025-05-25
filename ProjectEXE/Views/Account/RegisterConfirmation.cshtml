@@ -2,24 +2,205 @@
     ViewData["Title"] = "Xác nhận đăng ký";
 }
 
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">Xác nhận email của bạn</h3>
-                </div>
-                <div class="card-body text-center">
-                    <i class="fas fa-envelope fa-4x mb-3 text-primary"></i>
-                    <h4>Chúng tôi đã gửi email xác nhận</h4>
-                    <p>Vui lòng kiểm tra hộp thư của bạn (bao gồm thư mục spam) và nhấp vào liên kết xác nhận để hoàn tất quá trình đăng ký.</p>
-                    <p>Nếu bạn không nhận được email trong vòng vài phút, bạn có thể yêu cầu gửi lại email xác nhận.</p>
-                </div>
-                <div class="card-footer d-flex justify-content-between">
-                    <a asp-action="Login" class="btn btn-outline-primary">Quay lại đăng nhập</a>
-                    <a asp-action="ResendEmailConfirmation" class="btn btn-primary">Gửi lại email xác nhận</a>
+@section Styles {
+    <link rel="stylesheet" href="~/css/register-confirmation.css?v=@DateTime.Now.Ticks" />
+}
+
+<div class="register-confirmation-page">
+    <div class="container">
+        <div class="confirmation-wrapper">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 col-md-6 col-sm-8">
+                    <div class="confirmation-card">
+                        <!-- Email Animation -->
+                        <div class="email-animation">
+                            <div class="email-container">
+                                <div class="email-envelope">
+                                    <div class="email-lid"></div>
+                                    <div class="email-body"></div>
+                                    <div class="flying-email">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                </div>
+                                <div class="email-waves">
+                                    <div class="wave wave-1"></div>
+                                    <div class="wave wave-2"></div>
+                                    <div class="wave wave-3"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Header -->
+                        <div class="confirmation-header">
+                            <div class="header-icon">
+                                <i class="fas fa-paper-plane"></i>
+                            </div>
+                            <h3>Xác nhận email của bạn</h3>
+                            <p class="header-subtitle">Chúng tôi đã gửi email xác nhận</p>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="confirmation-body">
+                            <div class="message-content">
+                                <div class="main-message">
+                                    <h4>📨 Email đang chờ xác nhận</h4>
+                                    <p>Vui lòng kiểm tra hộp thư của bạn (bao gồm thư mục spam) và nhấp vào liên kết xác nhận để hoàn tất quá trình đăng ký.</p>
+                                </div>
+
+                                <div class="email-checklist">
+                                    <div class="check-item">
+                                        <div class="check-icon">
+                                            <i class="fas fa-inbox"></i>
+                                        </div>
+                                        <div class="check-content">
+                                            <strong>Kiểm tra hộp thư chính</strong>
+                                            <span>Email thường đến trong vài phút</span>
+                                        </div>
+                                    </div>
+                                    <div class="check-item">
+                                        <div class="check-icon">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <div class="check-content">
+                                            <strong>Kiểm tra thư mục spam</strong>
+                                            <span>Đôi khi email có thể bị lọc spam</span>
+                                        </div>
+                                    </div>
+                                    <div class="check-item">
+                                        <div class="check-icon">
+                                            <i class="fas fa-mouse-pointer"></i>
+                                        </div>
+                                        <div class="check-content">
+                                            <strong>Nhấp vào liên kết xác nhận</strong>
+                                            <span>Để hoàn tất việc kích hoạt tài khoản</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="resend-info">
+                                    <div class="info-icon">
+                                        <i class="fas fa-info-circle"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <p>Nếu bạn không nhận được email trong vòng vài phút, bạn có thể yêu cầu gửi lại email xác nhận.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer -->
+                        <div class="confirmation-footer">
+                            <div class="action-buttons">
+                                <a asp-action="Login" class="btn btn-outline">
+                                    <i class="fas fa-arrow-left"></i>
+                                    Quay lại đăng nhập
+                                </a>
+                                <a asp-action="ResendEmailConfirmation" class="btn btn-primary" id="resendBtn">
+                                    <i class="fas fa-paper-plane"></i>
+                                    Gửi lại email xác nhận
+                                </a>
+                            </div>
+
+                            <div class="help-section">
+                                <div class="help-links">
+                                    <a href="#" class="help-link">
+                                        <i class="fas fa-question-circle"></i>
+                                        Cần trợ giúp?
+                                    </a>
+                                    <span class="divider">•</span>
+                                    <a href="#" class="help-link">
+                                        <i class="fas fa-phone"></i>
+                                        Liên hệ hỗ trợ
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Notice -->
+                    <div class="security-notice">
+                        <div class="notice-card">
+                            <div class="notice-icon">
+                                <i class="fas fa-shield-check"></i>
+                            </div>
+                            <div class="notice-content">
+                                <h6>Tại sao cần xác nhận email?</h6>
+                                <p>Xác nhận email giúp bảo vệ tài khoản của bạn và đảm bảo bạn nhận được các thông báo quan trọng từ chúng tôi.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Animation and interaction handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            // Trigger animations
+            setTimeout(function() {
+                document.querySelector('.confirmation-card').classList.add('animate');
+                document.querySelector('.email-animation').classList.add('animate');
+            }, 300);
+
+            // Resend button handler
+            const resendBtn = document.getElementById('resendBtn');
+            if (resendBtn) {
+                resendBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    handleResendEmail(this);
+                });
+            }
+        });
+
+        // Handle resend email
+        function handleResendEmail(btn) {
+            const originalContent = btn.innerHTML;
+
+            // Show loading state
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi...';
+            btn.classList.add('loading');
+            btn.style.pointerEvents = 'none';
+
+            // Simulate API call
+            setTimeout(function() {
+                // Show success state
+                btn.innerHTML = '<i class="fas fa-check"></i> Đã gửi thành công!';
+                btn.classList.remove('loading');
+                btn.classList.add('success');
+
+                // Show success message
+                showNotification('Email xác nhận đã được gửi lại!', 'success');
+
+                // Reset after delay
+                setTimeout(function() {
+                    btn.innerHTML = originalContent;
+                    btn.classList.remove('success');
+                    btn.style.pointerEvents = 'auto';
+                }, 3000);
+            }, 2000);
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+    </script>
+}
