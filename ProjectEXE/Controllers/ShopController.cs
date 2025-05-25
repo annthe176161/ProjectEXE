@@ -192,7 +192,7 @@ namespace ProjectEXE.Controllers
                 if (result)
                 {
                     TempData["Success"] = "Cập nhật sản phẩm thành công!";
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(ManageProduct));
                 }
                 ModelState.AddModelError("", "Không thể cập nhật sản phẩm. Vui lòng thử lại.");
             }

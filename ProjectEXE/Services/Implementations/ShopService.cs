@@ -513,9 +513,8 @@ namespace ProjectEXE.Services.Implementations
                 product.IsInStock = model.IsInStock;
                 product.IsVisible = model.IsVisible;
 
-                var result = await _context.SaveChangesAsync();
-
-                return result > 0;
+                await _context.SaveChangesAsync();
+                return true;
             }
             catch (Exception ex)
             {
@@ -541,7 +540,7 @@ namespace ProjectEXE.Services.Implementations
                 }
 
                 _context.Products.Remove(product);
-                var result = await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
                 return (true, "Xóa sản phẩm thành công.");
             }
