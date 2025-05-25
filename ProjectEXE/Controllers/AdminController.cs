@@ -101,11 +101,11 @@ namespace ProjectEXE.Controllers
             bool success = await _productService.deleteProductById(id);
             if (success)
             {
-                TempData["SuccessMessage"] = "Xóa sản phẩm thành công!";
+                TempData["Success"] = "Xóa sản phẩm thành công!";
             }
             else
             {
-                TempData["ErrorMessage"] = "Không thể xóa sản phẩm. Vui lòng thử lại.";
+                TempData["Error"] = "Không thể xóa sản phẩm. Vui lòng thử lại.";
             }
             return RedirectToAction("Dashboard", new { fragment = "products-section" }); // Redirect tới khu vực product
         }
@@ -257,7 +257,7 @@ namespace ProjectEXE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Ban(int id)
         {
-            var result = await _userService.SetUserActiveStatusAsync(id, false);
+            var result = await _userService.SetUserActiveStatusAsync(id, 0);
             if (result) TempData["SuccessMessage"] = "Khóa người dùng thành công.";
             else TempData["ErrorMessage"] = "Không thể khóa người dùng.";
             return RedirectToAction(nameof(Dashboard), new { fragment = "users-section" });
@@ -268,7 +268,7 @@ namespace ProjectEXE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Unban(int id)
         {
-            var result = await _userService.SetUserActiveStatusAsync(id, true);
+            var result = await _userService.SetUserActiveStatusAsync(id, 1);
             if (result) TempData["SuccessMessage"] = "Mở khóa người dùng thành công.";
             else TempData["ErrorMessage"] = "Không thể mở khóa người dùng.";
             return RedirectToAction(nameof(Dashboard), new { fragment = "users-section" });

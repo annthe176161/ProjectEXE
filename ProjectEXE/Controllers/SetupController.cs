@@ -43,7 +43,7 @@ namespace ProjectEXE.Controllers
                     FullName = "Quản trị viên",
                     PhoneNumber = "0987654321",
                     RoleId = 1, // Role Admin
-                    IsActive = true,
+                    IsActive = 1,
                     CreatedAt = DateTime.Now
                 };
 

@@ -638,7 +638,7 @@
                                         <td>@Html.DisplayFor(modelItem => item.RoleName)</td>
                                         <td>@item.CreatedAt.ToString("dd/MM/yyyy")</td>
                                         <td class="text-center">
-                                            @if (item.IsActive)
+                                            @if (item.IsActive == 1)
                                             {
                                                 <span class="status-badge badge-active">Hoạt động</span>
                                             }
@@ -658,7 +658,7 @@
                                                 <i class="fas fa-edit"></i>
                                             </a>
 
-                                            @if (item.IsActive)
+                                            @if (item.IsActive == 1)
                                             {
                                                 <form asp-action="Ban" asp-route-id="@item.UserId" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn khóa người dùng này không?');">
                                                     @Html.AntiForgeryToken()

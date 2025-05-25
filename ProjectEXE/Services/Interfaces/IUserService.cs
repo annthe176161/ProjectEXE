@@ -16,7 +16,7 @@ namespace ProjectEXE.Services.Interfaces
         Task<IEnumerable<Role>> GetAllRolesAsync(); // To populate roles dropdown
 
         Task<bool> UpdateUserAsync(UserEditViewModel model);
-        Task<bool> SetUserActiveStatusAsync(int userId, bool isActive);
+        Task<bool> SetUserActiveStatusAsync(int userId, int isActive);
 
         Task<int> GetTotalUsersCountAsync(); // <== PHƯƠNG THỨC MỚI
 
