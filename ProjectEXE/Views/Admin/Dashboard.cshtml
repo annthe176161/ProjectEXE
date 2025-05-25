@@ -508,7 +508,7 @@
                         @foreach (var item in recentPaymentsList)
                         {
                             <tr>
-                                <td>#@item.PaymentId</td>
+                                <td>@item.UserId</td>
                                 <td>@Html.DisplayFor(modelItem => item.UserFullName)</td>
                                 <td>@Html.DisplayFor(modelItem => item.PackageName)</td>
                                 <td class="text-end">@item.PricePaid.ToString("N0") VNĐ</td>
@@ -632,7 +632,7 @@
                                     @foreach (var item in Model.userViewModels)
                                     {
                                         <tr>
-                                            <td>#@item.UserId</td>
+                                            <td>@item.UserId</td>
                                             <td>@Html.DisplayFor(modelItem => item.FullName)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Email)</td>
                                             <td>@Html.DisplayFor(modelItem => item.RoleName)</td>
@@ -754,7 +754,7 @@
                             @foreach (var item in Model.Products)
                             {
                                 <tr>
-                                    <td>#@item.ProductId</td>
+                                    <td>@item.ProductId</td>
                                     <td><img src="@item.ProductImages.FirstOrDefault()?.ImageUrl" alt="Sản phẩm" class="img-thumbnail"></td>
                                     <td>@item.ProductName</td>
                                     <td>@item.Category.CategoryName</td>
@@ -830,7 +830,7 @@
                             @foreach (var service in Model.ServicePackages)
                             {
                             <tr>
-                                <td>#@service.PackageId</td>
+                                <td>@service.PackageId</td>
                                 <td>@service.PackageName</td>
                                 <td>@service.ProductLimit</td>
                                 <td>@service.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN"))đ</td>
