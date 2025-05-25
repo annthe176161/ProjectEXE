@@ -1,0 +1,132 @@
+﻿@model ProjectEXE.ViewModel.ProductEditViewModel
+
+@{
+    ViewData["Title"] = "Thêm sản phẩm mới";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Hoặc layout dành cho Seller nếu có
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h2 class="mb-0">@ViewData["Title"]</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-10 col-lg-8 mx-auto">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        @* Thêm enctype nếu xử lý upload file *@
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="ProductName" class="form-label"></label>
+                            <input asp-for="ProductName" class="form-control" />
+                            <span asp-validation-for="ProductName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label"></label>
+                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Price" class="form-label"></label>
+                                <input asp-for="Price" type="number" step="any" class="form-control" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Gender" class="form-label"></label>
+                                <input asp-for="Gender" class="form-control" placeholder="Ví dụ: Nam, Nữ, Unisex" />
+                                <span asp-validation-for="Gender" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CategoryId" class="form-label"></label>
+                                <select asp-for="CategoryId" class="form-select" asp-items="Model.CategoriesList">
+                                    <option value="">-- Chọn danh mục --</option>
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ConditionId" class="form-label"></label>
+                                <select asp-for="ConditionId" class="form-select" asp-items="Model.ConditionsList">
+                                    <option value="">-- Chọn tình trạng --</option>
+                                </select>
+                                <span asp-validation-for="ConditionId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Size" class="form-label"></label>
+                                <input asp-for="Size" class="form-control" placeholder="Ví dụ: S, M, Freesize" />
+                                <span asp-validation-for="Size" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Color" class="form-label"></label>
+                                <input asp-for="Color" class="form-control" placeholder="Ví dụ: Đỏ, Xanh, Họa tiết" />
+                                <span asp-validation-for="Color" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Brand" class="form-label"></label>
+                                <input asp-for="Brand" class="form-control" />
+                                <span asp-validation-for="Brand" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Material" class="form-label"></label>
+                                <input asp-for="Material" class="form-control" />
+                                <span asp-validation-for="Material" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" asp-for="IsInStock" />
+                                    <label class="form-check-label" asp-for="IsInStock"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" asp-for="IsVisible" />
+                                    <label class="form-check-label" asp-for="IsVisible"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        @* Khu vực upload ảnh (Cần logic backend phức tạp hơn để xử lý file)
+                        <div class="mb-3">
+                        <label asp-for="MainImageFile" class="form-label">Ảnh đại diện</label>
+                        <input asp-for="MainImageFile" type="file" class="form-control">
+                        <span asp-validation-for="MainImageFile" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                        <label asp-for="OtherImageFiles" class="form-label">Ảnh khác (chọn nhiều file)</label>
+                        <input asp-for="OtherImageFiles" type="file" multiple class="form-control">
+                        <span asp-validation-for="OtherImageFiles" class="text-danger"></span>
+                        </div>
+                        *@
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu sản phẩm</button>
+                            <a asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
