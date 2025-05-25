@@ -104,7 +104,7 @@ namespace ProjectEXE.Controllers
             if (result)
             {
                 TempData["Success"] = "Sản phẩm đã được tạo thành công!";
-                return RedirectToAction("Index", "ShopProfile");
+                return RedirectToAction("ManageProduct", "Shop");
             }
             else
             {
