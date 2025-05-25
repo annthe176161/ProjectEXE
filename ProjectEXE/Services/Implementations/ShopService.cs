@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CloudinaryDotNet;
+using Microsoft.EntityFrameworkCore;
 using ProjectEXE.Models;
 using ProjectEXE.Services.Interfaces;
 using ProjectEXE.ViewModel.ProductViewModel;
@@ -13,12 +14,15 @@ namespace ProjectEXE.Services.Implementations
         private readonly RevaContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICloudinaryService _cloudinaryService;
 
-        public ShopService(RevaContext context, IWebHostEnvironment webHostEnvironment, IHttpContextAccessor httpContextAccessor)
+        public ShopService(RevaContext context, IWebHostEnvironment webHostEnvironment, 
+                    IHttpContextAccessor httpContextAccessor, ICloudinaryService cloudinaryService)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
             _httpContextAccessor = httpContextAccessor;
+            _cloudinaryService = cloudinaryService;
         }
 
         //====================hoapmhe173343====================================
@@ -100,12 +104,9 @@ namespace ProjectEXE.Services.Implementations
             // 1. Lấy gói hiện tại của shop (chưa hết hạn)
             var activeSubscription = await _context.PackageSubscriptions
                                     .Include(s => s.Package) 
-                                    .Where(s => s.ShopId == shopId && s.EndDate >= DateTime.Now)
+                                    .Where(s => s.ShopId == shopId)
                                     .OrderByDescending(s => s.EndDate)
                                     .FirstOrDefaultAsync();
-
-            if (activeSubscription == null)
-                return false; // Không có gói còn hạn
 
             int productLimit = activeSubscription.Package.ProductLimit;
 
@@ -140,9 +141,53 @@ namespace ProjectEXE.Services.Implementations
                 .ToListAsync();
         }
 
-        public Task<bool> CreateProductAsync(ProductFormViewModel model, int shopId)
-        {
-            throw new NotImplementedException();
+        public async Task<bool> CreateProductAsync(ProductFormViewModel model, int shopId)
+        { 
+            try
+            {
+                var product = new Product
+                {
+                    ShopId = shopId,
+                    ProductName = model.ProductName,
+                    Description = model.Description,
+                    Price = model.Price,
+                    CategoryId = model.CategoryId,
+                    ConditionId = model.ConditionId,
+                    Gender = model.Gender,
+                    Size = model.Size,
+                    Color = model.Color,
+                    Brand = model.Brand,
+                    Material = model.Material,
+                    IsInStock = true,
+                    IsVisible = true,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _context.Products.Add(product);
+                await _context.SaveChangesAsync(); // Để có ProductId cho ảnh
+
+                // Upload ảnh song song
+                var uploadTasks = model.NewImages.Select((file, index) => Task.Run(async () =>
+                {
+                    var uploadResult = await _cloudinaryService.UploadImageAsync(file);
+                    return new ProductImage
+                    {
+                        ProductId = product.ProductId,
+                        ImageUrl = uploadResult,
+                        IsMainImage = (index == 0) // Ảnh đầu là ảnh chính
+                    };
+                })).ToList();
+
+                var uploadedImages = await Task.WhenAll(uploadTasks);
+                _context.ProductImages.AddRange(uploadedImages);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         //======================================
@@ -274,71 +319,7 @@ namespace ProjectEXE.Services.Implementations
             return await _context.Shops
                 .FirstOrDefaultAsync(s => s.UserId == userId);
         }
-
-        public async Task<bool> HasShopAsync(int userId)
-        {
-            return await _context.Shops.AnyAsync(s => s.UserId == userId);
-        }
-
-        public async Task<bool> CreateShopAsync(CreateShopViewModel model, int userId)
-        {
-            // Kiểm tra xem người dùng đã có shop chưa
-            if (await HasShopAsync(userId))
-                return false;
-
-            // Kiểm tra tên shop đã tồn tại chưa
-            if (await _context.Shops.AnyAsync(s => s.ShopName == model.ShopName))
-                return false;
-
-            string profileImagePath = null;
-
-            // Xử lý upload ảnh đại diện nếu có
-            if (model.ProfileImage != null && model.ProfileImage.Length > 0)
-            {
-                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "shops");
-
-                // Tạo thư mục nếu chưa tồn tại
-                if (!Directory.Exists(uploadsFolder))
-                    Directory.CreateDirectory(uploadsFolder);
-
-                // Tạo tên file duy nhất
-                string uniqueFileName = $"{Guid.NewGuid()}_{model.ProfileImage.FileName}";
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                // Lưu file
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await model.ProfileImage.CopyToAsync(fileStream);
-                }
-
-                profileImagePath = $"/images/shops/{uniqueFileName}";
-            }
-
-            // Tạo shop mới
-            var shop = new Shop
-            {
-                ShopName = model.ShopName,
-                Description = model.Description,
-                ProfileImage = profileImagePath,
-                ContactInfo = model.ContactInfo,
-                UserId = userId,
-                CreatedAt = DateTime.Now
-            };
-
-            _context.Shops.Add(shop);
-            await _context.SaveChangesAsync();
-
-            // Cập nhật role user thành Seller nếu cần
-            var user = await _context.Users.FindAsync(userId);
-            if (user != null && user.RoleId != 3) // 3 = Seller role
-            {
-                user.RoleId = 3;
-                await _context.SaveChangesAsync();
-            }
-
-            return true;
-        }
-
+        
         public async Task<bool> UpdateShopAsync(CreateShopViewModel model, int shopId)
         {
             var shop = await _context.Shops.FindAsync(shopId);
@@ -392,6 +373,52 @@ namespace ProjectEXE.Services.Implementations
             return true;
         }
 
+        public async Task<ProductFormViewModel> GetProductFormDataAsync(int? productId, int shopId)
+        {
+            var viewModel = new ProductFormViewModel
+            {
+                Categories = await GetCategoriesAsync(),
+                Conditions = await GetConditionsAsync()
+            };
 
+            if (productId.HasValue)
+            {
+                var product = await _context.Products
+                    .Include(p => p.ProductImages)
+                    .FirstOrDefaultAsync(p => p.ProductId == productId && p.ShopId == shopId);
+
+                if (product != null)
+                {
+                    viewModel.ProductId = product.ProductId;
+                    viewModel.ProductName = product.ProductName;
+                    viewModel.Description = product.Description;
+                    viewModel.Price = product.Price;
+                    viewModel.CategoryId = product.CategoryId;
+                    viewModel.ConditionId = product.ConditionId;
+                    viewModel.Gender = product.Gender;
+                    viewModel.Size = product.Size;
+                    viewModel.Color = product.Color;
+                    viewModel.Brand = product.Brand;
+                    viewModel.Material = product.Material;
+                    viewModel.IsInStock = product.IsInStock;
+                    viewModel.IsVisible = product.IsVisible;
+
+                    viewModel.ExistingImages = product.ProductImages.Select(pi => new ProductImageViewModel
+                    {
+                        ImageId = pi.ImageId,
+                        ImageUrl = pi.ImageUrl,
+                        IsMainImage = pi.IsMainImage
+                    }).ToList();
+
+                    var mainImage = product.ProductImages.FirstOrDefault(pi => pi.IsMainImage);
+                    if (mainImage != null)
+                    {
+                        viewModel.MainImageId = mainImage.ImageId;
+                    }
+                }
+            }
+
+            return viewModel;
+        }
     }
 }

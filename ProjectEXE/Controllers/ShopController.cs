@@ -57,46 +57,6 @@ namespace ProjectEXE.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Create()
-        {
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            // Kiểm tra xem người dùng đã có shop chưa
-            if (await _shopService.HasShopAsync(userId))
-            {
-                return RedirectToAction("Index", "ShopProfile");
-            }
-            return View();
-        }
-
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateShopViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            // Kiểm tra xem người dùng đã có shop chưa
-            if (await _shopService.HasShopAsync(userId))
-            {
-                return RedirectToAction("Index", "ShopProfile");
-            }
-
-            var result = await _shopService.CreateShopAsync(model, userId);
-
-            if (result)
-            {
-                TempData["SuccessMessage"] = "Gian hàng của bạn đã được tạo thành công!";
-                return RedirectToAction("Index", "ShopProfile");
-            }
-
-            ModelState.AddModelError(string.Empty, "Không thể tạo gian hàng. Tên gian hàng có thể đã được sử dụng.");
-            return View(model);
-        }
 
         public async Task<IActionResult> AddNewProduct()
         {
@@ -116,13 +76,13 @@ namespace ProjectEXE.Controllers
                 return RedirectToAction("Index", "Package");
             }
             //kiểm tra xem còn số lượng thêm sản phẩm theo gói dịch vụ hay không
-            if (await _shopService.CanAddProductAsync(shopId))
+            if (!await _shopService.CanAddProductAsync(shopId))
             {
                 TempData["Error"] = "Bạn đã đạt giới hạn sản phẩm của gói hiện tại. Nâng cấp gói để đăng thêm sản phẩm và tăng doanh thu!";
                 return RedirectToAction("Index", "Package");
             }
-
-            return View();
+            var viewModel = await _shopService.GetProductFormDataAsync(null, shopId);
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -133,25 +93,21 @@ namespace ProjectEXE.Controllers
             //lấy id của shop
             int shopId = await _shopService.GetShopIdByUserId(userId);
 
-            if (ModelState.IsValid)
+            bool result = await _shopService.CreateProductAsync(model, shopId);
+            if (result)
             {
-                bool result = await _shopService.CreateProductAsync(model, shopId);
-
-                if (result)
-                {
-                    TempData["SuccessMessage"] = "Sản phẩm đã được tạo thành công!";
-                    return RedirectToAction("Index", "ShopProfile");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Có lỗi xảy ra khi tạo sản phẩm. Vui lòng thử lại.");
-                }
+                TempData["Success"] = "Sản phẩm đã được tạo thành công!";
+                return RedirectToAction("Index", "ShopProfile");
+            }
+            else
+            {
+                TempData["Error"] = "Có lỗi xảy ra khi tạo sản phẩm. Vui lòng thử lại.";
             }
 
             // Nếu có lỗi, tải lại dữ liệu cho form
             model.Categories = await _shopService.GetCategoriesAsync();
             model.Conditions = await _shopService.GetConditionsAsync();
-            return View("AddProduct", model);
+            return View("AddNewProduct", model);
         }
     }
 }
