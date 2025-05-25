@@ -51,11 +51,16 @@ namespace ProjectEXE.Controllers
             return View(viewModel);
         }
 
-        public async Task<IActionResult> ProductList([FromQuery] List<int> SelectedCategoryIds, ProductFilterViewModel filter, int page = 1)
+        public async Task<IActionResult> ProductList([FromQuery] List<int> SelectedCategoryIds,string gender, ProductFilterViewModel filter, int page = 1)
         {
             if (filter == null)
             {
                 filter = new ProductFilterViewModel();
+            }
+
+            if (!string.IsNullOrEmpty(gender))
+            {
+                filter.Gender = gender;
             }
 
             // Gán giá trị đã chọn từ query string vào filter
@@ -204,6 +209,26 @@ namespace ProjectEXE.Controllers
                 return userId;
             }
             return null;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> QuickView(int id)
+        {
+            try
+            {
+                var product = await _productService.GetProductDetailByIdAsync(id);
+                if (product == null)
+                {
+                    return Json(new { success = false, message = "Không tìm thấy sản phẩm" });
+                }
+
+                return PartialView("_QuickViewModal", product);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in QuickView for ProductId: {ProductId}", id);
+                return Json(new { success = false, message = "Có lỗi xảy ra" });
+            }
         }
     }
 }

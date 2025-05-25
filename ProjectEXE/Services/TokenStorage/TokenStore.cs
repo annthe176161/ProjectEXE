@@ -61,6 +61,12 @@ namespace ProjectEXE.Services.TokenStorage
         {
             return $"{email}:{tokenType}";
         }
+        public static Task RemoveTokenAsync(string email, string tokenType)
+        {
+            string key = GetKey(email, tokenType);
+            _tokens.TryRemove(key, out _);
+            return Task.CompletedTask;
+        }
 
         private class TokenInfo
         {

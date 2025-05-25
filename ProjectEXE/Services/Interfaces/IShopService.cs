@@ -1,5 +1,6 @@
 ﻿using ProjectEXE.Models;
 using ProjectEXE.ViewModel.ProductViewModel;
+using ProjectEXE.ViewModel.Shop;
 using ProjectEXE.ViewModel.ShopViewModel;
 using System.Security.Claims;
 
@@ -16,10 +17,13 @@ namespace ProjectEXE.Services.Interfaces
         Task<ShopDetailViewModel> GetShopDetailAsync(int shopId);
         // Thêm phương thức mới để lấy chi tiết shop và sản phẩm
         Task<ShopDetailViewModel> GetShopWithProductsAsync(int shopId, int page = 1, int pageSize = 6);
-
         Task<Shop> GetShopByUserIdAsync(int userId);
-        Task<bool> CreateShopAsync(CreateShopViewModel model, int userId);
         Task<bool> UpdateShopAsync(CreateShopViewModel model, int shopId);
-        Task<bool> HasShopAsync(int userId);
+        Task<bool> CheckExpiryDate(int shopId);
+        Task<bool> CanAddProductAsync(int shopId);
+        Task<List<CategoryViewModel>> GetCategoriesAsync();
+        Task<List<ConditionViewModel>> GetConditionsAsync();
+        Task<bool> CreateProductAsync(ProductFormViewModel model, int shopId);
+        Task<ProductFormViewModel> GetProductFormDataAsync(int? productId, int shopId);
     }
 }

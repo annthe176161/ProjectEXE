@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ProjectEXE.Models;
 using ProjectEXE.Services.Interfaces;
-using ProjectEXE.ViewModel.AccountViewModel;
-using ProjectEXE.Services;
 using ProjectEXE.Services.TokenStorage;
-using System;
+using ProjectEXE.ViewModel.AccountViewModel;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 
 namespace ProjectEXE.Controllers
 {
@@ -16,11 +15,13 @@ namespace ProjectEXE.Controllers
     {
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
+        private  readonly RevaContext _context; // Thêm dòng này
 
-        public AccountController(IUserService userService, IEmailService emailService)
+        public AccountController(IUserService userService, IEmailService emailService, RevaContext context)
         {
             _userService = userService;
             _emailService = emailService;
+            _context = context;
         }
 
         [HttpGet]
@@ -39,6 +40,7 @@ namespace ProjectEXE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+
             if (ModelState.IsValid)
             {
                 var user = await _userService.GetUserByEmailAsync(model.Email);
@@ -46,12 +48,12 @@ namespace ProjectEXE.Controllers
 
                 if (user != null && isPasswordValid)
                 {
-                    // Kiểm tra email đã được xác thực chưa
-                    //if (await TokenStore.IsEmailVerifiedAsync(user.Email) == false)
-                    //{
-                    //    TempData["Warning"] = "Vui lòng xác nhận email của bạn trước khi đăng nhập.";
-                    //    return View(model);
-                    //}
+                    // Kiểm tra email đã xác thực chưa
+                    if (!await TokenStore.IsEmailVerifiedAsync(user.Email))
+                    {
+                        TempData["Warning"] = "Vui lòng xác nhận email của bạn trước khi đăng nhập.";
+                        return View(model);
+                    }
 
                     var principal = _userService.CreateClaimsPrincipal(user);
 
@@ -230,33 +232,39 @@ namespace ProjectEXE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                // Validate token
-                bool isValid = await TokenStore.ValidateTokenAsync(
-                    model.Email, model.Token, "PasswordReset");
-
-                if (isValid)
+            
+                if (ModelState.IsValid)
                 {
-                    // Get the user
-                    var user = await _userService.GetUserByEmailAsync(model.Email);
+                    bool isValid = await TokenStore.ValidateTokenAsync(
+                        model.Email, model.Token, "PasswordReset");
 
-                    if (user != null)
+                    if (isValid)
                     {
-                        // Update password
-                        user.PasswordHash = _userService.HashPassword(model.Password);
-                        await _userService.UpdateUserAsync(user);
+                        var user = await _userService.GetUserByEmailAsync(model.Email);
 
-                        return View("ResetPasswordConfirmation");
+                        if (user != null)
+                        {
+                            // Cập nhật mật khẩu (dùng method có sẵn)
+                            user.PasswordHash = _userService.HashPassword(model.Password);
+                            await _userService.UpdateUserAsync(user);
+
+                            // Clear cache để tránh vấn đề cũ
+                            _context.Entry(user).State = EntityState.Detached;
+
+                            // Xóa token
+                            await TokenStore.RemoveTokenAsync(model.Email, "PasswordReset");
+
+                            TempData["Success"] = "Mật khẩu đã được đặt lại thành công. Vui lòng đăng nhập bằng mật khẩu mới.";
+                            return RedirectToAction("Login");
+                        }
                     }
+
+                    ModelState.AddModelError("", "Đặt lại mật khẩu không thành công. Token không hợp lệ hoặc đã hết hạn.");
                 }
 
-                // If we get here, something failed
-                ModelState.AddModelError("", "Đặt lại mật khẩu không thành công. Token không hợp lệ hoặc đã hết hạn.");
+                return View(model);
             }
-
-            return View(model);
-        }
+        
 
         [HttpPost]
         [Authorize]
