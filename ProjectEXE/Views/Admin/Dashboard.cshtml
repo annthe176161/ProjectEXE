@@ -1,5 +1,5 @@
 ﻿@model ProjectEXE.ViewModel.DashboardViewModel
-
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 
 @{
@@ -7,6 +7,9 @@
     // Lấy danh sách thanh toán gần đây từ ViewBag
     var recentPaymentsList = ViewBag.RecentPackagePayments as IEnumerable<ProjectEXE.ViewModel.RecentPackagePaymentDto>;
     // Lưu ý: Namespace của RecentPackagePaymentDto là ProjectEXE.ViewModel (số ít) theo code bạn cung cấp.
+
+    // Biến categoriesForTable giờ sẽ là kiểu IEnumerable<CategoryOfAdminViewModel>
+    var categoriesForTable = Model?.CategoriesList ?? new List<ProjectEXE.ViewModel.CategoryOfAdminViewModel>();
 }
 
 
@@ -339,11 +342,13 @@
                 <i class="fas fa-box"></i> Gói dịch vụ
             </a>
         </li>
+
         <li>
-            <a href="#settings-section">
-                <i class="fas fa-cog"></i> Cài đặt
+            <a href="#categories-management-section">
+                <i class="fas fa-tags"></i> Danh mục sản phẩm
             </a>
         </li>
+        
         <li>
             <a href="../index.html">
                 <i class="fas fa-sign-out-alt"></i> Đăng xuất
@@ -847,47 +852,58 @@
         </div>
 
             <!-- Service Packages Section -->
-            <div id="packages-section" class="mb-4">
-                <h2 class="h5 mb-3">Quản lý danh mục sản phẩm</h2>
-
-                <!-- Service Packages Table -->
-                <div class="table-responsive">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h3>Danh sách danh mục sản phẩm</h3>
-                        <button class="btn btn-primary"><i class="fas fa-plus me-2"></i>Thêm Danh mục sản phẩm mới</button>
+            <div id="categories-management-section" class="mb-4">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h5 class="m-0 font-weight-bold text-primary">Quản lý Danh mục sản phẩm</h5>
+                        <a class="btn btn-success btn-sm" href="/Admin/CreateCategory">
+                            <i class="fas fa-plus me-2"></i>Thêm Danh mục
+                        </a>
                     </div>
-                    <table class="table dashboard-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Tên Danh mục</th>
-                                <th>Danh mục Cha</th>
-                                <th class="text-center" style="width: 150px;">Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var categoryItem in Model.CategoriesList)
+                    <div class="card-body">
+                            @if (categoriesForTable.Any()) @* SỬA: Dùng categoriesForTable *@
                             {
-                                <tr>
-                                    <td>@categoryItem.CategoryId</td>
-                                    <td>@Html.DisplayFor(modelItem => categoryItem.CategoryName)</td>
-                                    <td>@Html.DisplayFor(modelItem => categoryItem.ParentCategoryName)</td>
-                                    <td class="text-center">
-                                        <a asp-controller="Admin" asp-action="EditCategory" asp-route-id="@categoryItem.CategoryId" class="btn btn-sm btn-info me-1" title="Sửa">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <form asp-controller="Admin" asp-action="DeleteCategory" asp-route-id="@categoryItem.CategoryId" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này? Các ràng buộc dữ liệu có thể ngăn cản việc xóa.');">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-sm btn-danger" title="Xóa">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover" id="categoriesTable">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Tên Danh mục</th>
+                                            <th>Danh mục Cha</th>
+                                            <th class="text-center" style="width: 150px;">Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            @foreach (var categoryItem in categoriesForTable) @* SỬA: Dùng categoriesForTable *@
+                                            {
+                                            <tr>
+                                                <td>@categoryItem.CategoryId</td>
+                                                <td>@Html.DisplayFor(modelItem => categoryItem.CategoryName)</td>
+                                                <td>@(categoryItem.ParentCategoryName ?? "N/A")</td>
+                                                <td class="text-center">
+                                                    <a asp-controller="Admin" asp-action="EditCategory" asp-route-id="@categoryItem.CategoryId" class="btn btn-sm btn-info me-1" title="Sửa">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <form asp-controller="Admin" asp-action="DeleteCategory" asp-route-id="@categoryItem.CategoryId" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
+                                                            @Html.AntiForgeryToken()
+                                                        <button type="submit" class="btn btn-sm btn-danger" title="Xóa">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            }
+                                    </tbody>
+                                </table>
+                            </div>
                             }
-                        </tbody>
-                    </table>
+                            else
+                            {
+                            <p class="text-center text-muted">Chưa có danh mục nào.</p>
+                            }
+                    </div>
                 </div>
+            </div>
 
 
 <!-- Bootstrap JS -->

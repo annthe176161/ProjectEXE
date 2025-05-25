@@ -12,7 +12,8 @@ namespace ProjectEXE.ViewModel
         public List<Product> Products { get; set; }
 
 
-        public IEnumerable<CategoryOfAdminViewModel> CategoriesList { get; set; } // <== THÊM DÒNG NÀY
+        // SỬA Ở ĐÂY: Đổi CategoryViewModel thành CategoryOfAdminViewModel
+        public IEnumerable<CategoryOfAdminViewModel> CategoriesList { get; set; }
 
         public DashboardViewModel()
         {
@@ -20,7 +21,8 @@ namespace ProjectEXE.ViewModel
             ServicePackages = new List<ServicePackage>();
             RBMDtos = new List<RBMDto>();
             RBPDtos = new List<RBPDto>();
-            CategoriesList = new List<CategoryOfAdminViewModel>(); // <== KHỞI TẠO
+            Products = new List<Product>();
+            CategoriesList = new List<CategoryOfAdminViewModel>(); // Sửa ở đây
         }
     }
 }

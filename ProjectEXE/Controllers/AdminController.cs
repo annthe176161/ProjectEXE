@@ -276,22 +276,15 @@ namespace ProjectEXE.Controllers
 
         // --- CATEGORY MANAGEMENT ACTIONS ---
 
-        // Action này có thể không cần nếu danh sách Categories chỉ hiển thị trên Dashboard.
-        // Nếu bạn vẫn muốn một trang riêng cho Categories, hãy giữ lại nó và tạo View "Categories.cshtml".
-        // GET: Admin/Categories 
-        // public async Task<IActionResult> Categories()
-        // {
-        //     ViewData["Title"] = "Quản lý Danh mục";
-        //     var categories = await _adminService.GetAllCategoriesWithParentNameAsync();
-        //     return View(categories); 
-        // }
+        // GET: Admin/CreateCategory
+        // --- CATEGORY MANAGEMENT ACTIONS ---
 
         // GET: Admin/CreateCategory
         public async Task<IActionResult> CreateCategory()
         {
             ViewData["Title"] = "Tạo Danh mục mới";
             var allCategories = await _adminService.GetAllParentCategoriesAsync();
-            var viewModel = new CategoryOfAdminViewModel // Đổi CategoryOfAdminViewModel thành CategoryViewModel
+            var viewModel = new CategoryOfAdminViewModel // Sửa ở đây
             {
                 ParentCategoryList = allCategories.Select(c => new SelectListItem
                 {
@@ -299,17 +292,16 @@ namespace ProjectEXE.Controllers
                     Text = c.CategoryName
                 }).ToList()
             };
-            return View(viewModel); // Trả về Views/Admin/CreateCategory.cshtml
+            return View(viewModel);
         }
 
         // POST: Admin/CreateCategory
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateCategory(CategoryOfAdminViewModel model) // Đổi CategoryOfAdminViewModel thành CategoryViewModel
+        public async Task<IActionResult> CreateCategory(CategoryOfAdminViewModel model) // Sửa ở đây
         {
-            ModelState.Remove("ParentCategoryList"); // Bỏ qua validation cho list này khi post
-            ModelState.Remove("ParentCategoryName"); // Bỏ qua validation cho trường này vì nó chỉ để hiển thị
-
+            ModelState.Remove("ParentCategoryList");
+            ModelState.Remove("ParentCategoryName");
             if (ModelState.IsValid)
             {
                 bool result = await _adminService.AddCategoryAsync(model);
@@ -320,7 +312,6 @@ namespace ProjectEXE.Controllers
                 }
                 ModelState.AddModelError("", "Không thể thêm danh mục. Vui lòng thử lại.");
             }
-
             var allCategories = await _adminService.GetAllParentCategoriesAsync();
             model.ParentCategoryList = allCategories.Select(c => new SelectListItem
             {
@@ -335,13 +326,12 @@ namespace ProjectEXE.Controllers
         public async Task<IActionResult> EditCategory(int? id)
         {
             if (id == null) return NotFound();
-
             ViewData["Title"] = "Chỉnh sửa Danh mục";
-            var categoryDomainModel = await _adminService.GetCategoryByIdAsync(id.Value); // Lấy Domain Model
+            var categoryDomainModel = await _adminService.GetCategoryByIdAsync(id.Value);
             if (categoryDomainModel == null) return NotFound();
 
             var allCategories = await _adminService.GetAllParentCategoriesAsync();
-            var viewModel = new CategoryOfAdminViewModel // Đổi CategoryOfAdminViewModel thành CategoryViewModel
+            var viewModel = new CategoryOfAdminViewModel // Sửa ở đây
             {
                 CategoryId = categoryDomainModel.CategoryId,
                 CategoryName = categoryDomainModel.CategoryName,
@@ -355,13 +345,13 @@ namespace ProjectEXE.Controllers
                                             Selected = c.CategoryId == categoryDomainModel.ParentCategoryId
                                         }).ToList()
             };
-            return View(viewModel); // Trả về Views/Admin/EditCategory.cshtml
+            return View(viewModel);
         }
 
         // POST: Admin/EditCategory/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditCategory(int id, CategoryOfAdminViewModel model) // Đổi CategoryOfAdminViewModel thành CategoryViewModel
+        public async Task<IActionResult> EditCategory(int id, CategoryOfAdminViewModel model) // Sửa ở đây
         {
             if (id != model.CategoryId) return NotFound();
 
@@ -385,7 +375,6 @@ namespace ProjectEXE.Controllers
                     ModelState.AddModelError("", "Không thể cập nhật danh mục. Vui lòng thử lại.");
                 }
             }
-
             var allCategories = await _adminService.GetAllParentCategoriesAsync();
             model.ParentCategoryList = allCategories
                                         .Where(c => c.CategoryId != model.CategoryId)
@@ -399,21 +388,17 @@ namespace ProjectEXE.Controllers
             return View(model);
         }
 
-        // POST: Admin/DeleteCategory/5
+        // POST: Admin/DeleteCategory/5 (Giữ nguyên logic)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             var (success, errorMessage) = await _adminService.DeleteCategoryAsync(id);
-            if (success)
-            {
-                TempData["SuccessMessage"] = errorMessage;
-            }
-            else
-            {
-                TempData["ErrorMessage"] = errorMessage;
-            }
+            if (success) TempData["SuccessMessage"] = errorMessage;
+            else TempData["ErrorMessage"] = errorMessage;
             return RedirectToAction(nameof(Dashboard), new { fragment = "categories-management-section" });
         }
+
+        // ... (các action Edit User, Ban, Unban, Product, Package giữ nguyên) ...
     }
 }
