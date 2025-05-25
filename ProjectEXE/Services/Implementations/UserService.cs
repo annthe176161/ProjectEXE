@@ -23,17 +23,51 @@ namespace ProjectEXE.Services.Implementations
 
         public async Task<User> GetUserByEmailAsync(string email)
         {
+            // Xóa cache của tất cả User entities trong ChangeTracker
+            var trackedEntries = _context.ChangeTracker.Entries<User>()
+                .Where(e => e.Entity.Email.ToLower() == email.ToLower())
+                .ToList();
+
+            foreach (var entry in trackedEntries)
+            {
+                entry.State = EntityState.Detached;
+            }
+
+            // Lấy dữ liệu mới từ database
             return await _context.Users
                 .Include(u => u.Role)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() && u.IsActive);
         }
 
         public async Task<bool> ValidatePasswordAsync(User user, string password)
         {
-            if (user == null)
-                return false;
+            // Thêm logging chi tiết
+            Console.WriteLine($"ValidatePasswordAsync called for email: {user?.Email}");
 
-            return VerifyPassword(password, user.PasswordHash);
+            if (user == null)
+            {
+                Console.WriteLine("ValidatePasswordAsync: user is null");
+                return false;
+            }
+
+            string passwordHash = user.PasswordHash;
+            Console.WriteLine($"ValidatePasswordAsync: password hash = {passwordHash}");
+
+            // Sử dụng trực tiếp BCrypt.Verify thay vì gọi VerifyPassword
+            bool result;
+            try
+            {
+                result = BCrypt.Net.BCrypt.Verify(password, passwordHash);
+                Console.WriteLine($"BCrypt.Verify result: {result}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"BCrypt.Verify exception: {ex.Message}");
+                result = false;
+            }
+
+            return result;
         }
 
         public async Task<User> GetUserDomainModelByIdAsync(int userId)
@@ -103,10 +137,19 @@ namespace ProjectEXE.Services.Implementations
 
         public async Task UpdateUserAsync(User user)
         {
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Entry(user).State = EntityState.Modified;
+                var result = await _context.SaveChangesAsync();
+                Console.WriteLine($"User update result: {result} records affected");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating user: {ex.Message}");
+                throw;
+            }
         }
-        
+
         public async Task<bool> UpdateUserAsync(UserEditViewModel model)
         {
             var user = await _context.Users.FindAsync(model.UserId);
@@ -178,15 +221,21 @@ namespace ProjectEXE.Services.Implementations
         public bool VerifyPassword(string password, string passwordHash)
         {
             // For demo purposes, if the hash is the same as the password (unencrypted), return true
-            if (passwordHash == "hashedpassword" && password == "admin123")
-                return true;
+            if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(passwordHash))
+                return false;
+
+            // Bỏ điều kiện hardcoded đặc biệt vì có thể gây nhầm lẫn
+            // if (passwordHash == "hashedpassword" && password == "admin123")
+            //     return true;
 
             try
             {
+                // Luôn sử dụng BCrypt để xác thực nhất quán
                 return BCrypt.Net.BCrypt.Verify(password, passwordHash);
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"Password verification error: {ex.Message}");
                 return false;
             }
         }
@@ -237,6 +286,38 @@ namespace ProjectEXE.Services.Implementations
                 return 0;
             }
             return await _context.Products.CountAsync();
+        }
+
+        public async Task<bool> DeleteUserAsync(int userId)
+        {
+            try
+            {
+                var user = await _context.Users.FindAsync(userId);
+                if (user == null)
+                {
+                    return false;
+                }
+
+                // Xóa các liên kết với bảng khác nếu cần
+                // Ví dụ: Xóa các liên kết đến vai trò, đơn hàng, v.v.
+
+                _context.Users.Remove(user);
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi khi xóa user: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> IsEmailVerifiedAsync(string email)
+        {
+            // Lấy thông tin từ TokenStore (không phải TokenStorage)
+            return await Services.TokenStorage.TokenStore.IsEmailVerifiedAsync(email);
+
+            // Hoặc đơn giản hơn nếu đã import namespace:
+            // return await TokenStore.IsEmailVerifiedAsync(email);
         }
     }
 }

@@ -36,6 +36,8 @@ namespace ProjectEXE.Services.Interfaces
         string HashPassword(string password);
         bool VerifyPassword(string password, string passwordHash);
         Task UpdateUserAsync(User user);
+        Task<bool> DeleteUserAsync(int userId);
+        Task<bool> IsEmailVerifiedAsync(string email);
     }
     
 }
