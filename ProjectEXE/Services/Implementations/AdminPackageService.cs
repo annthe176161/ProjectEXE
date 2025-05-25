@@ -109,7 +109,6 @@ namespace ProjectEXE.Services.Implementations
 
                 // Cập nhật trạng thái thanh toán
                 payment.StatusId = 2; // Confirmed
-                payment.ConfirmedByUserId = adminUserId;
 
                 // Kiểm tra xem đã có gói đang hoạt động không
                 var activeSubscription = await _context.PackageSubscriptions
@@ -176,7 +175,6 @@ namespace ProjectEXE.Services.Implementations
 
             // Cập nhật trạng thái thanh toán
             payment.StatusId = 3; // Rejected
-            payment.ConfirmedByUserId = adminUserId;
 
             await _context.SaveChangesAsync();
             return true;
