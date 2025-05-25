@@ -1,4 +1,4 @@
-﻿// ===== ADD PRODUCT SIMPLE JAVASCRIPT =====
+﻿// ===== ADD PRODUCT SIMPLE JAVASCRIPT - FIXED =====
 
 (function () {
     'use strict';
@@ -19,12 +19,22 @@
             fileInput.addEventListener('change', handleFileSelect);
         }
 
-        // Upload area click
+        // Upload area events - FIX: Only bind to specific clickable area
+        const uploadPlaceholder = document.querySelector('.upload-placeholder');
         const uploadArea = document.querySelector('.image-upload-area');
-        if (uploadArea) {
-            uploadArea.addEventListener('click', () => fileInput.click());
+
+        if (uploadPlaceholder && uploadArea && fileInput) {
+            // Only bind click to placeholder, not the entire upload area
+            uploadPlaceholder.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                fileInput.click();
+            });
+
+            // Drag and drop events
             uploadArea.addEventListener('dragover', handleDragOver);
             uploadArea.addEventListener('drop', handleDrop);
+            uploadArea.addEventListener('dragleave', handleDragLeave);
         }
 
         // Form submit
@@ -40,24 +50,43 @@
         }
     }
 
-    // Handle file selection
+    // Handle file selection - FIX: Prevent multiple triggers
     function handleFileSelect(e) {
+        // Prevent event bubbling
+        e.stopPropagation();
+
         const files = Array.from(e.target.files);
-        processFiles(files);
+
+        // Only process if files are actually selected
+        if (files.length > 0) {
+            processFiles(files);
+        }
     }
 
     // Handle drag over
     function handleDragOver(e) {
         e.preventDefault();
-        e.currentTarget.style.borderColor = 'var(--primary-green)';
+        e.stopPropagation();
+        e.currentTarget.classList.add('drag-over');
+    }
+
+    // Handle drag leave
+    function handleDragLeave(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.currentTarget.classList.remove('drag-over');
     }
 
     // Handle drop
     function handleDrop(e) {
         e.preventDefault();
+        e.stopPropagation();
+        e.currentTarget.classList.remove('drag-over');
+
         const files = Array.from(e.dataTransfer.files);
-        processFiles(files);
-        e.currentTarget.style.borderColor = '#d1ecf1';
+        if (files.length > 0) {
+            processFiles(files);
+        }
     }
 
     // Process files
@@ -101,8 +130,19 @@
         if (selectedFiles.length === 0) return;
 
         previewContainer = document.createElement('div');
-        previewContainer.className = 'image-preview-container row';
-        previewContainer.innerHTML = '<div class="col-12"><h6><i class="fas fa-images me-2"></i>Xem trước hình ảnh</h6></div>';
+        previewContainer.className = 'image-preview-container';
+
+        const previewHeader = document.createElement('div');
+        previewHeader.className = 'preview-header';
+        previewHeader.innerHTML = `
+            <h6><i class="fas fa-images me-2"></i>Xem trước hình ảnh (${selectedFiles.length}/${maxImages})</h6>
+            <button type="button" class="btn-clear-all" onclick="clearAllImages()">
+                <i class="fas fa-trash"></i> Xóa tất cả
+            </button>
+        `;
+
+        const previewGrid = document.createElement('div');
+        previewGrid.className = 'preview-grid row';
 
         selectedFiles.forEach((file, index) => {
             const col = document.createElement('div');
@@ -113,6 +153,11 @@
                 col.innerHTML = `
                     <div class="preview-card">
                         <img src="${e.target.result}" class="preview-image" alt="Preview ${index + 1}">
+                        <div class="preview-overlay">
+                            <button type="button" class="btn-remove" onclick="removeImage(${index})" title="Xóa ảnh">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
                         <div class="preview-footer">
                             <div class="image-label ${index === 0 ? 'main-label' : ''}">
                                 ${index === 0 ? 'Ảnh chính' : `Ảnh ${index + 1}`}
@@ -123,12 +168,34 @@
             };
             reader.readAsDataURL(file);
 
-            previewContainer.appendChild(col);
+            previewGrid.appendChild(col);
         });
+
+        previewContainer.appendChild(previewHeader);
+        previewContainer.appendChild(previewGrid);
 
         const uploadArea = document.querySelector('.image-upload-area');
         uploadArea.parentNode.insertAdjacentElement('afterend', previewContainer);
     }
+
+    // Remove single image
+    window.removeImage = function (index) {
+        selectedFiles.splice(index, 1);
+        updateFileInput();
+        showPreview();
+        showMessage('Đã xóa hình ảnh', 'success');
+    };
+
+    // Clear all images
+    window.clearAllImages = function () {
+        selectedFiles = [];
+        updateFileInput();
+        const previewContainer = document.querySelector('.image-preview-container');
+        if (previewContainer) {
+            previewContainer.remove();
+        }
+        showMessage('Đã xóa tất cả hình ảnh', 'success');
+    };
 
     // Format price
     function formatPrice(e) {
@@ -278,7 +345,7 @@
 
 })();
 
-// Toast message styles
+// Enhanced toast message styles
 const toastStyles = `
 .toast-message {
     position: fixed;
@@ -292,6 +359,7 @@ const toastStyles = `
     transform: translateX(100%);
     transition: transform 0.3s ease;
     border-left: 4px solid #28a745;
+    min-width: 280px;
 }
 
 .toast-message.show {
@@ -300,6 +368,10 @@ const toastStyles = `
 
 .toast-message.toast-error {
     border-left-color: #dc3545;
+}
+
+.toast-message.toast-warning {
+    border-left-color: #fd7e14;
 }
 
 .toast-content {
@@ -314,14 +386,167 @@ const toastStyles = `
 .toast-error .toast-content i { color: #dc3545; }
 .toast-warning .toast-content i { color: #fd7e14; }
 
+/* Upload area states */
+.image-upload-area.drag-over {
+    border-color: var(--primary-green) !important;
+    background-color: rgba(40, 167, 69, 0.05);
+}
+
+.upload-placeholder {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-placeholder:hover {
+    background-color: rgba(40, 167, 69, 0.02);
+}
+
+/* Preview styles */
+.image-preview-container {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.preview-header h6 {
+    margin: 0;
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.btn-clear-all {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-clear-all:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+}
+
+.preview-grid {
+    gap: 15px;
+}
+
+.preview-item {
+    margin-bottom: 15px;
+}
+
+.preview-card {
+    position: relative;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.preview-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.preview-image {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    display: block;
+}
+
+.preview-overlay {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.preview-card:hover .preview-overlay {
+    opacity: 1;
+}
+
+.btn-remove {
+    background: rgba(220, 53, 69, 0.9);
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-remove:hover {
+    background: #dc3545;
+    transform: scale(1.1);
+}
+
+.preview-footer {
+    padding: 8px;
+    text-align: center;
+}
+
+.image-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.main-label {
+    color: var(--primary-green);
+    background: rgba(40, 167, 69, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
 @media (max-width: 576px) {
     .toast-message {
         left: 10px;
         right: 10px;
         transform: translateY(-100%);
+        min-width: auto;
     }
     .toast-message.show {
         transform: translateY(0);
+    }
+    
+    .preview-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    
+    .btn-clear-all {
+        align-self: center;
+        width: fit-content;
+    }
+    
+    .preview-image {
+        height: 100px;
     }
 }
 `;
