@@ -62,12 +62,23 @@ namespace ProjectEXE.Controllers
         {
             Console.WriteLine($"LOGIN POST called for email: {model?.Email}");
 
-            if (!ModelState.IsValid)
-                return View(model);
-
-            try
+            if (ModelState.IsValid)
             {
-                var user = await _userService.GetUserByEmailAsync(model.Email);
+                // FORCE CLEAR cache trước khi login
+                _context.ChangeTracker.Clear();
+
+                // LẤY USER MỚI TỪ DATABASE (không cache)
+                var user = await _context.Users
+                    .Include(u => u.Role)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.Email.ToLower() == model.Email.ToLower() &&
+                                            (u.IsActive == 1 || u.IsActive == 2));
+
+                Console.WriteLine($"User found: {user != null}");
+                if (user != null)
+                {
+                    Console.WriteLine($"User IsActive: {user.IsActive}, PasswordHash: {user.PasswordHash?.Substring(0, 10)}...");
+                }
 
                 if (user == null)
                 {
@@ -76,44 +87,62 @@ namespace ProjectEXE.Controllers
                 }
 
                 // Kiểm tra trạng thái tài khoản
-                switch (user.IsActive)
+                if (user.IsActive == 0)
                 {
-                    case 0:
-                        TempData["Warning"] = "Tài khoản đang bị vô hiệu hóa";
-                        return View(model);
-                    case 2:
-                        TempData["Warning"] = "Vui lòng xác nhận email của bạn trước khi đăng nhập.";
-                        return View(model);
-                }
-
-                // Validate password
-                if (!await _userService.ValidatePasswordAsync(user, model.Password))
-                {
-                    TempData["Warning"] = "Email hoặc mật khẩu không chính xác";
+                    TempData["Warning"] = "Tài khoản đang bị vô hiệu hóa";
                     return View(model);
                 }
 
-                // Login successful
-                var principal = _userService.CreateClaimsPrincipal(user);
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    principal,
-                    new AuthenticationProperties
-                    {
-                        IsPersistent = model.RememberMe,
-                        ExpiresUtc = DateTime.UtcNow.AddDays(model.RememberMe ? 30 : 1)
-                    });
+                if (user.IsActive == 2)
+                {
+                    TempData["Warning"] = "Vui lòng xác nhận email của bạn trước khi đăng nhập.";
+                    return View(model);
+                }
 
-                return !string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl)
-                    ? Redirect(model.ReturnUrl)
-                    : RedirectToAction("Index", "Home");
+                // VALIDATE PASSWORD TRỰC TIẾP
+                bool isPasswordValid;
+                try
+                {
+                    isPasswordValid = BCrypt.Net.BCrypt.Verify(model.Password, user.PasswordHash);
+                    Console.WriteLine($"Password validation result: {isPasswordValid}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Password validation error: {ex.Message}");
+                    isPasswordValid = false;
+                }
+
+                if (isPasswordValid)
+                {
+                    Console.WriteLine("Login successful - creating claims");
+                    var principal = _userService.CreateClaimsPrincipal(user);
+
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        principal,
+                        new AuthenticationProperties
+                        {
+                            IsPersistent = model.RememberMe,
+                            ExpiresUtc = DateTime.UtcNow.AddDays(model.RememberMe ? 30 : 1)
+                        });
+
+                    Console.WriteLine("SignIn completed - redirecting");
+
+                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                    {
+                        return Redirect(model.ReturnUrl);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+
+                Console.WriteLine("Password invalid");
+                TempData["Warning"] = "Email hoặc mật khẩu không chính xác";
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Login error: {ex.Message}");
-                TempData["Warning"] = "Có lỗi xảy ra. Vui lòng thử lại.";
-                return View(model);
-            }
+
+            return View(model);
         }
 
         [HttpGet]
