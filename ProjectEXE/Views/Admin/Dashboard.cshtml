@@ -15,58 +15,58 @@
 
 @Html.AntiForgeryToken()
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.min.css">
-    <!-- Custom CSS -->
-    <style>
-        :root {
-            --primary-color: #2e8b57;
-            --secondary-color: #3cb371;
-            --accent-color: #228b22;
-            --light-color: #e8f5e9;
-            --dark-color: #1b5e20;
-            --text-color: #333333;
-            --white-color: #ffffff;
-            --gray-light: #f5f5f5;
-            --gray-medium: #e0e0e0;
-        }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Chart.js -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.min.css">
+<!-- Custom CSS -->
+<style>
+    :root {
+        --primary-color: #2e8b57;
+        --secondary-color: #3cb371;
+        --accent-color: #228b22;
+        --light-color: #e8f5e9;
+        --dark-color: #1b5e20;
+        --text-color: #333333;
+        --white-color: #ffffff;
+        --gray-light: #f5f5f5;
+        --gray-medium: #e0e0e0;
+    }
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
-            color: var(--text-color);
-        }
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f8f9fa;
+        color: var(--text-color);
+    }
 
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 250px;
-            background-color: var(--dark-color);
-            color: white;
-            padding-top: 20px;
-            transition: all 0.3s;
-            z-index: 1000;
-        }
+    /* Sidebar */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 250px;
+        background-color: var(--dark-color);
+        color: white;
+        padding-top: 20px;
+        transition: all 0.3s;
+        z-index: 1000;
+    }
 
-        .sidebar-header {
-            padding: 10px 20px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 20px;
-        }
+    .sidebar-header {
+        padding: 10px 20px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 20px;
+    }
 
         .sidebar-header img {
             max-width: 150px;
         }
 
-        .sidebar-menu {
-            padding: 0;
-            list-style-type: none;
-        }
+    .sidebar-menu {
+        padding: 0;
+        list-style-type: none;
+    }
 
         .sidebar-menu li {
             margin-bottom: 5px;
@@ -81,12 +81,12 @@
             border-left: 3px solid transparent;
         }
 
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            border-left-color: var(--secondary-color);
-        }
+            .sidebar-menu a:hover,
+            .sidebar-menu a.active {
+                background-color: rgba(255, 255, 255, 0.1);
+                color: white;
+                border-left-color: var(--secondary-color);
+            }
 
         .sidebar-menu i {
             margin-right: 10px;
@@ -94,29 +94,29 @@
             text-align: center;
         }
 
-        /* Main Content */
-        .main-content {
-            margin-left: 250px;
-            padding: 20px;
-            transition: all 0.3s;
-        }
+    /* Main Content */
+    .main-content {
+        margin-left: 250px;
+        padding: 20px;
+        transition: all 0.3s;
+    }
 
-        /* Header */
-        .admin-header {
-            background-color: white;
-            padding: 15px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    /* Header */
+    .admin-header {
+        background-color: white;
+        padding: 15px 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-        .user-profile {
-            display: flex;
-            align-items: center;
-        }
+    .user-profile {
+        display: flex;
+        align-items: center;
+    }
 
         .user-profile img {
             width: 40px;
@@ -125,24 +125,24 @@
             margin-right: 10px;
         }
 
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--text-color);
-        }
+    .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--text-color);
+    }
 
-        /* Cards */
-        .dashboard-card {
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: transform 0.3s;
-        }
+    /* Cards */
+    .dashboard-card {
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: transform 0.3s;
+    }
 
         .dashboard-card:hover {
             transform: translateY(-5px);
@@ -165,35 +165,35 @@
             font-size: 14px;
         }
 
-        .card-change.positive {
-            color: #28a745;
-        }
+    .card-change.positive {
+        color: #28a745;
+    }
 
-        .card-change.negative {
-            color: #dc3545;
-        }
+    .card-change.negative {
+        color: #dc3545;
+    }
 
-        .card-icon {
-            background-color: var(--light-color);
-            color: var(--primary-color);
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
+    .card-icon {
+        background-color: var(--light-color);
+        color: var(--primary-color);
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
 
-        /* Tables */
-        .table-responsive {
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+    /* Tables */
+    .table-responsive {
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+    }
 
         .table-responsive h3 {
             margin-top: 0;
@@ -203,46 +203,46 @@
             margin-bottom: 20px;
         }
 
-        .dashboard-table th {
-            background-color: var(--light-color);
-            color: var(--dark-color);
-        }
+    .dashboard-table th {
+        background-color: var(--light-color);
+        color: var(--dark-color);
+    }
 
-        .dashboard-table td,
-        .dashboard-table th {
-            vertical-align: middle;
-        }
+    .dashboard-table td,
+    .dashboard-table th {
+        vertical-align: middle;
+    }
 
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-        }
+    .status-badge {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+    }
 
-        .badge-active {
-            background-color: #d1e7dd;
-            color: #0f5132;
-        }
+    .badge-active {
+        background-color: #d1e7dd;
+        color: #0f5132;
+    }
 
-        .badge-expired {
-            background-color: #f8d7da;
-            color: #842029;
-        }
+    .badge-expired {
+        background-color: #f8d7da;
+        color: #842029;
+    }
 
-        .badge-pending {
-            background-color: #fff3cd;
-            color: #664d03;
-        }
+    .badge-pending {
+        background-color: #fff3cd;
+        color: #664d03;
+    }
 
-        /* Charts */
-        .chart-container {
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+    /* Charts */
+    .chart-container {
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+    }
 
         .chart-container h3 {
             margin-top: 0;
@@ -252,10 +252,10 @@
             margin-bottom: 20px;
         }
 
-        /* Tabs */
-        .admin-tabs {
-            margin-bottom: 20px;
-        }
+    /* Tabs */
+    .admin-tabs {
+        margin-bottom: 20px;
+    }
 
         .admin-tabs .nav-link {
             color: var(--text-color);
@@ -263,53 +263,53 @@
             padding: 10px 20px;
         }
 
-        .admin-tabs .nav-link.active {
-            color: var(--primary-color);
-            background-color: transparent;
-            border-bottom: 2px solid var(--primary-color);
-        }
-
-        /* Action Buttons */
-        .btn-action {
-            padding: 4px 8px;
-            font-size: 14px;
-            margin-right: 5px;
-        }
-
-        .btn-view {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .btn-edit {
-            background-color: #ffc107;
-            color: #212529;
-        }
-
-        .btn-delete {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        /* Responsive */
-        @@media (max-width: 992px) {
-            .sidebar {
-                left: -250px;
+            .admin-tabs .nav-link.active {
+                color: var(--primary-color);
+                background-color: transparent;
+                border-bottom: 2px solid var(--primary-color);
             }
+
+    /* Action Buttons */
+    .btn-action {
+        padding: 4px 8px;
+        font-size: 14px;
+        margin-right: 5px;
+    }
+
+    .btn-view {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .btn-edit {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    /* Responsive */
+    @@media (max-width: 992px) {
+        .sidebar {
+            left: -250px;
+        }
 
             .sidebar.active {
                 left: 0;
             }
 
-            .main-content {
-                margin-left: 0;
-            }
-
-            .menu-toggle {
-                display: block;
-            }
+        .main-content {
+            margin-left: 0;
         }
-    </style>
+
+        .menu-toggle {
+            display: block;
+        }
+    }
+</style>
 
 <!-- Sidebar -->
 <div class="sidebar">
@@ -348,7 +348,7 @@
                 <i class="fas fa-tags"></i> Danh mục sản phẩm
             </a>
         </li>
-        
+
         <li>
             <a href="../index.html">
                 <i class="fas fa-sign-out-alt"></i> Đăng xuất
@@ -410,7 +410,7 @@
                         @:0
                     }
                 </div>
-                
+
             </div>
         </div>
         <div class="col-md-3 col-sm-6">
@@ -429,7 +429,7 @@
                         @:0
                     }
                 </div>
-                
+
             </div>
         </div>
         <div class="col-md-3 col-sm-6">
@@ -459,7 +459,7 @@
                         @("0 VNĐ")
                     }
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -501,7 +501,7 @@
                             <th class="text-end">Số tiền</th> @* Căn phải cho số tiền *@
                             <th>Trạng thái</th>
                             <th class="text-center">Ngày thanh toán</th> @* Căn giữa trạng thái *@
-                           
+
                         </tr>
                     </thead>
                     <tbody>
@@ -562,179 +562,179 @@
             }
         </div>
 
-    <!-- Users Section -->
-    <div id="users-section" class="mb-4">
-        <h2 class="h5 mb-3">Quản lý người dùng</h2>
+        <!-- Users Section -->
+        <div id="users-section" class="mb-4">
+            <h2 class="h5 mb-3">Quản lý người dùng</h2>
 
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                @TempData["SuccessMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                @TempData["ErrorMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
 
-        <!-- User Tabs -->
-        <ul class="nav nav-tabs admin-tabs" id="userTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="all-users-tab" data-bs-toggle="tab" data-bs-target="#all-users"
-                        type="button" role="tab">
-                    Tất cả
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="buyers-tab" data-bs-toggle="tab" data-bs-target="#buyers" type="button"
-                        role="tab">
-                    Người mua
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="sellers-tab" data-bs-toggle="tab" data-bs-target="#sellers"
-                        type="button" role="tab">
-                    Người bán
-                </button>
-            </li>
-        </ul>
+            <!-- User Tabs -->
+            <ul class="nav nav-tabs admin-tabs" id="userTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="all-users-tab" data-bs-toggle="tab" data-bs-target="#all-users"
+                            type="button" role="tab">
+                        Tất cả
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="buyers-tab" data-bs-toggle="tab" data-bs-target="#buyers" type="button"
+                            role="tab">
+                        Người mua
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="sellers-tab" data-bs-toggle="tab" data-bs-target="#sellers"
+                            type="button" role="tab">
+                        Người bán
+                    </button>
+                </li>
+            </ul>
 
-        <!-- User Table -->
-        <div class="tab-content" id="userTabsContent">
-            <div class="tab-pane fade show active" id="all-users" role="tabpanel">
-                <div class="table-responsive">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h3>Danh sách người dùng</h3>
-                        <div class="d-flex">
-                            <input type="text" class="form-control me-2" placeholder="Tìm kiếm...">
-                            <button class="btn btn-primary">Tìm</button>
+            <!-- User Table -->
+            <div class="tab-content" id="userTabsContent">
+                <div class="tab-pane fade show active" id="all-users" role="tabpanel">
+                    <div class="table-responsive">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3>Danh sách người dùng</h3>
+                            <div class="d-flex">
+                                <input type="text" class="form-control me-2" placeholder="Tìm kiếm...">
+                                <button class="btn btn-primary">Tìm</button>
+                            </div>
                         </div>
-                    </div>
                         @if (Model.userViewModels != null && Model.userViewModels.Any())
                         {
-                        <table class="table table-bordered table-hover dashboard-table" id="dataTableUsers" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Họ tên</th>
-                                    <th>Email</th>
-                                    <th>Vai trò</th>
-                                    <th>Ngày đăng ký</th>
-                                    <th>Trạng thái</th>
-                                    <th class="text-center" style="min-width: 180px;">Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.userViewModels)
-                                {
+                            <table class="table table-bordered table-hover dashboard-table" id="dataTableUsers" width="100%" cellspacing="0">
+                                <thead>
                                     <tr>
-                                        <td>#@item.UserId</td>
-                                        <td>@Html.DisplayFor(modelItem => item.FullName)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.RoleName)</td>
-                                        <td>@item.CreatedAt.ToString("dd/MM/yyyy")</td>
-                                        <td class="text-center">
-                                            @if (item.IsActive)
-                                            {
-                                                <span class="status-badge badge-active">Hoạt động</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="status-badge badge-expired">Bị khóa</span>
-                                            }
-                                        </td>
-                                        <td class="text-center">
-                                            @* Nút Xem Chi Tiết (Details) - Cần tạo Action Details trong Controller *@
-                                            @*
-                                    <a asp-action="Details" asp-route-id="@item.UserId" class="btn btn-sm btn-action btn-view me-1" title="Xem chi tiết">
-                                    <i class="fas fa-eye"></i>
-                                    </a>
-                                    *@
-                                            <a asp-action="Edit" asp-route-id="@item.UserId" class="btn btn-sm btn-action btn-edit me-1" title="Chỉnh sửa">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-
-                                            @if (item.IsActive)
-                                            {
-                                                <form asp-action="Ban" asp-route-id="@item.UserId" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn khóa người dùng này không?');">
-                                                    @Html.AntiForgeryToken()
-                                                    <button type="submit" class="btn btn-sm btn-action btn-warning me-1" title="Khóa tài khoản">
-                                                        @* btn-warning cho Ban *@
-                                                        <i class="fas fa-lock"></i>
-                                                    </button>
-                                                </form>
-                                            }
-                                            else
-                                            {
-                                                <form asp-action="Unban" asp-route-id="@item.UserId" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn mở khóa người dùng này không?');">
-                                                    @Html.AntiForgeryToken()
-                                                    <button type="submit" class="btn btn-sm btn-action btn-success me-1" title="Mở khóa tài khoản">
-                                                        @* btn-success cho Unban *@
-                                                        <i class="fas fa-unlock"></i>
-                                                    </button>
-                                                </form>
-                                            }
-
-
-                                        </td>
+                                        <th>ID</th>
+                                        <th>Họ tên</th>
+                                        <th>Email</th>
+                                        <th>Vai trò</th>
+                                        <th>Ngày đăng ký</th>
+                                        <th>Trạng thái</th>
+                                        <th class="text-center" style="min-width: 180px;">Thao tác</th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
-                    }
-                    else
-                    {
-                        <div class="alert alert-info text-center">
-                            Không tìm thấy người dùng nào phù hợp.
-                        </div>
-                    }
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1">Trước</a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">Sau</a>
-                            </li>
-                        </ul>
-                    </nav>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.userViewModels)
+                                    {
+                                        <tr>
+                                            <td>#@item.UserId</td>
+                                            <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.RoleName)</td>
+                                            <td>@item.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                            <td class="text-center">
+                                                @if (item.IsActive)
+                                                {
+                                                    <span class="status-badge badge-active">Hoạt động</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="status-badge badge-expired">Bị khóa</span>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                @* Nút Xem Chi Tiết (Details) - Cần tạo Action Details trong Controller *@
+                                                @*
+                                        <a asp-action="Details" asp-route-id="@item.UserId" class="btn btn-sm btn-action btn-view me-1" title="Xem chi tiết">
+                                        <i class="fas fa-eye"></i>
+                                        </a>
+                                        *@
+                                                <a asp-action="Edit" asp-route-id="@item.UserId" class="btn btn-sm btn-action btn-edit me-1" title="Chỉnh sửa">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+
+                                                @if (item.IsActive)
+                                                {
+                                                    <form asp-action="Ban" asp-route-id="@item.UserId" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn khóa người dùng này không?');">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="btn btn-sm btn-action btn-warning me-1" title="Khóa tài khoản">
+                                                            @* btn-warning cho Ban *@
+                                                            <i class="fas fa-lock"></i>
+                                                        </button>
+                                                    </form>
+                                                }
+                                                else
+                                                {
+                                                    <form asp-action="Unban" asp-route-id="@item.UserId" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn mở khóa người dùng này không?');">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="btn btn-sm btn-action btn-success me-1" title="Mở khóa tài khoản">
+                                                            @* btn-success cho Unban *@
+                                                            <i class="fas fa-unlock"></i>
+                                                        </button>
+                                                    </form>
+                                                }
+
+
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info text-center">
+                                Không tìm thấy người dùng nào phù hợp.
+                            </div>
+                        }
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1">Trước</a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Sau</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
-            </div>
-            <div class="tab-pane fade" id="buyers" role="tabpanel">
-                <!-- Buyer-specific content would go here -->
-                <div class="table-responsive">
-                    <h3>Danh sách người mua</h3>
-                    <!-- Table similar to above but filtered for buyers -->
+                <div class="tab-pane fade" id="buyers" role="tabpanel">
+                    <!-- Buyer-specific content would go here -->
+                    <div class="table-responsive">
+                        <h3>Danh sách người mua</h3>
+                        <!-- Table similar to above but filtered for buyers -->
+                    </div>
                 </div>
-            </div>
-            <div class="tab-pane fade" id="sellers" role="tabpanel">
-                <!-- Seller-specific content would go here -->
-                <div class="table-responsive">
-                    <h3>Danh sách người bán</h3>
-                    <!-- Table similar to above but filtered for sellers -->
+                <div class="tab-pane fade" id="sellers" role="tabpanel">
+                    <!-- Seller-specific content would go here -->
+                    <div class="table-responsive">
+                        <h3>Danh sách người bán</h3>
+                        <!-- Table similar to above but filtered for sellers -->
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Products Section -->
-    <div id="products-section" class="mb-4">
-        <h2 class="h5 mb-3">Quản lý sản phẩm</h2>
+        <!-- Products Section -->
+        <div id="products-section" class="mb-4">
+            <h2 class="h5 mb-3">Quản lý sản phẩm</h2>
 
-        <!-- Product Table -->
-        <div class="table-responsive">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Danh sách sản phẩm</h3>
-                <div class="d-flex">
-                    <input id="productSearch" type="text" class="form-control me-2" placeholder="Tìm kiếm...">
+            <!-- Product Table -->
+            <div class="table-responsive">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3>Danh sách sản phẩm</h3>
+                    <div class="d-flex">
+                        <input id="productSearch" type="text" class="form-control me-2" placeholder="Tìm kiếm...">
                         <button onclick="loadProducts(1)" class="btn btn-primary">Tìm</button>
+                    </div>
                 </div>
-            </div>
                 @if (Model.Products != null && Model.Products.Any())
                 {
                     <table id="products" class="table dashboard-table">
@@ -764,7 +764,7 @@
                                     <td>
                                         @*
                                 <button class="btn btn-action btn-view"><i class="fas fa-eye"></i></button>
-                                        *@
+                                *@
                                         <button class="btn btn-action btn-edit" onclick="editProduct(@item.ProductId)"><i class="fas fa-edit"></i></button>
                                         <button class="btn btn-action btn-delete" onclick="showDeleteModal(@item.ProductId, '@Url.Action("DeleteProduct", "Admin")', 'Xác nhận xóa sản phẩm', 'Bạn có chắc muốn xóa sản phẩm này?')"><i class="fas fa-trash"></i></button>
                                     </td>
@@ -772,84 +772,85 @@
                             }
                         </tbody>
                     </table>
-                } else
+                }
+                else
                 {
                     <table id="products" class="table dashboard-table">
                         <thead>
                             <tr>
                                 <th>
-                        <div class="alert alert-info text-center">
-                            Không tìm thấy sản phẩm nào phù hợp.
-                        </div>
-                        </th>
-                        </tr>
+                                    <div class="alert alert-info text-center">
+                                        Không tìm thấy sản phẩm nào phù hợp.
+                                    </div>
+                                </th>
+                            </tr>
                         </thead>
                     </table>
                 }
-            <nav aria-label="Page navigation">
+                <nav aria-label="Page navigation">
                     <ul id="product-pagination" class="pagination justify-content-center">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">Trước</a>
-                    </li>
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Trước</a>
+                        </li>
                         @for (int i = 0; i < (int)ViewData["ProductPages"]; i++)
                         {
-                            <li class="page-item @(i == 0 ? "active" : "")" @(i != 0 ? "onclick=loadProducts("+(i+1)+")" : "")><a class="page-link" href="#">@(i + 1)</a></li>
+                            <li class="page-item @(i == 0 ? "active" : "")" @(i != 0 ? "onclick=loadProducts(" + (i + 1) + ")" : "")><a class="page-link" href="#">@(i + 1)</a></li>
                         }
-                    <li class="page-item @((int)ViewData["ProductPages"] > 1 ? "" : "disabled")">
+                        <li class="page-item @((int)ViewData["ProductPages"] > 1 ? "" : "disabled")">
                             <a class="page-link" href="#" @((int)ViewData["ProductPages"] > 1 ? "onclick=loadProducts(2)" : "")">Sau</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </div>
-
-    <!-- Service Packages Section -->
-    <div id="packages-section" class="mb-4">
-        <h2 class="h5 mb-3">Quản lý gói dịch vụ</h2>
-
-        <!-- Service Packages Table -->
-        <div class="table-responsive">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Danh sách gói dịch vụ</h3>
-                <button class="btn btn-primary" onclick="openAddModal()"><i class="fas fa-plus me-2"></i>Thêm gói mới</button>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-            <table class="table dashboard-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Tên gói</th>
-                        <th>Giới hạn sản phẩm</th>
-                        <th>Giá gốc</th>
-                        <th>Giá khuyến mãi</th>
-                        <th>Lượt đăng ký</th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var service in Model.ServicePackages)
-                    {
-                        <tr>
-                            <td>#@service.PackageId</td>
-                            <td>@service.PackageName</td>
-                            <td>@service.ProductLimit</td>
-                            <td>@service.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN"))đ</td>
-                            <td>@service.DiscountedPrice?.ToString("#,0", new System.Globalization.CultureInfo("vi-VN"))đ</td>
-                            <td>@service.PackageSubscriptions.Count(item => item.Status.StatusName.Equals("Active"))</td>
-                            <td>
-                                <button class="btn btn-action btn-edit"
-                                        onclick='openEditModal(@service.PackageId, "@service.PackageName", @service.ProductLimit, @service.Price, @service.DiscountedPrice)'>
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-action btn-delete"
-                                            onclick="showDeleteModal(@service.PackageId, '@Url.Action("Delete", "Admin")', 'Xác Nhận Xóa Gói', 'Bạn có chắc chắn muốn xóa gói này?')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
         </div>
+
+        <!-- Service Packages Section -->
+        <div id="packages-section" class="mb-4">
+            <h2 class="h5 mb-3">Quản lý gói dịch vụ</h2>
+
+            <!-- Service Packages Table -->
+            <div class="table-responsive">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3>Danh sách gói dịch vụ</h3>
+                    <button class="btn btn-primary" onclick="openAddModal()"><i class="fas fa-plus me-2"></i>Thêm gói mới</button>
+                </div>
+                <table class="table dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên gói</th>
+                            <th>Giới hạn sản phẩm</th>
+                            <th>Giá gốc</th>
+                            <th>Giá khuyến mãi</th>
+                            <th>Lượt đăng ký</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            @foreach (var service in Model.ServicePackages)
+                            {
+                            <tr>
+                                <td>#@service.PackageId</td>
+                                <td>@service.PackageName</td>
+                                <td>@service.ProductLimit</td>
+                                <td>@service.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN"))đ</td>
+                                <td>@service.DiscountedPrice?.ToString("#,0", new System.Globalization.CultureInfo("vi-VN"))đ</td>
+                                <td>@service.PackageSubscriptions.Count(item => item.Status.StatusName.Equals("Active"))</td>
+                                <td>
+                                    <button class="btn btn-action btn-edit"
+                                            onclick='openEditModal(@service.PackageId, "@service.PackageName", @service.ProductLimit, @service.Price, @service.DiscountedPrice)'>
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-action btn-delete"
+                                            onclick="showDeleteModal(@service.PackageId, '@Url.Action("Delete", "Admin")', 'Xác Nhận Xóa Gói', 'Bạn có chắc chắn muốn xóa gói này?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            }
+                    </tbody>
+                </table>
+            </div>
 
             <!-- Service Packages Section -->
             <div id="categories-management-section" class="mb-4">
@@ -861,8 +862,8 @@
                         </a>
                     </div>
                     <div class="card-body">
-                            @if (categoriesForTable.Any()) @* SỬA: Dùng categoriesForTable *@
-                            {
+                @if (categoriesForTable.Any()) @* SỬA: Dùng categoriesForTable *@
+                {
                             <div class="table-responsive">
                                 <table class="table table-bordered table-hover" id="categoriesTable">
                                     <thead>
@@ -874,8 +875,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                            @foreach (var categoryItem in categoriesForTable) @* SỬA: Dùng categoriesForTable *@
-                                            {
+                                @foreach (var categoryItem in categoriesForTable) @* SỬA: Dùng categoriesForTable *@
+                                {
                                             <tr>
                                                 <td>@categoryItem.CategoryId</td>
                                                 <td>@Html.DisplayFor(modelItem => categoryItem.CategoryName)</td>
@@ -885,507 +886,507 @@
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                     <form asp-controller="Admin" asp-action="DeleteCategory" asp-route-id="@categoryItem.CategoryId" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
-                                                            @Html.AntiForgeryToken()
+                                                @Html.AntiForgeryToken()
                                                         <button type="submit" class="btn btn-sm btn-danger" title="Xóa">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
                                                     </form>
                                                 </td>
                                             </tr>
-                                            }
+                                }
                                     </tbody>
                                 </table>
                             </div>
-                            }
-                            else
-                            {
+                }
+                else
+                {
                             <p class="text-center text-muted">Chưa có danh mục nào.</p>
+                }
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Bootstrap JS -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <!-- Chart.js -->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+            <!-- Custom Scripts -->
+            <script>
+                // Toggle sidebar on mobile
+                document.querySelector('.menu-toggle').addEventListener('click', function () {
+                    document.querySelector('.sidebar').classList.toggle('active');
+                });
+
+                // Revenue Chart
+                const revenueLabels = @Html.Raw(Json.Serialize(Model.RBMDtos.Select(x => x.RevenueMonth)));
+                const revenueValues = @Html.Raw(Json.Serialize(Model.RBMDtos.Select(x => x.TotalRevenue)));
+
+                const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+                const revenueChart = new Chart(revenueCtx, {
+                    type: 'line',
+                    data: {
+                        labels: revenueLabels,
+                        datasets: [{
+                            label: 'Doanh thu theo tháng',
+                            data: revenueValues,
+                            backgroundColor: 'rgba(46, 139, 87, 0.2)',
+                            borderColor: 'rgba(46, 139, 87, 1)',
+                            borderWidth: 2,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false
                             }
-                    </div>
-                </div>
-            </div>
-
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- Custom Scripts -->
-<script>
-    // Toggle sidebar on mobile
-    document.querySelector('.menu-toggle').addEventListener('click', function () {
-        document.querySelector('.sidebar').classList.toggle('active');
-    });
-
-    // Revenue Chart
-    const revenueLabels = @Html.Raw(Json.Serialize(Model.RBMDtos.Select(x => x.RevenueMonth)));
-    const revenueValues = @Html.Raw(Json.Serialize(Model.RBMDtos.Select(x => x.TotalRevenue)));
-
-    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-    const revenueChart = new Chart(revenueCtx, {
-        type: 'line',
-        data: {
-            labels: revenueLabels,
-            datasets: [{
-                label: 'Doanh thu theo tháng',
-                data: revenueValues,
-                backgroundColor: 'rgba(46, 139, 87, 0.2)',
-                borderColor: 'rgba(46, 139, 87, 1)',
-                borderWidth: 2,
-                tension: 0.3
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
-    // Package Distribution Chart
-    const packageLabels = @Html.Raw(Json.Serialize(Model.RBPDtos.Select(x => x.PackageName)));
-    const packageRevenues = @Html.Raw(Json.Serialize(Model.RBPDtos.Select(x => x.TotalRevenue)));
-
-    const packageCtx = document.getElementById('packageChart').getContext('2d');
-    const packageChart = new Chart(packageCtx, {
-        type: 'doughnut',
-            data: {
-                labels: packageLabels,
-                datasets: [{
-                    data: packageRevenues,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.7)', // Đỏ hồng
-                        'rgba(54, 162, 235, 0.7)', // Xanh dương
-                        'rgba(255, 206, 86, 0.7)'  // Vàng
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }
-    });
-</script>
-
-<!-- Modal Thêm Gói Mới -->
-<div class="modal fade" id="addPackageModal" tabindex="-1" aria-labelledby="addPackageModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addPackageModalLabel">Thêm gói dịch vụ mới</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addPackageForm">
-                    <div class="mb-3">
-                        <label for="packageName" class="form-label">Tên gói dịch vụ</label>
-                        <input type="text" class="form-control" id="packageName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="productLimit" class="form-label">Giới hạn sản phẩm</label>
-                        <input type="number" class="form-control" id="productLimit" min="1" required>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="originalPrice" class="form-label">Giá gốc (VNĐ)</label>
-                            <input type="number" class="form-control" id="originalPrice" min="0" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="salePrice" class="form-label">Giá khuyến mãi (VNĐ)</label>
-                            <input type="number" class="form-control" id="salePrice" min="0">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-primary" id="saveNewPackage">Lưu gói dịch vụ</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Chỉnh Sửa Gói -->
-<div class="modal fade" id="editPackageModal" tabindex="-1" aria-labelledby="editPackageModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editPackageModalLabel">Chỉnh sửa gói dịch vụ</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editPackageForm">
-                    <input type="hidden" id="editPackageId">
-                    <div class="mb-3">
-                        <label for="editPackageName" class="form-label">Tên gói dịch vụ</label>
-                        <input type="text" class="form-control" id="editPackageName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editProductLimit" class="form-label">Giới hạn sản phẩm</label>
-                        <input type="number" class="form-control" id="editProductLimit" min="1" required>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="editOriginalPrice" class="form-label">Giá gốc (VNĐ)</label>
-                            <input type="number" class="form-control" id="editOriginalPrice" min="0" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="editSalePrice" class="form-label">Giá khuyến mãi (VNĐ)</label>
-                            <input type="number" class="form-control" id="editSalePrice" min="0">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-primary" id="updatePackage">Cập nhật</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content border-danger">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="deleteModalLabel">Xác Nhận Xóa Gói</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-                <div id="deleteModalContent" class="modal-body">
-                Bạn có chắc chắn muốn xóa gói này?
-            </div>
-            <div class="modal-footer">
-                <form id="deleteForm" method="post">
-                    <input type="hidden" name="id" id="deleteItemId" />
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                    <button type="submit" class="btn btn-danger">Xác Nhận</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-    <!-- Modal Chỉnh Sửa Sản Phẩm -->
-    <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editProductModalLabel">Chỉnh sửa sản phẩm</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="editProductForm">
-                        <input type="hidden" id="editProductId">
-                        <div class="mb-3">
-                            <label for="editProductName" class="form-label">Tên sản phẩm</label>
-                            <input type="text" class="form-control" id="editProductName" required>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="editProductCategory" class="form-label">Danh mục</label>
-                                <select id="editProductCategory" class="form-control">
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="editProductShop" class="form-label">Người bán</label>
-                                <select id="editProductShop" class="form-control">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="editProductPrice" class="form-label">Giá</label>
-                                <input type="number" class="form-control" id="editProductPrice" min="0" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="editProductStatus" class="form-label">Trạng Thái</label>
-                                <select id="editProductStatus" class="form-control">
-                                    <option value="true">Hiển Thị</option>
-                                    <option value="false">Ẩn</option>
-                                </select>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                    <button type="button" class="btn btn-primary" id="updateProduct">Cập nhật</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-<script>
-    // Handle Add New Package
-    document.getElementById('saveNewPackage').addEventListener('click', function () {
-        const packageData = {
-            PackageName: document.getElementById('packageName').value,
-            ProductLimit: parseInt(document.getElementById('productLimit').value),
-            OriginalPrice: parseInt(document.getElementById('originalPrice').value),
-            SalePrice: parseInt(document.getElementById('salePrice').value || 0)
-        };
-
-        fetch('/Admin/AddPackage', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-            },
-            body: JSON.stringify(packageData)
-        })
-            .then(res => {
-                if (res.ok) {
-                    location.reload();
-                } else {
-                    alert("Không thể thêm gói.");
-                }
-            });
-    });
-
-    function openAddModal() {
-        new bootstrap.Modal(document.getElementById('addPackageModal')).show();
-    }
-
-    // Handle Populate Edit Modal
-    function openEditModal(packageId, packageName, productLimit, Price, DiscountedPrice) {
-        document.getElementById('editPackageId').value = packageId;
-        document.getElementById('editPackageName').value = packageName;
-        document.getElementById('editProductLimit').value = productLimit;
-        document.getElementById('editOriginalPrice').value = Price;
-        document.getElementById('editSalePrice').value = DiscountedPrice;
-
-        new bootstrap.Modal(document.getElementById('editPackageModal')).show();
-    }
-
-    // Handle Save Edit
-    document.getElementById('updatePackage').addEventListener('click', function () {
-        const packageData = {
-            PackageId: document.getElementById('editPackageId').value,
-            PackageName: document.getElementById('editPackageName').value,
-            ProductLimit: parseInt(document.getElementById('editProductLimit').value),
-            OriginalPrice: parseInt(document.getElementById('editOriginalPrice').value),
-            SalePrice: parseInt(document.getElementById('editSalePrice').value || 0)
-        };
-
-        fetch('/Admin/EditPackage', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-            },
-            body: JSON.stringify(packageData)
-        })
-            .then(res => {
-                if (res.ok) {
-                    location.reload();
-                } else {
-                    alert("Không thể cập nhật gói.");
-                }
-            });
-    });
-</script>
-
-<script>
-        function loadProducts(page = 1) {
-            event.preventDefault();
-            const keyword = $('#productSearch').val();
-
-            $.ajax({
-                url: 'GetProducts',
-                type: 'GET',
-                data: { search: keyword, page: page },
-                success: function (response) {
-                    console.log(response);
-                    renderProducts(response.products);
-                    renderProductsPagination(response.currentPage, response.totalPages, keyword);
-                },
-                error: function () {
-                    console.log('Đã xảy ra lỗi khi tải danh sách sản phẩm.');
-                }
-            });
-        }
-
-        function renderProducts(products) {
-            let tbody = '';
-            if (products.length === 0) {
-                tbody = `<thead>
-                                <tr><th><div class="alert alert-info text-center">
-                                    Không tìm thấy sản phẩm nào phù hợp.
-                                </div></th></tr>
-                                </thead>`;
-            } else {
-                tbody = `
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Hình ảnh</th>
-                                        <th>Tên sản phẩm</th>
-                                        <th>Danh mục</th>
-                                        <th>Người bán</th>
-                                        <th>Giá</th>
-                                        <th>Trạng thái</th>
-                                        <th>Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody>`;
-                for (let i = 0; i < products.length; i++) {
-                    let p = products[i];
-                    tbody += `
-                        <tr>
-                            <td>#${p.productId}</td>
-                            <td><img src="${p.imageUrl || '/placeholder.png'}" alt="Sản phẩm" class="img-thumbnail"></td>
-                            <td>${p.productName}</td>
-                            <td>${p.category}</td>
-                            <td>${p.shop}</td>
-                            <td>${p.price.toLocaleString('vi-VN')}đ</td>
-                            <td><span class="status-badge ${p.isVisible ? 'badge-active' : 'badge-expired'}">${p.isVisible ? 'Hiển thị' : 'Ẩn'}</span></td>
-                            <td>
-                                <button class="btn btn-action btn-edit" onclick="editProduct(${p.productId})"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-action btn-delete" onclick="showDeleteModal(${p.productId}, '@Url.Action("DeleteProduct", "Admin")', 'Xác nhận xóa sản phẩm', 'Bạn có chắc muốn xóa sản phẩm này?')"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    `;
-                }
-                tbody += `</tbody>`;
-            }
-            console.log(tbody);
-            $('#products').html(tbody);
-        }
-
-        function renderProductsPagination(currentPage, totalPages, search) {
-            let pagination = '';
-            for (let i = 1; i <= totalPages; i++) {
-                pagination += `<li class="page-item ${i === currentPage ? 'active' : ''}">
-                    <a class="page-link" href="#" onclick="loadProducts(${i})">${i}</a>
-                </li>`;
-            }
-
-            $('#product-pagination').html(`
-                <li class="page-item ${currentPage <= 1 ? 'disabled' : ''}">
-                    <a class="page-link" href="#" onclick="loadProducts(${currentPage - 1})">Trước</a>
-                </li>
-                ${pagination}
-                <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
-                    <a class="page-link" href="#" onclick="loadProducts(${currentPage + 1})">Sau</a>
-                </li>
-            `);
-        }
-        function showDeleteModal(itemId, actionUrl, deleteModalLabel = null, deleteModalContent = null) {
-        const form = document.getElementById("deleteForm");
-        form.action = actionUrl;
-        document.getElementById("deleteItemId").value = itemId;
-            if (deleteModalLabel != null) {
-                document.getElementById("deleteModalLabel").innerHTML = deleteModalLabel;
-            }
-            if (deleteModalContent != null) {
-                document.getElementById("deleteModalContent").innerHTML = deleteModalContent;
-            }
-        const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
-        deleteModal.show();
-    }
-</script>
-<script>
-        function editProduct(id) {
-            $.ajax({
-                url: 'GetProductById',
-                type: 'GET',
-                data: { id: id },
-                success: function (response) {
-                    console.log(response);
-                    var data = response;
-
-                    const product = data.product;
-
-                    // Fill product fields
-                    document.getElementById("editProductId").value = product.productId;
-                    document.getElementById("editProductName").value = product.productName;
-                    document.getElementById("editProductPrice").value = product.price;
-                    document.getElementById("editProductStatus").value = product.isVisible.toString();
-
-                    // Populate categories
-                    const categorySelect = document.getElementById("editProductCategory");
-                    categorySelect.innerHTML = ''; // Clear existing options
-                    data.categories.forEach(cat => {
-                        const option = document.createElement("option");
-                        option.value = cat.categoryId;
-                        option.textContent = cat.categoryName;
-                        if (cat.categoryId === product.categoryId) {
-                            option.selected = true;
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
-                        categorySelect.appendChild(option);
-                    });
-
-                    // Populate shops
-                    const shopSelect = document.getElementById("editProductShop");
-                    shopSelect.innerHTML = ''; // Clear existing options
-                    data.shops.forEach(shop => {
-                        const option = document.createElement("option");
-                        option.value = shop.shopId;
-                        option.textContent = shop.shopName;
-                        if (shop.shopId === product.shopId) {
-                            option.selected = true;
-                        }
-                        shopSelect.appendChild(option);
-                    });
-
-                    // Show the modal
-                    const modal = new bootstrap.Modal(document.getElementById("editProductModal"));
-                    modal.show();
-                },
-                error: function () {
-                    console.log('Đã xảy ra lỗi khi tải dữ liệu sản phẩm.');
-                }
-            });
-    }
-        document.getElementById('updateProduct').addEventListener('click', function () {
-            const productData = {
-                ProductId: document.getElementById('editProductId').value,
-                ProductName: document.getElementById('editProductName').value,
-                CategoryId: parseInt(document.getElementById('editProductCategory').value),
-                ShopId: parseInt(document.getElementById('editProductShop').value),
-                Price: parseInt(document.getElementById('editProductPrice').value),
-                IsVisible: document.getElementById('editProductStatus').value === 'true'
-            };
-
-            fetch('/Admin/EditProduct', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                },
-                body: JSON.stringify(productData)
-            })
-                .then(res => {
-                    if (res.ok) {
-                        location.reload();
-                    } else {
-                        alert("Không thể cập nhật sản phẩm.");
                     }
                 });
-        });
-</script>
+
+                // Package Distribution Chart
+                const packageLabels = @Html.Raw(Json.Serialize(Model.RBPDtos.Select(x => x.PackageName)));
+                const packageRevenues = @Html.Raw(Json.Serialize(Model.RBPDtos.Select(x => x.TotalRevenue)));
+
+                const packageCtx = document.getElementById('packageChart').getContext('2d');
+                const packageChart = new Chart(packageCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: packageLabels,
+                        datasets: [{
+                            data: packageRevenues,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.7)', // Đỏ hồng
+                                'rgba(54, 162, 235, 0.7)', // Xanh dương
+                                'rgba(255, 206, 86, 0.7)'  // Vàng
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            </script>
+
+            <!-- Modal Thêm Gói Mới -->
+            <div class="modal fade" id="addPackageModal" tabindex="-1" aria-labelledby="addPackageModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addPackageModalLabel">Thêm gói dịch vụ mới</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addPackageForm">
+                                <div class="mb-3">
+                                    <label for="packageName" class="form-label">Tên gói dịch vụ</label>
+                                    <input type="text" class="form-control" id="packageName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="productLimit" class="form-label">Giới hạn sản phẩm</label>
+                                    <input type="number" class="form-control" id="productLimit" min="1" required>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="originalPrice" class="form-label">Giá gốc (VNĐ)</label>
+                                        <input type="number" class="form-control" id="originalPrice" min="0" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="salePrice" class="form-label">Giá khuyến mãi (VNĐ)</label>
+                                        <input type="number" class="form-control" id="salePrice" min="0">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="button" class="btn btn-primary" id="saveNewPackage">Lưu gói dịch vụ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Chỉnh Sửa Gói -->
+            <div class="modal fade" id="editPackageModal" tabindex="-1" aria-labelledby="editPackageModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editPackageModalLabel">Chỉnh sửa gói dịch vụ</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editPackageForm">
+                                <input type="hidden" id="editPackageId">
+                                <div class="mb-3">
+                                    <label for="editPackageName" class="form-label">Tên gói dịch vụ</label>
+                                    <input type="text" class="form-control" id="editPackageName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editProductLimit" class="form-label">Giới hạn sản phẩm</label>
+                                    <input type="number" class="form-control" id="editProductLimit" min="1" required>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="editOriginalPrice" class="form-label">Giá gốc (VNĐ)</label>
+                                        <input type="number" class="form-control" id="editOriginalPrice" min="0" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="editSalePrice" class="form-label">Giá khuyến mãi (VNĐ)</label>
+                                        <input type="number" class="form-control" id="editSalePrice" min="0">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="button" class="btn btn-primary" id="updatePackage">Cập nhật</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Confirmation Modal -->
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content border-danger">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title" id="deleteModalLabel">Xác Nhận Xóa Gói</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div id="deleteModalContent" class="modal-body">
+                            Bạn có chắc chắn muốn xóa gói này?
+                        </div>
+                        <div class="modal-footer">
+                            <form id="deleteForm" method="post">
+                                <input type="hidden" name="id" id="deleteItemId" />
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn btn-danger">Xác Nhận</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Modal Chỉnh Sửa Sản Phẩm -->
+            <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editProductModalLabel">Chỉnh sửa sản phẩm</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editProductForm">
+                                <input type="hidden" id="editProductId">
+                                <div class="mb-3">
+                                    <label for="editProductName" class="form-label">Tên sản phẩm</label>
+                                    <input type="text" class="form-control" id="editProductName" required>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="editProductCategory" class="form-label">Danh mục</label>
+                                        <select id="editProductCategory" class="form-control">
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="editProductShop" class="form-label">Người bán</label>
+                                        <select id="editProductShop" class="form-control">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="editProductPrice" class="form-label">Giá</label>
+                                        <input type="number" class="form-control" id="editProductPrice" min="0" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="editProductStatus" class="form-label">Trạng Thái</label>
+                                        <select id="editProductStatus" class="form-control">
+                                            <option value="true">Hiển Thị</option>
+                                            <option value="false">Ẩn</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="button" class="btn btn-primary" id="updateProduct">Cập nhật</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <script>
+                // Handle Add New Package
+                document.getElementById('saveNewPackage').addEventListener('click', function () {
+                    const packageData = {
+                        PackageName: document.getElementById('packageName').value,
+                        ProductLimit: parseInt(document.getElementById('productLimit').value),
+                        OriginalPrice: parseInt(document.getElementById('originalPrice').value),
+                        SalePrice: parseInt(document.getElementById('salePrice').value || 0)
+                    };
+
+                    fetch('/Admin/AddPackage', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                        },
+                        body: JSON.stringify(packageData)
+                    })
+                        .then(res => {
+                            if (res.ok) {
+                                location.reload();
+                            } else {
+                                alert("Không thể thêm gói.");
+                            }
+                        });
+                });
+
+                function openAddModal() {
+                    new bootstrap.Modal(document.getElementById('addPackageModal')).show();
+                }
+
+                // Handle Populate Edit Modal
+                function openEditModal(packageId, packageName, productLimit, Price, DiscountedPrice) {
+                    document.getElementById('editPackageId').value = packageId;
+                    document.getElementById('editPackageName').value = packageName;
+                    document.getElementById('editProductLimit').value = productLimit;
+                    document.getElementById('editOriginalPrice').value = Price;
+                    document.getElementById('editSalePrice').value = DiscountedPrice;
+
+                    new bootstrap.Modal(document.getElementById('editPackageModal')).show();
+                }
+
+                // Handle Save Edit
+                document.getElementById('updatePackage').addEventListener('click', function () {
+                    const packageData = {
+                        PackageId: document.getElementById('editPackageId').value,
+                        PackageName: document.getElementById('editPackageName').value,
+                        ProductLimit: parseInt(document.getElementById('editProductLimit').value),
+                        OriginalPrice: parseInt(document.getElementById('editOriginalPrice').value),
+                        SalePrice: parseInt(document.getElementById('editSalePrice').value || 0)
+                    };
+
+                    fetch('/Admin/EditPackage', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                        },
+                        body: JSON.stringify(packageData)
+                    })
+                        .then(res => {
+                            if (res.ok) {
+                                location.reload();
+                            } else {
+                                alert("Không thể cập nhật gói.");
+                            }
+                        });
+                });
+            </script>
+
+            <script>
+                function loadProducts(page = 1) {
+                    event.preventDefault();
+                    const keyword = $('#productSearch').val();
+
+                    $.ajax({
+                        url: 'GetProducts',
+                        type: 'GET',
+                        data: { search: keyword, page: page },
+                        success: function (response) {
+                            console.log(response);
+                            renderProducts(response.products);
+                            renderProductsPagination(response.currentPage, response.totalPages, keyword);
+                        },
+                        error: function () {
+                            console.log('Đã xảy ra lỗi khi tải danh sách sản phẩm.');
+                        }
+                    });
+                }
+
+                function renderProducts(products) {
+                    let tbody = '';
+                    if (products.length === 0) {
+                        tbody = `<thead>
+                                                <tr><th><div class="alert alert-info text-center">
+                                                    Không tìm thấy sản phẩm nào phù hợp.
+                                                </div></th></tr>
+                                                </thead>`;
+                    } else {
+                        tbody = `
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Hình ảnh</th>
+                                                        <th>Tên sản phẩm</th>
+                                                        <th>Danh mục</th>
+                                                        <th>Người bán</th>
+                                                        <th>Giá</th>
+                                                        <th>Trạng thái</th>
+                                                        <th>Thao tác</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>`;
+                        for (let i = 0; i < products.length; i++) {
+                            let p = products[i];
+                            tbody += `
+                                        <tr>
+                                            <td>#${p.productId}</td>
+                                            <td><img src="${p.imageUrl || '/placeholder.png'}" alt="Sản phẩm" class="img-thumbnail"></td>
+                                            <td>${p.productName}</td>
+                                            <td>${p.category}</td>
+                                            <td>${p.shop}</td>
+                                            <td>${p.price.toLocaleString('vi-VN')}đ</td>
+                                            <td><span class="status-badge ${p.isVisible ? 'badge-active' : 'badge-expired'}">${p.isVisible ? 'Hiển thị' : 'Ẩn'}</span></td>
+                                            <td>
+                                                <button class="btn btn-action btn-edit" onclick="editProduct(${p.productId})"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-action btn-delete" onclick="showDeleteModal(${p.productId}, '@Url.Action("DeleteProduct", "Admin")', 'Xác nhận xóa sản phẩm', 'Bạn có chắc muốn xóa sản phẩm này?')"><i class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    `;
+                        }
+                        tbody += `</tbody>`;
+                    }
+                    console.log(tbody);
+                    $('#products').html(tbody);
+                }
+
+                function renderProductsPagination(currentPage, totalPages, search) {
+                    let pagination = '';
+                    for (let i = 1; i <= totalPages; i++) {
+                        pagination += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+                                    <a class="page-link" href="#" onclick="loadProducts(${i})">${i}</a>
+                                </li>`;
+                    }
+
+                    $('#product-pagination').html(`
+                                <li class="page-item ${currentPage <= 1 ? 'disabled' : ''}">
+                                    <a class="page-link" href="#" onclick="loadProducts(${currentPage - 1})">Trước</a>
+                                </li>
+                                ${pagination}
+                                <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
+                                    <a class="page-link" href="#" onclick="loadProducts(${currentPage + 1})">Sau</a>
+                                </li>
+                            `);
+                }
+                function showDeleteModal(itemId, actionUrl, deleteModalLabel = null, deleteModalContent = null) {
+                    const form = document.getElementById("deleteForm");
+                    form.action = actionUrl;
+                    document.getElementById("deleteItemId").value = itemId;
+                    if (deleteModalLabel != null) {
+                        document.getElementById("deleteModalLabel").innerHTML = deleteModalLabel;
+                    }
+                    if (deleteModalContent != null) {
+                        document.getElementById("deleteModalContent").innerHTML = deleteModalContent;
+                    }
+                    const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
+                    deleteModal.show();
+                }
+            </script>
+            <script>
+                function editProduct(id) {
+                    $.ajax({
+                        url: 'GetProductById',
+                        type: 'GET',
+                        data: { id: id },
+                        success: function (response) {
+                            console.log(response);
+                            var data = response;
+
+                            const product = data.product;
+
+                            // Fill product fields
+                            document.getElementById("editProductId").value = product.productId;
+                            document.getElementById("editProductName").value = product.productName;
+                            document.getElementById("editProductPrice").value = product.price;
+                            document.getElementById("editProductStatus").value = product.isVisible.toString();
+
+                            // Populate categories
+                            const categorySelect = document.getElementById("editProductCategory");
+                            categorySelect.innerHTML = ''; // Clear existing options
+                            data.categories.forEach(cat => {
+                                const option = document.createElement("option");
+                                option.value = cat.categoryId;
+                                option.textContent = cat.categoryName;
+                                if (cat.categoryId === product.categoryId) {
+                                    option.selected = true;
+                                }
+                                categorySelect.appendChild(option);
+                            });
+
+                            // Populate shops
+                            const shopSelect = document.getElementById("editProductShop");
+                            shopSelect.innerHTML = ''; // Clear existing options
+                            data.shops.forEach(shop => {
+                                const option = document.createElement("option");
+                                option.value = shop.shopId;
+                                option.textContent = shop.shopName;
+                                if (shop.shopId === product.shopId) {
+                                    option.selected = true;
+                                }
+                                shopSelect.appendChild(option);
+                            });
+
+                            // Show the modal
+                            const modal = new bootstrap.Modal(document.getElementById("editProductModal"));
+                            modal.show();
+                        },
+                        error: function () {
+                            console.log('Đã xảy ra lỗi khi tải dữ liệu sản phẩm.');
+                        }
+                    });
+                }
+                document.getElementById('updateProduct').addEventListener('click', function () {
+                    const productData = {
+                        ProductId: document.getElementById('editProductId').value,
+                        ProductName: document.getElementById('editProductName').value,
+                        CategoryId: parseInt(document.getElementById('editProductCategory').value),
+                        ShopId: parseInt(document.getElementById('editProductShop').value),
+                        Price: parseInt(document.getElementById('editProductPrice').value),
+                        IsVisible: document.getElementById('editProductStatus').value === 'true'
+                    };
+
+                    fetch('/Admin/EditProduct', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                        },
+                        body: JSON.stringify(productData)
+                    })
+                        .then(res => {
+                            if (res.ok) {
+                                location.reload();
+                            } else {
+                                alert("Không thể cập nhật sản phẩm.");
+                            }
+                        });
+                });
+            </script>

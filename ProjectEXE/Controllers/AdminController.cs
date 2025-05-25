@@ -11,9 +11,10 @@ using System; // Cho StringComparison, DateTime
 using System.Collections.Generic; // Cho List
 using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Authorization;
 namespace ProjectEXE.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly IAdminService _adminService;
