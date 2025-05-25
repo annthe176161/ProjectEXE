@@ -9,7 +9,7 @@ namespace ProjectEXE.Services.Interfaces
         Task<List<ServicePackage>> getAllService();
         Task<List<RBMDto>> getRevenueByMonth();
         Task<List<RBPDto>> getRevenueByPackage();
-        Task<bool> deleteServiceById(int id);
+        Task DeleteServiceById(int id);
         Task<bool> addPackage(ServicePackage package);
         Task<bool> editPackage(ServicePackage package);
 
@@ -22,6 +22,6 @@ namespace ProjectEXE.Services.Interfaces
         Task<bool> AddCategoryAsync(CategoryOfAdminViewModel model); // Sửa ở đây
         Task<bool> UpdateCategoryAsync(CategoryOfAdminViewModel model); // Sửa ở đây
         Task<(bool Success, string ErrorMessage)> DeleteCategoryAsync(int categoryId);
-
+        bool HasActivePackage(int packageId);
     }
 }

@@ -27,16 +27,14 @@ namespace ProjectEXE.Services.Implementations
             return false;
         }
 
-        public async Task<bool> deleteServiceById(int id)
+        public async Task DeleteServiceById(int id)
         {
             var item = _context.ServicePackages.Find(id);
             if (item != null)
             {
                 _context.ServicePackages.Remove(item);
-                _context.SaveChanges();
-                return true;
+                await _context.SaveChangesAsync();
             }
-            return false;
         }
 
         public async Task<bool> editPackage(ServicePackage p)
@@ -251,6 +249,11 @@ namespace ProjectEXE.Services.Implementations
                 Console.WriteLine($"Error deleting category: {ex.Message}");
                 return (false, "Đã có lỗi xảy ra trong quá trình xóa danh mục.");
             }
+        }
+
+        public bool HasActivePackage(int packageId)
+        {
+            return _context.PackagePayments.Any(p => p.PackageId == packageId);
         }
     }
 }

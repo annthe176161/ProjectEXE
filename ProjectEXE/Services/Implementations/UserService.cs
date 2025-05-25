@@ -37,7 +37,7 @@ namespace ProjectEXE.Services.Implementations
             return await _context.Users
                 .Include(u => u.Role)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() && u.IsActive);
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() && u.IsActive == 1);
         }
 
         public async Task<bool> ValidatePasswordAsync(User user, string password)
@@ -86,7 +86,7 @@ namespace ProjectEXE.Services.Implementations
                 PhoneNumber = phoneNumber,
                 Address = address,
                 RoleId = roleId,
-                IsActive = true,
+                IsActive = 1,
                 CreatedAt = DateTime.Now
             };
 
@@ -169,7 +169,7 @@ namespace ProjectEXE.Services.Implementations
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> SetUserActiveStatusAsync(int userId, bool isActive)
+        public async Task<bool> SetUserActiveStatusAsync(int userId, int isActive)
         {
             var user = await _context.Users.FindAsync(userId);
             if (user == null)
@@ -244,7 +244,7 @@ namespace ProjectEXE.Services.Implementations
         {
             return await _context.Users
                 .Include(u => u.Role)
-                .FirstOrDefaultAsync(u => u.UserId == userId && u.IsActive);
+                .FirstOrDefaultAsync(u => u.UserId == userId && u.IsActive == 1);
         }
 
         public async Task<decimal> GetTotalPackagePaymentsRevenueAsync()

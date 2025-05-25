@@ -22,7 +22,7 @@ namespace ProjectEXE.ViewModel
         public int RoleId { get; set; }
 
         [Display(Name = "Active")]
-        public bool IsActive { get; set; }
+        public int IsActive { get; set; }
 
         // This property will be used to populate the Roles dropdown in the View
         [BindNever]
