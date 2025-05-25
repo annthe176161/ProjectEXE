@@ -269,5 +269,11 @@ namespace ProjectEXE.Controllers
                 return null;
             }
         }
+
+        public IActionResult EditShop()
+        {
+            TempData["Warning"] = "Tính năng đang trong quá trình phát triển";
+            return RedirectToAction("Index", "ShopProfile");
+        }
     }
 }
