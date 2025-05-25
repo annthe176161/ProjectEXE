@@ -43,14 +43,30 @@ namespace ProjectEXE.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userService.GetUserByEmailAsync(model.Email);
+
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Email hoặc mật khẩu không chính xác");
+                    return View(model);
+                }
+
+                // Kiểm tra trạng thái tài khoản
+                if (user.IsActive == 0) // Tài khoản bị vô hiệu hóa
+                {
+                    ModelState.AddModelError(string.Empty, "Tài khoản của bạn đã bị vô hiệu hóa");
+                    return View(model);
+                }
+
+                if (user.IsActive == 2) // Chưa xác thực email
+                {
+                    TempData["Warning"] = "Vui lòng xác nhận email của bạn trước khi đăng nhập.";
+                    return View(model);
+                }
+
                 var isPasswordValid = await _userService.ValidatePasswordAsync(user, model.Password);
 
-                if (user != null && isPasswordValid)
+                if (isPasswordValid)
                 {
-
-        
-                 
-
                     var principal = _userService.CreateClaimsPrincipal(user);
 
                     await HttpContext.SignInAsync(
@@ -74,6 +90,7 @@ namespace ProjectEXE.Controllers
 
                 ModelState.AddModelError(string.Empty, "Email hoặc mật khẩu không chính xác");
             }
+
 
             return View(model);
         }
@@ -101,29 +118,41 @@ namespace ProjectEXE.Controllers
                     return View(model);
                 }
 
-                // Create the user
-                var user = await _userService.CreateUserAsync(
-                    model.Email,
-                    model.Password,
-                    model.FullName,
-                    model.PhoneNumber,
-                    model.Address,
-                    model.RoleId
-                );
-
-                if (user != null)
+                try
                 {
-                    // Generate a verification token
-                    string token = GenerateRandomToken();
+                    // Create the user với RoleId từ form (default = 2)
+                    var user = await _userService.CreateUserAsync(
+                        model.Email,
+                        model.Password,
+                        model.FullName,
+                        model.PhoneNumber,
+                        model.Address,
+                        model.RoleId
+                    );
 
-                    // Store the token
-                    await TokenStore.StoreTokenAsync(model.Email, token, "EmailVerification");
+                    if (user != null)
+                    {
+                        // Generate a verification token
+                        string token = GenerateRandomToken();
 
-                    // Send verification email
-                    await _emailService.SendVerificationEmailAsync(model.Email, token);
+                        // Store the token
+                        await TokenStore.StoreTokenAsync(model.Email, token, "EmailVerification");
 
-                    // Redirect to confirmation page
-                    return RedirectToAction("RegisterConfirmation");
+                        // Send verification email
+                        await _emailService.SendVerificationEmailAsync(model.Email, token);
+
+                        // Redirect to confirmation page
+                        return RedirectToAction("RegisterConfirmation");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Có lỗi xảy ra khi tạo tài khoản. Vui lòng thử lại.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Register error: {ex.Message}");
+                    ModelState.AddModelError("", "Có lỗi xảy ra khi tạo tài khoản. Vui lòng thử lại.");
                 }
             }
 
@@ -144,18 +173,19 @@ namespace ProjectEXE.Controllers
                 return BadRequest("Email hoặc token không hợp lệ");
             }
 
-            // Validate the token
+            // 
             bool isValid = await TokenStore.ValidateTokenAsync(email, token, "EmailVerification");
 
             if (isValid)
             {
-                // Mark the email as verified
-                await TokenStore.MarkEmailAsVerifiedAsync(email);
-
-                // Get the user and sign in automatically
+                // Lấy user và cập nhật trạng thái
                 var user = await _userService.GetUserByEmailAsync(email);
-                if (user != null)
+                if (user != null && user.IsActive == 2) 
                 {
+                    user.IsActive = 1; 
+                    await _userService.UpdateUserAsync(user);
+
+                    // Đăng nhập tự động
                     var principal = _userService.CreateClaimsPrincipal(user);
 
                     await HttpContext.SignInAsync(
@@ -167,6 +197,9 @@ namespace ProjectEXE.Controllers
                             ExpiresUtc = DateTime.UtcNow.AddDays(30)
                         });
                 }
+
+                // Xóa token sau khi sử dụng
+                await TokenStore.RemoveTokenAsync(email, "EmailVerification");
 
                 return View("EmailVerified");
             }
@@ -188,20 +221,49 @@ namespace ProjectEXE.Controllers
             {
                 var user = await _userService.GetUserByEmailAsync(model.Email);
 
+                // Kiểm tra các điều kiện cần thiết
                 if (user != null)
                 {
-                    // Generate token
-                    string token = GenerateRandomToken();
+                    // Kiểm tra tài khoản có bị vô hiệu hóa không
+                    if (user.IsActive == 0)
+                    {
+                        ModelState.AddModelError("Email", "Tài khoản này đã bị vô hiệu hóa. Vui lòng liên hệ quản trị viên.");
+                        return View(model);
+                    }
 
-                    // Store the token
-                    await TokenStore.StoreTokenAsync(model.Email, token, "PasswordReset");
+                    // Kiểm tra email đã được xác nhận chưa
+                    if (user.IsActive == 2)
+                    {
+                        ModelState.AddModelError("Email", "Email này chưa được xác nhận. Vui lòng xác nhận email trước khi đặt lại mật khẩu.");
+                        return View(model);
+                    }
 
-                    // Send email
-                    await _emailService.SendPasswordResetEmailAsync(model.Email, token);
+                    // Chỉ gửi email reset nếu tài khoản hợp lệ (IsActive == 1)
+                    if (user.IsActive == 1)
+                    {
+                        // Generate token
+                        string token = GenerateRandomToken();
+
+                        // Store the token
+                        await TokenStore.StoreTokenAsync(model.Email, token, "PasswordReset");
+
+                        // Send email
+                        await _emailService.SendPasswordResetEmailAsync(model.Email, token);
+
+                        // Debug URL
+                        var baseUrl = HttpContext.Request.Scheme + "://" + HttpContext.Request.Host;
+                        var resetUrl = $"{baseUrl}/Account/ResetPassword?email={Uri.EscapeDataString(model.Email)}&token={Uri.EscapeDataString(token)}";
+                        Console.WriteLine($"Password Reset URL: {resetUrl}");
+
+                        return View("ForgotPasswordConfirmation");
+                    }
                 }
-
-                // Always show success page (even if email doesn't exist) to prevent email enumeration
-                return View("ForgotPasswordConfirmation");
+                else
+                {
+                    // Email không tồn tại
+                    ModelState.AddModelError("Email", "Email này chưa được đăng ký trong hệ thống.");
+                    return View(model);
+                }
             }
 
             return View(model);

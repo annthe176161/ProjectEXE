@@ -211,7 +211,7 @@ namespace ProjectEXE.Controllers
                 Email = user.Email,
                 FullName = user.FullName,
                 RoleId = user.RoleId,
-                IsActive = user.IsActive,
+                IsActive = user.IsActive == 1,
                 RolesList = allRoles.Select(r => new SelectListItem
                 {
                     Value = r.RoleId.ToString(),

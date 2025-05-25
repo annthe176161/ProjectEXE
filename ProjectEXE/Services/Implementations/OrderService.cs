@@ -30,7 +30,7 @@ namespace ProjectEXE.Services.Implementations
 
             // Lấy thông tin người mua
             var buyer = await _context.Users
-                .FirstOrDefaultAsync(u => u.UserId == buyerId && u.IsActive);
+                .FirstOrDefaultAsync(u => u.UserId == buyerId && u.IsActive == 1);
 
             if (buyer == null)
                 throw new Exception("Người dùng không tồn tại hoặc không hoạt động");

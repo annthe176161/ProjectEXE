@@ -33,13 +33,12 @@ namespace ProjectEXE.Services.Implementations
                 entry.State = EntityState.Detached;
             }
 
-            // Lấy dữ liệu mới từ database
+            // Lấy dữ liệu mới từ database - bao gồm cả tài khoản chưa xác thực (IsActive = 2)
             return await _context.Users
                 .Include(u => u.Role)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() && u.IsActive);
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() && (u.IsActive == 1 || u.IsActive == 2));
         }
-
         public async Task<bool> ValidatePasswordAsync(User user, string password)
         {
             // Thêm logging chi tiết
@@ -86,7 +85,7 @@ namespace ProjectEXE.Services.Implementations
                 PhoneNumber = phoneNumber,
                 Address = address,
                 RoleId = roleId,
-                IsActive = true,
+                IsActive = 2, 
                 CreatedAt = DateTime.Now
             };
 
@@ -161,7 +160,7 @@ namespace ProjectEXE.Services.Implementations
             user.FullName = model.FullName;
             user.Email = model.Email;
             user.RoleId = model.RoleId;
-            user.IsActive = model.IsActive;
+            user.IsActive = model.IsActive ? 1 : 0;
             // Note: Password and CreatedAt are not updated here.
             // Password update should be a separate, secure process.
 
@@ -174,10 +173,10 @@ namespace ProjectEXE.Services.Implementations
             var user = await _context.Users.FindAsync(userId);
             if (user == null)
             {
-                return false; // User not found
+                return false; 
             }
 
-            user.IsActive = isActive;
+            user.IsActive = isActive ? 1 : 0;
             _context.Users.Update(user);
             return await _context.SaveChangesAsync() > 0;
         }
@@ -198,7 +197,7 @@ namespace ProjectEXE.Services.Implementations
 
         public async Task<int> GetTotalUsersCountAsync()
         {
-            return await _context.Users.CountAsync();
+            return await _context.Users.CountAsync(u => u.IsActive == 1);
         }
 
         public string HashPassword(string password)
@@ -244,7 +243,7 @@ namespace ProjectEXE.Services.Implementations
         {
             return await _context.Users
                 .Include(u => u.Role)
-                .FirstOrDefaultAsync(u => u.UserId == userId && u.IsActive);
+                .FirstOrDefaultAsync(u => u.UserId == userId && u.IsActive == 1);
         }
 
         public async Task<decimal> GetTotalPackagePaymentsRevenueAsync()
@@ -271,7 +270,7 @@ namespace ProjectEXE.Services.Implementations
                                        FullName = user.FullName,
                                        RoleName = role.RoleName, // Lấy RoleName từ bảng Roles
                                        CreatedAt = user.CreatedAt,
-                                       IsActive = user.IsActive
+                                       IsActive = (user.IsActive == 1 || user.IsActive == 2)
                                    }).ToListAsync();
             return usersData;
         }
@@ -313,11 +312,19 @@ namespace ProjectEXE.Services.Implementations
 
         public async Task<bool> IsEmailVerifiedAsync(string email)
         {
-            // Lấy thông tin từ TokenStore (không phải TokenStorage)
-            return await Services.TokenStorage.TokenStore.IsEmailVerifiedAsync(email);
+            var user = await _context.Users
+         .AsNoTracking()
+         .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
 
-            // Hoặc đơn giản hơn nếu đã import namespace:
-            // return await TokenStore.IsEmailVerifiedAsync(email);
+            return user?.IsActive == 1; 
+        }
+        public async Task<bool> IsEmailPendingVerificationAsync(string email)
+        {
+            var user = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+
+            return user?.IsActive == 2; 
         }
     }
 }
