@@ -2,24 +2,150 @@
     ViewData["Title"] = "Xác nhận đăng xuất";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-danger text-white">
-                    <h4>Xác nhận đăng xuất</h4>
+@section Styles {
+    <link rel="stylesheet" href="~/css/logout.css?v=@DateTime.Now.Ticks" />
+}
+
+<div class="logout-wrapper">
+    <div class="logout-container">
+        <div class="logout-card">
+            <!-- Logout Icon Animation -->
+            <div class="logout-icon-container">
+                <div class="logout-icon">
+                    <i class="fas fa-sign-out-alt"></i>
                 </div>
-                <div class="card-body">
-                    <p>Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?</p>
-                    <form asp-controller="Account" asp-action="Logout" method="post">
-                        @Html.AntiForgeryToken()
-                        <div class="d-flex justify-content-between">
-                            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Hủy</a>
-                            <button type="submit" class="btn btn-danger">Đăng xuất</button>
-                        </div>
-                    </form>
+                <div class="icon-ripple"></div>
+            </div>
+
+            <!-- Logout Header -->
+            <div class="logout-header">
+                <h2 class="logout-title">Xác nhận đăng xuất</h2>
+                <p class="logout-subtitle">Bạn có chắc chắn muốn rời khỏi hệ thống?</p>
+            </div>
+
+            <!-- User Info Display -->
+            <div class="user-info-display">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-details">
+                    <p class="user-name">@User.Identity?.Name</p>
+                    <p class="user-email">Phiên làm việc sẽ kết thúc</p>
+                </div>
+            </div>
+
+            <!-- Security Notice -->
+            <div class="security-notice">
+                <i class="fas fa-shield-alt"></i>
+                <p>Đăng xuất sẽ xóa tất cả dữ liệu phiên làm việc của bạn khỏi thiết bị này.</p>
+            </div>
+
+            <!-- Logout Form -->
+            <div class="logout-actions">
+                <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                    @Html.AntiForgeryToken()
+
+                    <div class="action-buttons">
+                        <a asp-controller="Home" asp-action="Index" class="btn-cancel" id="cancelBtn">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>Quay lại</span>
+                        </a>
+
+                        <button type="submit" class="btn-logout" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span id="logoutText">Đăng xuất</span>
+                            <div class="btn-loader" id="btnLoader"></div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Additional Options -->
+            <div class="additional-options">
+                <p class="options-text">Hoặc bạn có thể:</p>
+                <div class="quick-actions">
+                    <a href="@Url.Action("Index", "Home")" class="quick-action">
+                        <i class="fas fa-home"></i>
+                        Về trang chủ
+                    </a>
+                    <a href="@Url.Action("Profile", "Account")" class="quick-action">
+                        <i class="fas fa-user-cog"></i>
+                        Cài đặt tài khoản
+                    </a>
                 </div>
             </div>
         </div>
+
+        <!-- Background Decoration -->
+        <div class="decoration-elements">
+            <div class="decoration-circle circle-1"></div>
+            <div class="decoration-circle circle-2"></div>
+            <div class="decoration-circle circle-3"></div>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form submission handling
+            const logoutForm = document.getElementById('logoutForm');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const logoutText = document.getElementById('logoutText');
+            const btnLoader = document.getElementById('btnLoader');
+
+            logoutForm.addEventListener('submit', function(e) {
+                // Add loading state
+                logoutBtn.classList.add('loading');
+                logoutBtn.disabled = true;
+                logoutText.textContent = 'Đang đăng xuất...';
+                btnLoader.style.display = 'block';
+
+                // Add exit animation to card
+                const card = document.querySelector('.logout-card');
+                card.classList.add('exit-animation');
+            });
+
+            // Cancel button animation
+            const cancelBtn = document.getElementById('cancelBtn');
+            cancelBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const card = document.querySelector('.logout-card');
+                card.classList.add('slide-out-left');
+
+                setTimeout(() => {
+                    window.location.href = this.href;
+                }, 300);
+            });
+
+            // Entrance animation
+            const card = document.querySelector('.logout-card');
+            setTimeout(() => {
+                card.classList.add('entrance-complete');
+            }, 100);
+
+            // Ripple effect for icon
+            const iconContainer = document.querySelector('.logout-icon-container');
+            setInterval(() => {
+                const ripple = document.querySelector('.icon-ripple');
+                ripple.style.animation = 'none';
+                setTimeout(() => {
+                    ripple.style.animation = 'rippleEffect 3s ease-out infinite';
+                }, 50);
+            }, 3000);
+
+            // Auto focus on cancel button for accessibility
+            cancelBtn.focus();
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    cancelBtn.click();
+                } else if (e.key === 'Enter' && e.ctrlKey) {
+                    logoutForm.submit();
+                }
+            });
+        });
+    </script>
+}
