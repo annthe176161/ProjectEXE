@@ -112,7 +112,7 @@ namespace ProjectEXE.Services.Implementations
 
             // Đếm số sản phẩm hiện có của shop
             int currentProductCount = await _context.Products
-                .CountAsync(p => p.ShopId == shopId);
+                .CountAsync(p => p.ShopId == shopId && p.IsInStock);
 
             // Kiểm tra xem còn slot để thêm sản phẩm không
             return currentProductCount < productLimit;
