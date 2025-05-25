@@ -28,7 +28,11 @@ namespace ProjectEXE
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IShopService, ShopService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+            // UserService nên ???c ??ng ký v?i Scoped lifetime
             builder.Services.AddScoped<IUserService, UserService>();
+
+            // EmailService có th? là Transient ho?c Scoped
+            builder.Services.AddTransient<IEmailService, EmailService>();
             builder.Services.AddScoped<IShopOrderService, ShopOrderService>();
             builder.Services.AddScoped<IPackageService, PackageService>();
             builder.Services.AddScoped<IAdminPackageService, AdminPackageService>();
