@@ -2,20 +2,298 @@
     ViewData["Title"] = "Truy cập bị từ chối";
 }
 
-<div class="container my-5 text-center">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow border-danger">
-                <div class="card-body">
-                    <i class="fas fa-exclamation-triangle text-danger" style="font-size: 5rem;"></i>
-                    <h2 class="mt-3 mb-4">Truy cập bị từ chối</h2>
-                    <p class="lead">Bạn không có quyền truy cập vào trang này.</p>
-                    <p>Vui lòng liên hệ quản trị viên nếu bạn cho rằng đây là sự cố.</p>
-                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3">
-                        <i class="fas fa-home me-2"></i>Quay lại trang chủ
-                    </a>
+@section Styles {
+    <link rel="stylesheet" href="~/css/access-denied.css?v=@DateTime.Now.Ticks" />
+}
+
+<div class="access-denied-page">
+    <div class="container">
+        <div class="denied-wrapper">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-8 col-sm-10">
+                    <div class="denied-card">
+                        <!-- Warning Animation -->
+                        <div class="warning-animation">
+                            <div class="shield-container">
+                                <div class="shield-outline">
+                                    <div class="shield-body">
+                                        <div class="warning-icon">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                    </div>
+                                    <div class="shield-waves">
+                                        <div class="wave wave-1"></div>
+                                        <div class="wave wave-2"></div>
+                                        <div class="wave wave-3"></div>
+                                    </div>
+                                </div>
+                                <div class="lock-indicators">
+                                    <div class="lock-dot lock-dot-1"></div>
+                                    <div class="lock-dot lock-dot-2"></div>
+                                    <div class="lock-dot lock-dot-3"></div>
+                                    <div class="lock-dot lock-dot-4"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Header -->
+                        <div class="denied-header">
+                            <div class="header-icon">
+                                <i class="fas fa-ban"></i>
+                            </div>
+                            <h2>Truy cập bị từ chối</h2>
+                            <p class="header-subtitle">Bạn không có quyền truy cập vào trang này</p>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="denied-body">
+                            <div class="message-content">
+                                <div class="main-message">
+                                    <h4>🚫 Quyền truy cập bị hạn chế</h4>
+                                    <p class="lead">Bạn không có quyền truy cập vào trang này. Điều này có thể xảy ra vì một số lý do sau:</p>
+                                </div>
+
+                                <div class="reason-list">
+                                    <div class="reason-item">
+                                        <div class="reason-icon">
+                                            <i class="fas fa-user-lock"></i>
+                                        </div>
+                                        <div class="reason-content">
+                                            <strong>Quyền hạn không đủ</strong>
+                                            <span>Tài khoản của bạn không có quyền truy cập tính năng này</span>
+                                        </div>
+                                    </div>
+                                    <div class="reason-item">
+                                        <div class="reason-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="reason-content">
+                                            <strong>Phiên đăng nhập hết hạn</strong>
+                                            <span>Vui lòng đăng nhập lại để tiếp tục</span>
+                                        </div>
+                                    </div>
+                                    <div class="reason-item">
+                                        <div class="reason-icon">
+                                            <i class="fas fa-shield-alt"></i>
+                                        </div>
+                                        <div class="reason-content">
+                                            <strong>Khu vực bảo mật</strong>
+                                            <span>Trang này yêu cầu xác thực bổ sung</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="suggestions">
+                                    <h5>💡 Gợi ý giải pháp:</h5>
+                                    <div class="suggestion-grid">
+                                        <div class="suggestion-item">
+                                            <div class="suggestion-icon">
+                                                <i class="fas fa-sign-in-alt"></i>
+                                            </div>
+                                            <div class="suggestion-content">
+                                                <strong>Đăng nhập lại</strong>
+                                                <span>Kiểm tra thông tin đăng nhập</span>
+                                            </div>
+                                        </div>
+                                        <div class="suggestion-item">
+                                            <div class="suggestion-icon">
+                                                <i class="fas fa-user-cog"></i>
+                                            </div>
+                                            <div class="suggestion-content">
+                                                <strong>Liên hệ quản trị</strong>
+                                                <span>Yêu cầu cấp quyền truy cập</span>
+                                            </div>
+                                        </div>
+                                        <div class="suggestion-item">
+                                            <div class="suggestion-icon">
+                                                <i class="fas fa-home"></i>
+                                            </div>
+                                            <div class="suggestion-content">
+                                                <strong>Về trang chủ</strong>
+                                                <span>Quay lại trang chủ an toàn</span>
+                                            </div>
+                                        </div>
+                                        <div class="suggestion-item">
+                                            <div class="suggestion-icon">
+                                                <i class="fas fa-history"></i>
+                                            </div>
+                                            <div class="suggestion-content">
+                                                <strong>Quay lại</strong>
+                                                <span>Trở về trang trước đó</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="error-info">
+                                    <div class="error-code">
+                                        <span class="code-label">Mã lỗi:</span>
+                                        <span class="code-value">403 - Forbidden</span>
+                                    </div>
+                                    <div class="error-time">
+                                        <span class="time-label">Thời gian:</span>
+                                        <span class="time-value" id="errorTime"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer -->
+                        <div class="denied-footer">
+                            <div class="action-buttons">
+                                <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+                                    <i class="fas fa-home"></i>
+                                    Quay lại trang chủ
+                                </a>
+                                <button onclick="history.back()" class="btn btn-outline">
+                                    <i class="fas fa-arrow-left"></i>
+                                    Trang trước
+                                </button>
+                            </div>
+
+                            <div class="help-section">
+                                <div class="help-links">
+                                    <a href="#" class="help-link" onclick="contactSupport()">
+                                        <i class="fas fa-headset"></i>
+                                        Liên hệ hỗ trợ
+                                    </a>
+                                    <span class="divider">•</span>
+                                    <a href="#" class="help-link" onclick="reportIssue()">
+                                        <i class="fas fa-bug"></i>
+                                        Báo cáo sự cố
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Info Card -->
+                    <div class="info-card">
+                        <div class="info-content">
+                            <div class="info-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="info-text">
+                                <h6>Cần trợ giúp?</h6>
+                                <p>Nếu bạn cho rằng đây là sự cố hoặc bạn cần quyền truy cập, vui lòng liên hệ với quản trị viên hệ thống.</p>
+                                <div class="contact-info">
+                                    <a href="mailto:support@example.com" class="contact-link">
+                                        <i class="fas fa-envelope"></i>
+                                        support@example.com
+                                    </a>
+                                    <a href="tel:+1234567890" class="contact-link">
+                                        <i class="fas fa-phone"></i>
+                                        (123) 456-7890
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set error time
+            updateErrorTime();
+
+            // Trigger animations
+            setTimeout(function() {
+                document.querySelector('.denied-card').classList.add('animate');
+                document.querySelector('.warning-animation').classList.add('animate');
+            }, 300);
+        });
+
+        // Update error time display
+        function updateErrorTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('vi-VN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+
+            const timeElement = document.getElementById('errorTime');
+            if (timeElement) {
+                timeElement.textContent = timeString;
+            }
+        }
+
+        // Contact support
+        function contactSupport() {
+            showNotification('Đang chuyển hướng đến trang hỗ trợ...', 'info');
+            // Add your support contact logic here
+            setTimeout(() => {
+                window.open('mailto:support@example.com?subject=Yêu cầu hỗ trợ - Lỗi truy cập&body=Tôi gặp vấn đề truy cập vào trang web. Vui lòng hỗ trợ.', '_blank');
+            }, 1000);
+        }
+
+        // Report issue
+        function reportIssue() {
+            showNotification('Đang mở form báo cáo sự cố...', 'info');
+            // Add your issue reporting logic here
+            setTimeout(() => {
+                window.open('mailto:support@example.com?subject=Báo cáo sự cố - Lỗi 403&body=Chi tiết sự cố: Không thể truy cập trang ' + window.location.href, '_blank');
+            }, 1000);
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas ${type === 'info' ? 'fa-info-circle' : 'fa-check-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Auto-suggest login if user seems to be logged out
+        setTimeout(function() {
+            if (!document.cookie.includes('AuthToken')) {
+                showLoginSuggestion();
+            }
+        }, 5000);
+
+        function showLoginSuggestion() {
+            const suggestion = document.createElement('div');
+            suggestion.className = 'login-suggestion';
+            suggestion.innerHTML = `
+                <div class="suggestion-content">
+                    <i class="fas fa-lightbulb"></i>
+                    <div class="suggestion-text">
+                        <strong>Gợi ý:</strong> Có vẻ như bạn chưa đăng nhập. Hãy thử đăng nhập để truy cập trang này.
+                    </div>
+                    <a href="/Account/Login" class="suggestion-btn">Đăng nhập</a>
+                </div>
+            `;
+
+            document.body.appendChild(suggestion);
+
+            setTimeout(() => suggestion.classList.add('show'), 100);
+
+            // Auto hide after 10 seconds
+            setTimeout(() => {
+                suggestion.classList.remove('show');
+                setTimeout(() => suggestion.remove(), 300);
+            }, 10000);
+        }
+    </script>
+}

@@ -2,24 +2,100 @@
     ViewData["Title"] = "Email đã xác thực";
 }
 
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-header bg-success text-white">
-                    <h3 class="mb-0">Xác thực email thành công</h3>
-                </div>
-                <div class="card-body text-center">
-                    <i class="fas fa-check-circle fa-4x mb-3 text-success"></i>
-                    <h4>Email của bạn đã được xác thực!</h4>
-                    <p>Tài khoản của bạn đã được kích hoạt thành công. Bạn có thể bắt đầu sử dụng tất cả các tính năng ngay bây giờ.</p>
-                </div>
-                <div class="card-footer">
-                    <div class="d-grid gap-2">
-                        <a asp-controller="Home" asp-action="Index" class="btn btn-success">Đi đến trang chủ</a>
+@section Styles {
+    <link rel="stylesheet" href="~/css/email-verified.css?v=@DateTime.Now.Ticks" />
+}
+
+<div class="email-verified-page">
+    <div class="container">
+        <div class="verification-wrapper">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 col-md-6 col-sm-8">
+                    <div class="verification-card">
+                        <!-- Success Animation -->
+                        <div class="success-animation">
+                            <div class="checkmark-circle">
+                                <div class="checkmark-stem"></div>
+                                <div class="checkmark-kick"></div>
+                            </div>
+                        </div>
+
+                        <!-- Card Header -->
+                        <div class="verification-header">
+                            <div class="header-icon">
+                                <i class="fas fa-shield-check"></i>
+                            </div>
+                            <h3>Xác thực thành công!</h3>
+                            <p class="header-subtitle">Email của bạn đã được xác nhận</p>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="verification-body">
+                            <div class="success-message">
+                                <h4>Chúc mừng! 🎉</h4>
+                                <p>Tài khoản của bạn đã được kích hoạt thành công. Bạn có thể bắt đầu sử dụng tất cả các tính năng ngay bây giờ.</p>
+                            </div>
+
+                            <div class="features-list">
+                                <div class="feature-item">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span>Mua sắm không giới hạn</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-store"></i>
+                                    <span>Mở cửa hàng của riêng bạn</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-heart"></i>
+                                    <span>Lưu sản phẩm yêu thích</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-bell"></i>
+                                    <span>Nhận thông báo mới nhất</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer -->
+                        <div class="verification-footer">
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-success">
+                                <i class="fas fa-home"></i>
+                                Khám phá ngay
+                            </a>
+                            <div class="footer-links">
+                                <a href="#" class="link-secondary">Trung tâm trợ giúp</a>
+                                <span class="divider">•</span>
+                                <a href="#" class="link-secondary">Liên hệ hỗ trợ</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Info -->
+                    <div class="additional-info">
+                        <div class="info-card">
+                            <div class="info-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div class="info-content">
+                                <h6>Mẹo nhỏ</h6>
+                                <p>Hoàn thiện hồ sơ của bạn để có trải nghiệm tốt nhất và tăng độ tin cậy khi giao dịch.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Simple animation trigger
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                document.querySelector('.verification-card').classList.add('animate');
+                document.querySelector('.success-animation').classList.add('animate');
+            }, 300);
+        });
+    </script>
+}
