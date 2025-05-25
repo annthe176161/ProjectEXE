@@ -85,12 +85,13 @@ namespace ProjectEXE.Services.Implementations
             .ToListAsync();
         }
 
-        public async Task<List<CategorysViewModel>> GetCategories()
+        public async Task<List<CategoryViewModel>> GetCategories()
         {
-            return await _context.Categories.Select(c => new CategorysViewModel
+            return await _context.Categories.Select(c => new CategoryViewModel
             {
-                categoryId = c.CategoryId,
-                categoryName = c.CategoryName,
+                CategoryId = c.CategoryId,
+                CategoryName = c.CategoryName,
+                ParentCategoryId = c.ParentCategoryId,
             }).ToListAsync();
         }
 

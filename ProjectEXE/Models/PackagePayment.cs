@@ -19,11 +19,7 @@ public partial class PackagePayment
 
     public int StatusId { get; set; }
 
-    public int? ConfirmedByUserId { get; set; }
-
     public DateTime CreatedAt { get; set; }
-
-    public virtual User? ConfirmedByUser { get; set; }
 
     public virtual ServicePackage Package { get; set; } = null!;
 

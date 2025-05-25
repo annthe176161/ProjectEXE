@@ -14,5 +14,14 @@ namespace ProjectEXE.Services.Interfaces
         Task<bool> editPackage(ServicePackage package);
 
         Task<IEnumerable<RecentPackagePaymentDto>> GetRecentPackagePaymentsAsync(int count);
+
+        // SỬA Ở ĐÂY: Cập nhật kiểu dữ liệu liên quan đến Category
+        Task<IEnumerable<CategoryOfAdminViewModel>> GetAllCategoriesWithParentNameAsync();
+        Task<Category> GetCategoryByIdAsync(int categoryId);
+        Task<IEnumerable<Category>> GetAllParentCategoriesAsync();
+        Task<bool> AddCategoryAsync(CategoryOfAdminViewModel model); // Sửa ở đây
+        Task<bool> UpdateCategoryAsync(CategoryOfAdminViewModel model); // Sửa ở đây
+        Task<(bool Success, string ErrorMessage)> DeleteCategoryAsync(int categoryId);
+
     }
 }

@@ -129,5 +129,128 @@ namespace ProjectEXE.Services.Implementations
 
             return recentPayments;
         }
+
+
+        // TRIỂN KHAI CÁC PHƯƠNG THỨC MỚI CHO CATEGORIES
+
+        // SỬA Ở ĐÂY: Cập nhật các phương thức liên quan đến Category
+
+        public async Task<IEnumerable<CategoryOfAdminViewModel>> GetAllCategoriesWithParentNameAsync()
+        {
+            if (_context.Categories == null)
+            {
+                return Enumerable.Empty<CategoryOfAdminViewModel>();
+            }
+
+            var categories = await _context.Categories
+                .OrderBy(c => c.CategoryName)
+                .Select(c => new CategoryOfAdminViewModel // Sửa ở đây
+                {
+                    CategoryId = c.CategoryId,
+                    CategoryName = c.CategoryName,
+                    ParentCategoryId = c.ParentCategoryId,
+                    ParentCategoryName = c.ParentCategoryId != null ? _context.Categories.FirstOrDefault(p => p.CategoryId == c.ParentCategoryId).CategoryName : null
+                    // Hoặc nếu dùng navigation property:
+                    // ParentCategoryName = c.ParentCategory != null ? c.ParentCategory.CategoryName : null
+                }).ToListAsync();
+
+            return categories;
+        }
+
+        public async Task<Category> GetCategoryByIdAsync(int categoryId)
+        {
+            if (_context.Categories == null) return null;
+            return await _context.Categories.FindAsync(categoryId);
+        }
+
+        public async Task<IEnumerable<Category>> GetAllParentCategoriesAsync()
+        {
+            if (_context.Categories == null) return Enumerable.Empty<Category>();
+            return await _context.Categories.OrderBy(c => c.CategoryName).ToListAsync();
+        }
+
+        public async Task<bool> AddCategoryAsync(CategoryOfAdminViewModel model) // Sửa ở đây
+        {
+            if (_context.Categories == null) return false;
+
+            var category = new Category
+            {
+                CategoryName = model.CategoryName,
+                ParentCategoryId = model.ParentCategoryId == 0 ? null : model.ParentCategoryId
+            };
+
+            try
+            {
+                _context.Categories.Add(category);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding category: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateCategoryAsync(CategoryOfAdminViewModel model) // Sửa ở đây
+        {
+            if (_context.Categories == null) return false;
+
+            var category = await _context.Categories.FindAsync(model.CategoryId);
+            if (category == null)
+            {
+                return false;
+            }
+
+            if (model.ParentCategoryId.HasValue && model.ParentCategoryId.Value == category.CategoryId)
+            {
+                return false;
+            }
+
+            category.CategoryName = model.CategoryName;
+            category.ParentCategoryId = model.ParentCategoryId == 0 ? null : model.ParentCategoryId;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating category: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<(bool Success, string ErrorMessage)> DeleteCategoryAsync(int categoryId)
+        {
+            // ... (Logic xóa giữ nguyên, không bị ảnh hưởng bởi việc đổi tên ViewModel) ...
+            if (_context.Categories == null) return (false, "Không thể kết nối tới danh mục.");
+            var category = await _context.Categories.FindAsync(categoryId);
+            if (category == null) return (false, "Không tìm thấy danh mục để xóa.");
+            bool hasChildren = await _context.Categories.AnyAsync(c => c.ParentCategoryId == categoryId);
+            if (hasChildren) return (false, "Không thể xóa danh mục này vì nó chứa các danh mục con. Vui lòng xóa hoặc di chuyển các danh mục con trước.");
+            if (_context.Products != null)
+            {
+                bool isInUseByProducts = await _context.Products.AnyAsync(p => p.CategoryId == categoryId);
+                if (isInUseByProducts) return (false, "Không thể xóa danh mục này vì đang được sử dụng bởi một hoặc nhiều sản phẩm.");
+            }
+            try
+            {
+                _context.Categories.Remove(category);
+                await _context.SaveChangesAsync();
+                return (true, "Xóa danh mục thành công.");
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine($"Error deleting category (DbUpdateException): {ex.InnerException?.Message ?? ex.Message}");
+                return (false, "Lỗi khi xóa danh mục. Có thể danh mục này vẫn còn liên kết dữ liệu.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting category: {ex.Message}");
+                return (false, "Đã có lỗi xảy ra trong quá trình xóa danh mục.");
+            }
+        }
     }
 }

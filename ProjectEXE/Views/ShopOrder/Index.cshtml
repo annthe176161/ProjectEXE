@@ -3,159 +3,169 @@
     ViewData["Title"] = "Quản lý đơn hàng shop";
 }
 
-<div class="container-fluid py-4">
-    <h2 class="mb-4"><i class="fas fa-shopping-bag me-2"></i> Quản lý đơn hàng shop</h2>
+@section Styles {
+    <link rel="stylesheet" href="~/css/shop-order-management.css?v=@DateTime.Now.Ticks">
+}
 
-    <!-- Bộ lọc -->
-    <div class="card mb-4">
-        <div class="card-body">
-            <form method="get" id="filterForm">
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">Trạng thái đơn hàng</label>
-                        <select class="form-select" name="statusFilter" id="statusFilter">
-                            <option value="">Tất cả trạng thái</option>
-                            @foreach (var status in Model.StatusOptions)
-                            {
-                                <option value="@status.Key" selected="@(Model.StatusFilter == status.Key.ToString())">@status.Value</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">Khoảng thời gian</label>
-                        <input type="text" class="form-control" id="dateRangeFilter" name="dateRange" value="@Model.DateRangeFilter" placeholder="Chọn khoảng thời gian">
-                    </div>
-                    <div class="col-md-4 mb-3 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary me-2">
-                            <i class="fas fa-filter me-2"></i>Lọc
-                        </button>
-                        <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
-                            <i class="fas fa-redo me-2"></i>Đặt lại
-                        </a>
-                    </div>
-                </div>
-            </form>
+<div class="shop-order-management">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="container-fluid">
+                <h2 class="page-title">
+                    <i class="fas fa-shopping-bag me-2"></i>
+                    Quản lý đơn hàng shop
+                </h2>
+            </div>
         </div>
-    </div>
 
-    <!-- Danh sách đơn hàng -->
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Mã đơn</th>
-                            <th>Sản phẩm</th>
-                            <th>Khách hàng</th>
-                            <th>Thông tin liên hệ</th>
-                            <th>Ngày đặt</th>
-                            <th>Trạng thái</th>
-                            <th>Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.Orders.Any())
-                        {
-                            foreach (var order in Model.Orders)
+        <!-- Filter Section -->
+        <div class="filter-card card mb-4">
+            <div class="card-body">
+                <form method="get" id="filterForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Trạng thái đơn hàng</label>
+                            <select class="form-select" name="statusFilter" id="statusFilter">
+                                <option value="">Tất cả trạng thái</option>
+                                @foreach (var status in Model.StatusOptions)
+                                {
+                                    <option value="@status.Key" selected="@(Model.StatusFilter == status.Key.ToString())">@status.Value</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="filter-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-filter"></i>
+                                    Lọc đơn hàng
+                                </button>
+                                <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                                    <i class="fas fa-redo"></i>
+                                    Đặt lại bộ lọc
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="orders-card card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mã đơn hàng</th>
+                                <th>Sản phẩm</th>
+                                <th>Khách hàng</th>
+                                <th>Liên hệ</th>
+                                <th>Ngày đặt</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Orders.Any())
+                            {
+                                @foreach (var order in Model.Orders)
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="order-id">#@order.OrderId</span>
+                                        </td>
+                                        <td>
+                                            <div class="product-info">
+                                                <img src="@order.ProductImageUrl" class="product-image" alt="@order.ProductName">
+                                                <div class="product-details">
+                                                    <div class="product-name">@order.ProductName</div>
+                                                    <div class="product-price">@order.Price.ToString("N0")₫</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="customer-name">@order.BuyerName</span>
+                                        </td>
+                                        <td>
+                                            <div class="contact-info">
+                                                <div class="contact-item">
+                                                    <i class="fas fa-phone-alt"></i>
+                                                    <span>@order.BuyerPhone</span>
+                                                </div>
+                                                <div class="contact-item">
+                                                    <i class="fas fa-envelope"></i>
+                                                    <span>@order.BuyerEmail</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="order-date">@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</span>
+                                        </td>
+                                        <td>
+                                            <div class="status-wrapper">
+                                                <span class="badge @order.StatusClass">
+                                                    <i class="fas fa-circle"></i>
+                                                    @order.StatusName
+                                                </span>
+                                                @if (order.StatusId == 5 && !string.IsNullOrEmpty(order.CancelReason))
+                                                {
+                                                    <div class="cancel-reason">
+                                                        Lý do: @order.CancelReason
+                                                    </div>
+                                                }
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("OrderDetail", new { id = order.OrderId })"
+                                               class="btn btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                                Chi tiết
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
                             {
                                 <tr>
-                                    <td>#@order.OrderId</td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <img src="@order.ProductImageUrl" class="rounded me-2" style="width: 50px; height: 50px; object-fit: cover;">
-                                            <div>
-                                                <div class="fw-bold text-truncate" style="max-width: 200px;">@order.ProductName</div>
-                                                <div class="text-danger">@order.Price.ToString("N0")₫</div>
+                                    <td colspan="7">
+                                        <div class="empty-state">
+                                            <div class="empty-icon">
+                                                <i class="fas fa-box-open"></i>
                                             </div>
+                                            <h4>Chưa có đơn hàng nào</h4>
+                                            <p>Hiện tại chưa có đơn hàng nào phù hợp với bộ lọc của bạn.</p>
                                         </div>
-                                    </td>
-                                    <td>@order.BuyerName</td>
-                                    <td>
-                                        <div><i class="fas fa-phone-alt me-1 text-muted"></i> @order.BuyerPhone</div>
-                                        <div><i class="fas fa-envelope me-1 text-muted"></i> @order.BuyerEmail</div>
-                                    </td>
-                                    <td>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
-                                    <td>
-                                        <span class="badge @order.StatusClass">@order.StatusName</span>
-                                        @if (order.StatusId == 5 && !string.IsNullOrEmpty(order.CancelReason))
-                                        {
-                                            <div class="small text-muted mt-1">Lý do: @order.CancelReason</div>
-                                        }
-                                    </td>
-                                    <td>
-                                        <a href="@Url.Action("OrderDetail", new { id = order.OrderId })" class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-eye me-1"></i>Chi tiết
-                                        </a>
                                     </td>
                                 </tr>
                             }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="7" class="text-center py-4">
-                                    <div class="text-muted">
-                                        <i class="fas fa-box-open mb-3" style="font-size: 3rem;"></i>
-                                        <p class="mb-0">Không có đơn hàng nào</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                        </tbody>
+                    </table>
+                </div>
 
-            <!-- Phân trang -->
-            @if (Model.Pagination.TotalPages > 1)
-            {
-                <nav aria-label="Page navigation" class="mt-4">
-                    <ul class="pagination justify-content-center">
-                        @for (int i = 1; i <= Model.Pagination.TotalPages; i++)
-                        {
-                            <li class="page-item @(i == Model.Pagination.CurrentPage ? "active" : "")">
-                                <a class="page-link" href="@Url.Action("Index", new { page = i, statusFilter = Model.StatusFilter, dateRange = Model.DateRangeFilter })">@i</a>
-                            </li>
-                        }
-                    </ul>
-                </nav>
-            }
+                <!-- Pagination -->
+                @if (Model.Pagination.TotalPages > 1)
+                {
+                    <div class="pagination-wrapper">
+                        <nav aria-label="Phân trang đơn hàng">
+                            <ul class="pagination justify-content-center">
+                                @for (int i = 1; i <= Model.Pagination.TotalPages; i++)
+                                {
+                                    <li class="page-item @(i == Model.Pagination.CurrentPage ? "active" : "")">
+                                        <a class="page-link" href="@Url.Action("Index", new { page = i, statusFilter = Model.StatusFilter, dateRange = Model.DateRangeFilter })">@i</a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
-    <script src="https://cdn.jsdelivr.net/moment/latest/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            // Khởi tạo date range picker
-            $('#dateRangeFilter').daterangepicker({
-                opens: 'left',
-                autoUpdateInput: false,
-                locale: {
-                    format: 'DD/MM/YYYY',
-                    cancelLabel: 'Xóa',
-                    applyLabel: 'Áp dụng',
-                    fromLabel: 'Từ',
-                    toLabel: 'Đến',
-                }
-            });
-
-            $('#dateRangeFilter').on('apply.daterangepicker', function(ev, picker) {
-                $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
-            });
-
-            $('#dateRangeFilter').on('cancel.daterangepicker', function(ev, picker) {
-                $(this).val('');
-            });
-
-            // Lọc khi thay đổi trạng thái
-            $('#statusFilter').on('change', function() {
-                $('#filterForm').submit();
-            });
-        });
-    </script>
+    <script src="~/js/shop-order-management.js"></script>
 }

@@ -44,19 +44,13 @@ public partial class RevaContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            var ConnectionString = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetConnectionString("MyCnn");
-            optionsBuilder.UseSqlServer(ConnectionString);
-        }
-    }
+    { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A0B4D5ECC7C");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A0B2247D82D");
 
             entity.Property(e => e.CategoryName).HasMaxLength(100);
 
@@ -67,13 +61,7 @@ public partial class RevaContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BCF546500EE");
-
-            entity.HasIndex(e => e.BuyerId, "IX_Orders_BuyerId");
-
-            entity.HasIndex(e => e.SellerId, "IX_Orders_SellerId");
-
-            entity.HasIndex(e => e.StatusId, "IX_Orders_StatusId");
+            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BCFEC80C0E3");
 
             entity.Property(e => e.CancelReason).HasMaxLength(255);
             entity.Property(e => e.OrderDate)
@@ -106,9 +94,9 @@ public partial class RevaContext : DbContext
 
         modelBuilder.Entity<OrderStatus>(entity =>
         {
-            entity.HasKey(e => e.StatusId).HasName("PK__OrderSta__C8EE206343091DA2");
+            entity.HasKey(e => e.StatusId).HasName("PK__OrderSta__C8EE20638B6123DD");
 
-            entity.HasIndex(e => e.StatusName, "UQ__OrderSta__05E7698A526003C2").IsUnique();
+            entity.HasIndex(e => e.StatusName, "UQ__OrderSta__05E7698A780B93CF").IsUnique();
 
             entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.StatusName).HasMaxLength(50);
@@ -116,19 +104,15 @@ public partial class RevaContext : DbContext
 
         modelBuilder.Entity<PackagePayment>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__PackageP__9B556A3846272873");
+            entity.HasKey(e => e.PaymentId).HasName("PK__PackageP__9B556A3886BA9B50");
 
-            entity.HasIndex(e => e.TransactionCode, "UQ__PackageP__D85E70261DEF2C25").IsUnique();
+            entity.HasIndex(e => e.TransactionCode, "UQ__PackageP__D85E7026F41A61A8").IsUnique();
 
             entity.Property(e => e.Amount).HasColumnType("decimal(12, 2)");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.TransactionCode).HasMaxLength(50);
-
-            entity.HasOne(d => d.ConfirmedByUser).WithMany(p => p.PackagePaymentConfirmedByUsers)
-                .HasForeignKey(d => d.ConfirmedByUserId)
-                .HasConstraintName("FK_PackagePayments_ConfirmedBy");
 
             entity.HasOne(d => d.Package).WithMany(p => p.PackagePayments)
                 .HasForeignKey(d => d.PackageId)
@@ -144,7 +128,7 @@ public partial class RevaContext : DbContext
                 .HasForeignKey(d => d.SubscriptionId)
                 .HasConstraintName("FK_PackagePayments_Subscriptions");
 
-            entity.HasOne(d => d.User).WithMany(p => p.PackagePaymentUsers)
+            entity.HasOne(d => d.User).WithMany(p => p.PackagePayments)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PackagePayments_Users");
@@ -152,9 +136,7 @@ public partial class RevaContext : DbContext
 
         modelBuilder.Entity<PackageSubscription>(entity =>
         {
-            entity.HasKey(e => e.SubscriptionId).HasName("PK__PackageS__9A2B249D57F51D45");
-
-            entity.HasIndex(e => e.ShopId, "IX_PackageSubscriptions_ShopId");
+            entity.HasKey(e => e.SubscriptionId).HasName("PK__PackageS__9A2B249D773A325A");
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -180,9 +162,9 @@ public partial class RevaContext : DbContext
 
         modelBuilder.Entity<PaymentStatus>(entity =>
         {
-            entity.HasKey(e => e.StatusId).HasName("PK__PaymentS__C8EE20630ED36391");
+            entity.HasKey(e => e.StatusId).HasName("PK__PaymentS__C8EE206398297870");
 
-            entity.HasIndex(e => e.StatusName, "UQ__PaymentS__05E7698A1EF5901D").IsUnique();
+            entity.HasIndex(e => e.StatusName, "UQ__PaymentS__05E7698ADECA3E4D").IsUnique();
 
             entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.StatusName).HasMaxLength(50);
@@ -190,13 +172,7 @@ public partial class RevaContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6CDA2653423");
-
-            entity.HasIndex(e => e.CategoryId, "IX_Products_CategoryId");
-
-            entity.HasIndex(e => e.IsVisible, "IX_Products_IsVisible");
-
-            entity.HasIndex(e => e.ShopId, "IX_Products_ShopId");
+            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6CD4D5DA70D");
 
             entity.Property(e => e.Brand).HasMaxLength(100);
             entity.Property(e => e.Color).HasMaxLength(50);
@@ -229,9 +205,9 @@ public partial class RevaContext : DbContext
 
         modelBuilder.Entity<ProductCondition>(entity =>
         {
-            entity.HasKey(e => e.ConditionId).HasName("PK__ProductC__37F5C0CFD3849081");
+            entity.HasKey(e => e.ConditionId).HasName("PK__ProductC__37F5C0CF906BC5CC");
 
-            entity.HasIndex(e => e.ConditionName, "UQ__ProductC__CE7E60662426F0D6").IsUnique();
+            entity.HasIndex(e => e.ConditionName, "UQ__ProductC__CE7E6066EB369B55").IsUnique();
 
             entity.Property(e => e.ConditionName).HasMaxLength(50);
             entity.Property(e => e.Description).HasMaxLength(255);
@@ -239,7 +215,7 @@ public partial class RevaContext : DbContext
 
         modelBuilder.Entity<ProductImage>(entity =>
         {
-            entity.HasKey(e => e.ImageId).HasName("PK__ProductI__7516F70C3170E4E4");
+            entity.HasKey(e => e.ImageId).HasName("PK__ProductI__7516F70CBAE67826");
 
             entity.Property(e => e.ImageUrl).HasMaxLength(255);
 
@@ -251,27 +227,27 @@ public partial class RevaContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("PK__Roles__8AFACE1AD3AEDE34");
+            entity.HasKey(e => e.RoleId).HasName("PK__Roles__8AFACE1A0042E0F8");
 
-            entity.HasIndex(e => e.RoleName, "UQ__Roles__8A2B616064EF443C").IsUnique();
+            entity.HasIndex(e => e.RoleName, "UQ__Roles__8A2B61604280FF35").IsUnique();
 
             entity.Property(e => e.RoleName).HasMaxLength(50);
         });
 
         modelBuilder.Entity<ServicePackage>(entity =>
         {
-            entity.HasKey(e => e.PackageId).HasName("PK__ServiceP__322035CC195D46DC");
+            entity.HasKey(e => e.PackageId).HasName("PK__ServiceP__322035CC8F2A1F92");
 
-            entity.Property(e => e.DiscountedPrice).HasColumnType("decimal(12, 2)");
+            entity.Property(e => e.DiscountedPrice).HasColumnType("decimal(12, 0)");
             entity.Property(e => e.PackageName).HasMaxLength(100);
-            entity.Property(e => e.Price).HasColumnType("decimal(12, 2)");
+            entity.Property(e => e.Price).HasColumnType("decimal(12, 0)");
         });
 
         modelBuilder.Entity<Shop>(entity =>
         {
-            entity.HasKey(e => e.ShopId).HasName("PK__Shops__67C557C9DCF86EA8");
+            entity.HasKey(e => e.ShopId).HasName("PK__Shops__67C557C98927C61D");
 
-            entity.HasIndex(e => e.ShopName, "UQ__Shops__649A7D9693342DE6").IsUnique();
+            entity.HasIndex(e => e.ShopName, "UQ__Shops__649A7D96470C743D").IsUnique();
 
             entity.Property(e => e.ContactInfo).HasMaxLength(500);
             entity.Property(e => e.CreatedAt)
@@ -289,9 +265,9 @@ public partial class RevaContext : DbContext
 
         modelBuilder.Entity<SubscriptionStatus>(entity =>
         {
-            entity.HasKey(e => e.StatusId).HasName("PK__Subscrip__C8EE2063BB77D4B3");
+            entity.HasKey(e => e.StatusId).HasName("PK__Subscrip__C8EE20630527522C");
 
-            entity.HasIndex(e => e.StatusName, "UQ__Subscrip__05E7698A2D3225DB").IsUnique();
+            entity.HasIndex(e => e.StatusName, "UQ__Subscrip__05E7698A3CD04EFF").IsUnique();
 
             entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.StatusName).HasMaxLength(50);
@@ -299,9 +275,9 @@ public partial class RevaContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4C3DA04F6C");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4CAA66CD95");
 
-            entity.HasIndex(e => e.Email, "UQ__Users__A9D105349D9262BE").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Users__A9D10534BB355421").IsUnique();
 
             entity.Property(e => e.Address).HasMaxLength(255);
             entity.Property(e => e.CreatedAt)
@@ -309,7 +285,7 @@ public partial class RevaContext : DbContext
                 .HasColumnType("datetime");
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.FullName).HasMaxLength(100);
-            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.IsActive).HasDefaultValue(1);
             entity.Property(e => e.PasswordHash).HasMaxLength(255);
             entity.Property(e => e.PhoneNumber).HasMaxLength(20);
 
