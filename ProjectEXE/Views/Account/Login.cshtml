@@ -3,48 +3,60 @@
     ViewData["Title"] = "Đăng nhập";
 }
 
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">Đăng nhập</h3>
-                </div>
-                <div class="card-body">
-                    <form asp-action="Login" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input type="hidden" asp-for="ReturnUrl" />
+@section Styles {
+    <link rel="stylesheet" href="~/css/login.css?v=@DateTime.Now.Ticks">
+}
 
-                        <div class="mb-3">
-                            <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" class="form-control" placeholder="Nhập email của bạn" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
+<div class="login-wrapper">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h3 class="login-title">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Đăng nhập
+                </h3>
+            </div>
 
-                        <div class="mb-3">
-                            <label asp-for="Password" class="form-label"></label>
-                            <input asp-for="Password" class="form-control" placeholder="Nhập mật khẩu" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
+            <div class="login-body">
+                <form asp-action="Login" method="post" id="loginForm">
+                    <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+                    <input type="hidden" asp-for="ReturnUrl" />
 
-                        <div class="mb-3 d-flex justify-content-between align-items-center">
-                            <div class="form-check">
-                                <input asp-for="RememberMe" class="form-check-input" />
-                                <label asp-for="RememberMe" class="form-check-label"></label>
-                            </div>
-                            <div>
-                                <a asp-action="ForgotPassword">Quên mật khẩu?</a>
-                            </div>
-                        </div>
+                    <div class="form-floating">
+                        <input asp-for="Email" class="form-control" placeholder="Nhập email của bạn" autocomplete="email" />
+                        <label asp-for="Email">Địa chỉ email</label>
+                        <i class="fas fa-envelope input-icon"></i>
+                        <span asp-validation-for="Email" class="field-validation-error"></span>
+                    </div>
 
-                        <div class="d-grid gap-2 mb-3">
-                            <button type="submit" class="btn btn-primary">Đăng nhập</button>
+                    <div class="form-floating">
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Nhập mật khẩu" autocomplete="current-password" id="passwordInput" />
+                        <label asp-for="Password">Mật khẩu</label>
+                        <button type="button" class="password-toggle" onclick="togglePassword()">
+                            <i class="fas fa-eye" id="passwordIcon"></i>
+                        </button>
+                        <span asp-validation-for="Password" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="form-options">
+                        <div class="custom-checkbox">
+                            <input asp-for="RememberMe" type="checkbox" id="rememberMe" />
+                            <label asp-for="RememberMe" for="rememberMe">Ghi nhớ đăng nhập</label>
                         </div>
-                    </form>
-                </div>
-                <div class="card-footer text-center">
-                    <p class="mb-0">Chưa có tài khoản? <a asp-action="Register">Đăng ký ngay</a></p>
-                </div>
+                        <a asp-action="ForgotPassword" class="forgot-password">Quên mật khẩu?</a>
+                    </div>
+
+                    <button type="submit" class="login-btn" id="loginButton">
+                        <span id="loginText">Đăng nhập</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="login-footer">
+                <p class="mb-0">
+                    Chưa có tài khoản?
+                    <a asp-action="Register" class="register-link">Đăng ký ngay</a>
+                </p>
             </div>
         </div>
     </div>
@@ -52,4 +64,75 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Password toggle functionality
+        function togglePassword() {
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordIcon = document.getElementById('passwordIcon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.classList.remove('fa-eye');
+                passwordIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.classList.remove('fa-eye-slash');
+                passwordIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Form submission with loading state
+        document.getElementById('loginForm').addEventListener('submit', function() {
+            const button = document.getElementById('loginButton');
+            const text = document.getElementById('loginText');
+
+            button.classList.add('loading');
+            text.textContent = 'Đang đăng nhập...';
+            button.disabled = true;
+        });
+
+        // Auto-focus first input with error or email input
+        document.addEventListener('DOMContentLoaded', function() {
+            const errorInput = document.querySelector('.input-validation-error');
+            if (errorInput) {
+                errorInput.focus();
+            } else {
+                document.querySelector('input[type="email"]').focus();
+            }
+        });
+
+        // Enhanced form validation feedback
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.value.trim() !== '') {
+                    this.classList.add('has-value');
+                } else {
+                    this.classList.remove('has-value');
+                }
+            });
+
+            input.addEventListener('focus', function() {
+                this.classList.remove('is-invalid');
+                const errorSpan = this.parentNode.querySelector('.field-validation-error');
+                if (errorSpan) {
+                    errorSpan.style.display = 'none';
+                }
+            });
+        });
+
+        // Smooth animations on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const card = document.querySelector('.login-card');
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s ease-out';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
 }
