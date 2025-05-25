@@ -36,55 +36,6 @@ namespace ProjectEXE.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Select(int id)
-        {
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            // Lấy thông tin shop của người dùng
-            var shop = await _shopService.GetShopByUserIdAsync(userId);
-
-            if (shop == null)
-            {
-                TempData["ErrorMessage"] = "Bạn cần có gian hàng để sử dụng tính năng này.";
-                return RedirectToAction("Create", "Shop");
-            }
-
-            try
-            {
-                // Tạo yêu cầu thanh toán
-                var paymentInfo = await _packageService.CreatePaymentRequestAsync(id, shop.ShopId, userId);
-                return View(paymentInfo);
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = ex.Message;
-                return RedirectToAction("Index");
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmPayment(string transactionCode)
-        {
-            if (string.IsNullOrEmpty(transactionCode))
-            {
-                TempData["ErrorMessage"] = "Mã giao dịch không hợp lệ.";
-                return RedirectToAction("Index");
-            }
-
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            try
-            {
-                // Xác nhận thanh toán
-                var result = await _packageService.ConfirmPaymentAsync(transactionCode, userId);
-                return View(result);
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = ex.Message;
-                return RedirectToAction("Index");
-            }
-        }
+        
     }
 }
