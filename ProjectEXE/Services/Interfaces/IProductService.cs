@@ -1,5 +1,3 @@
-
-
 using ProjectEXE.Models;
 using ProjectEXE.ViewModel;
 using ProjectEXE.ViewModel.ProductViewModel;
@@ -15,7 +13,7 @@ namespace ProjectEXE.Services.Interfaces
         public Task<int> getTotalPagesWithSearch(string search, int limit = 10);
         public Task<bool> deleteProductById(int id);
         public Task<List<ShopsViewModel>> GetShops();
-        public Task<List<CategorysViewModel>> GetCategories();
+        public Task<List<CategoryViewModel>> GetCategories();
         public Task<ProductsViewModel> GetProductById(int id);
         Task<bool> editProduct(Product product);
 

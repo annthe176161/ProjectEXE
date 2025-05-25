@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjectEXE.Models;
 using ProjectEXE.Services.Interfaces;
+using ProjectEXE.ViewModel.ProductViewModel;
 using ProjectEXE.ViewModel.Shop;
 
 namespace ProjectEXE.Services.Implementations

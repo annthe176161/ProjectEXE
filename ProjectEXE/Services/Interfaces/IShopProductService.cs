@@ -1,4 +1,5 @@
-﻿using ProjectEXE.ViewModel.Shop;
+﻿using ProjectEXE.ViewModel.ProductViewModel;
+using ProjectEXE.ViewModel.Shop;
 
 namespace ProjectEXE.Services.Interfaces
 {

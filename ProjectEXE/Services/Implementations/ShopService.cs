@@ -2,6 +2,7 @@
 using ProjectEXE.Models;
 using ProjectEXE.Services.Interfaces;
 using ProjectEXE.ViewModel.ProductViewModel;
+using ProjectEXE.ViewModel.Shop;
 using ProjectEXE.ViewModel.ShopViewModel;
 using System.Security.Claims;
 
@@ -20,6 +21,7 @@ namespace ProjectEXE.Services.Implementations
             _httpContextAccessor = httpContextAccessor;
         }
 
+        //====================hoapmhe173343====================================
         public async Task<bool> ActiveShop(ShopView shop, string imageUrl)
         {
             var user = _httpContextAccessor.HttpContext?.User;
@@ -114,6 +116,36 @@ namespace ProjectEXE.Services.Implementations
             // Kiểm tra xem còn slot để thêm sản phẩm không
             return currentProductCount < productLimit;
         }
+
+        public async Task<List<CategoryViewModel>> GetCategoriesAsync()
+        {
+            return await _context.Categories
+                .Select(c => new CategoryViewModel
+                {
+                    CategoryId = c.CategoryId,
+                    CategoryName = c.CategoryName,
+                    ParentCategoryId = c.ParentCategoryId
+                })
+                .ToListAsync();
+        }
+
+        public async Task<List<ConditionViewModel>> GetConditionsAsync()
+        {
+            return await _context.ProductConditions
+                .Select(c => new ConditionViewModel
+                {
+                    ConditionId = c.ConditionId,
+                    ConditionName = c.ConditionName
+                })
+                .ToListAsync();
+        }
+
+        public Task<bool> CreateProductAsync(ProductFormViewModel model, int shopId)
+        {
+            throw new NotImplementedException();
+        }
+
+        //======================================
 
         public async Task<bool> IsShopPremiumAsync(int shopId)
         {
@@ -359,5 +391,7 @@ namespace ProjectEXE.Services.Implementations
             await _context.SaveChangesAsync();
             return true;
         }
+
+
     }
 }

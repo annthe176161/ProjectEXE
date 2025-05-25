@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProjectEXE.Services.Implementations;
 using ProjectEXE.Services.Interfaces;
+using ProjectEXE.ViewModel.Shop;
 using ProjectEXE.ViewModel.ShopViewModel;
 using System.Composition;
 using System.Security.Claims;
@@ -54,7 +56,7 @@ namespace ProjectEXE.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -123,5 +125,33 @@ namespace ProjectEXE.Controllers
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddNewProduct(ProductFormViewModel model)
+        {
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            //lấy id của shop
+            int shopId = await _shopService.GetShopIdByUserId(userId);
+
+            if (ModelState.IsValid)
+            {
+                bool result = await _shopService.CreateProductAsync(model, shopId);
+
+                if (result)
+                {
+                    TempData["SuccessMessage"] = "Sản phẩm đã được tạo thành công!";
+                    return RedirectToAction("Index", "ShopProfile");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Có lỗi xảy ra khi tạo sản phẩm. Vui lòng thử lại.");
+                }
+            }
+
+            // Nếu có lỗi, tải lại dữ liệu cho form
+            model.Categories = await _shopService.GetCategoriesAsync();
+            model.Conditions = await _shopService.GetConditionsAsync();
+            return View("AddProduct", model);
+        }
     }
 }
