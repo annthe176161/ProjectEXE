@@ -98,7 +98,6 @@ namespace ProjectEXE.Controllers
                     TransactionCode = transactionCode,
                     Amount = amount,
                     StatusId = 2,
-                    ConfirmedByUserId = 7,
                     CreatedAt = DateTime.UtcNow,
                 };
 

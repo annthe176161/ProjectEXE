@@ -27,9 +27,7 @@ public partial class User
 
     public virtual ICollection<Order> OrderSellers { get; set; } = new List<Order>();
 
-    public virtual ICollection<PackagePayment> PackagePaymentConfirmedByUsers { get; set; } = new List<PackagePayment>();
-
-    public virtual ICollection<PackagePayment> PackagePaymentUsers { get; set; } = new List<PackagePayment>();
+    public virtual ICollection<PackagePayment> PackagePayments { get; set; } = new List<PackagePayment>();
 
     public virtual Role Role { get; set; } = null!;
 
