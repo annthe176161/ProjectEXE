@@ -2,24 +2,164 @@
     ViewData["Title"] = "Xác thực email thất bại";
 }
 
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-header bg-danger text-white">
-                    <h3 class="mb-0">Xác thực email thất bại</h3>
+@section Styles {
+    <link rel="stylesheet" href="~/css/email-verification-failed.css?v=@DateTime.Now.Ticks" />
+}
+
+<div class="verification-failed-wrapper">
+    <div class="verification-failed-container">
+        <div class="verification-failed-card">
+            <!-- Header Section -->
+            <div class="verification-header">
+                <div class="error-icon-container">
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="error-pulse"></div>
+                    </div>
                 </div>
-                <div class="card-body text-center">
-                    <i class="fas fa-exclamation-circle fa-4x mb-3 text-danger"></i>
-                    <h4>Không thể xác thực email của bạn</h4>
-                    <p>Liên kết xác thực có thể đã hết hạn hoặc không hợp lệ.</p>
-                    <p>Vui lòng yêu cầu một liên kết xác thực mới.</p>
+                <h2 class="error-title">Xác thực email thất bại</h2>
+                <p class="error-subtitle">Không thể xác thực địa chỉ email của bạn</p>
+            </div>
+
+            <!-- Status Timeline -->
+            <div class="status-timeline">
+                <div class="timeline-item completed">
+                    <div class="timeline-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <span class="timeline-text">Email đã gửi</span>
                 </div>
-                <div class="card-footer d-flex justify-content-between">
-                    <a asp-action="Login" class="btn btn-outline-primary">Về trang đăng nhập</a>
-                    <a asp-action="ResendEmailConfirmation" class="btn btn-primary">Gửi lại email xác nhận</a>
+                <div class="timeline-line"></div>
+                <div class="timeline-item completed">
+                    <div class="timeline-icon">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <span class="timeline-text">Đã nhấp link</span>
+                </div>
+                <div class="timeline-line"></div>
+                <div class="timeline-item failed">
+                    <div class="timeline-icon">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <span class="timeline-text">Xác thực thất bại</span>
+                </div>
+            </div>
+
+            <!-- Error Details -->
+            <div class="error-details">
+                <div class="error-content">
+                    <div class="error-main-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="error-text">
+                        <h4>Không thể xác thực email của bạn</h4>
+                        <p class="error-description">
+                            Liên kết xác thực có thể đã hết hạn hoặc không hợp lệ.
+                            Vui lòng yêu cầu một liên kết xác thực mới.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Possible Reasons -->
+                <div class="possible-reasons">
+                    <h6>Nguyên nhân có thể:</h6>
+                    <ul class="reason-list">
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>Liên kết đã hết hạn (thường sau 24 giờ)</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-link"></i>
+                            <span>Liên kết bị hỏng hoặc không đầy đủ</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-double"></i>
+                            <span>Email đã được xác thực trước đó</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-ban"></i>
+                            <span>Liên kết đã được sử dụng</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-section">
+                <div class="action-buttons">
+                    <a asp-action="ResendEmailConfirmation" class="btn-resend-email" id="resendButton">
+                        <i class="fas fa-paper-plane"></i>
+                        <span id="resendText">Gửi lại email xác nhận</span>
+                        <div class="btn-loader" id="btnLoader"></div>
+                    </a>
+                    <a asp-action="Login" class="btn-back-login">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Về trang đăng nhập</span>
+                    </a>
+                </div>
+
+                <!-- Help Section -->
+                <div class="help-section">
+                    <div class="help-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <div class="help-content">
+                        <h6>Cần trợ giúp?</h6>
+                        <p>Nếu vấn đề vẫn tiếp tục, vui lòng liên hệ bộ phận hỗ trợ của chúng tôi.</p>
+                        <div class="help-links">
+                            <a href="#" class="help-link">
+                                <i class="fas fa-headset"></i>
+                                Liên hệ hỗ trợ
+                            </a>
+                            <a href="#" class="help-link">
+                                <i class="fas fa-book"></i>
+                                Hướng dẫn
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tips Section -->
+            <div class="tips-section">
+                <div class="tips-header">
+                    <i class="fas fa-lightbulb"></i>
+                    <h6>Mẹo hữu ích</h6>
+                </div>
+                <div class="tips-content">
+                    <div class="tip-item">
+                        <i class="fas fa-envelope-open"></i>
+                        <span>Kiểm tra thư mục spam/junk mail</span>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-copy"></i>
+                        <span>Sao chép toàn bộ liên kết từ email</span>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-browser"></i>
+                        <span>Thử mở liên kết trong trình duyệt khác</span>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Background Decoration -->
+        <div class="decoration-elements">
+            <div class="floating-shape shape-1">
+                <i class="fas fa-exclamation"></i>
+            </div>
+            <div class="floating-shape shape-2">
+                <i class="fas fa-envelope-open"></i>
+            </div>
+            <div class="floating-shape shape-3">
+                <i class="fas fa-redo"></i>
+            </div>
+            <div class="decoration-circle circle-1"></div>
+            <div class="decoration-circle circle-2"></div>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/email-verification-failed.js?v=@DateTime.Now.Ticks"></script>
+}
