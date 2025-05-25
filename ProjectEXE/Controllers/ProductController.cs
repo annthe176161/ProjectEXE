@@ -51,11 +51,16 @@ namespace ProjectEXE.Controllers
             return View(viewModel);
         }
 
-        public async Task<IActionResult> ProductList([FromQuery] List<int> SelectedCategoryIds, ProductFilterViewModel filter, int page = 1)
+        public async Task<IActionResult> ProductList([FromQuery] List<int> SelectedCategoryIds,string gender, ProductFilterViewModel filter, int page = 1)
         {
             if (filter == null)
             {
                 filter = new ProductFilterViewModel();
+            }
+
+            if (!string.IsNullOrEmpty(gender))
+            {
+                filter.Gender = gender;
             }
 
             // Gán giá trị đã chọn từ query string vào filter

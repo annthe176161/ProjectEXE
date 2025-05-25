@@ -10,5 +10,6 @@
         public List<int> SelectedConditionIds { get; set; } = new List<int>();
         public string SortBy { get; set; } = "newest";
         public bool ShowPremiumOnly { get; set; } = false;
+        public string? Gender { get; set; }
     }
 }
