@@ -205,5 +205,25 @@ namespace ProjectEXE.Controllers
             }
             return null;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> QuickView(int id)
+        {
+            try
+            {
+                var product = await _productService.GetProductDetailByIdAsync(id);
+                if (product == null)
+                {
+                    return Json(new { success = false, message = "Không tìm thấy sản phẩm" });
+                }
+
+                return PartialView("_QuickViewModal", product);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in QuickView for ProductId: {ProductId}", id);
+                return Json(new { success = false, message = "Có lỗi xảy ra" });
+            }
+        }
     }
 }

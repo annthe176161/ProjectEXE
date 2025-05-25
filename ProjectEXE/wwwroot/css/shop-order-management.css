@@ -1,0 +1,601 @@
+﻿/* ===== SHOP ORDER MANAGEMENT SCOPED STYLES ===== */
+
+.shop-order-management {
+    /* Scoped variables */
+    --som-primary: #28a745;
+    --som-primary-dark: #1e7e34;
+    --som-secondary: #20c997;
+    --som-light-bg: #d4edda;
+    --som-white: #ffffff;
+    --som-gray: #6c757d;
+    --som-text: #2c3e50;
+    --som-shadow: 0 4px 12px rgba(40, 167, 69, 0.1);
+    --som-radius: 12px;
+    --som-transition: all 0.3s ease;
+    background: linear-gradient(135deg, #fafffe 0%, #f0fdf4 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+    /* ===== PAGE HEADER ===== */
+    .shop-order-management .page-header {
+        background: linear-gradient(135deg, var(--som-primary), var(--som-secondary));
+        color: var(--som-white);
+        padding: 2rem 0;
+        margin: -2rem -15px 2rem -15px;
+        border-radius: 0 0 var(--som-radius) var(--som-radius);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .shop-order-management .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.05)"/></svg>');
+            opacity: 0.3;
+        }
+
+    .shop-order-management .page-title {
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        position: relative;
+        z-index: 2;
+    }
+
+    /* ===== FILTER CARD ===== */
+    .shop-order-management .filter-card {
+        background: var(--som-white);
+        border-radius: var(--som-radius);
+        box-shadow: var(--som-shadow);
+        margin-bottom: 2rem;
+        overflow: hidden;
+        border: 1px solid rgba(40, 167, 69, 0.1);
+    }
+
+        .shop-order-management .filter-card::before {
+            content: '';
+            height: 4px;
+            background: linear-gradient(90deg, var(--som-primary), var(--som-secondary));
+            display: block;
+        }
+
+        .shop-order-management .filter-card .card-body {
+            padding: 1.5rem;
+        }
+
+    .shop-order-management .form-label {
+        font-weight: 600;
+        color: var(--som-text);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .shop-order-management .form-label::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: var(--som-primary);
+            border-radius: 2px;
+        }
+
+    .shop-order-management .form-select {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        transition: var(--som-transition);
+        background: var(--som-white);
+    }
+
+        .shop-order-management .form-select:focus {
+            border-color: var(--som-primary);
+            box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1);
+            outline: none;
+        }
+
+    .shop-order-management .filter-actions {
+        display: flex;
+        gap: 0.75rem;
+        align-items: end;
+    }
+
+    .shop-order-management .btn-primary {
+        background: linear-gradient(45deg, var(--som-primary), var(--som-secondary));
+        border: none;
+        color: var(--som-white);
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: var(--som-transition);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .shop-order-management .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+        }
+
+    .shop-order-management .btn-outline-secondary {
+        border: 2px solid #6c757d;
+        color: #6c757d;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: var(--som-transition);
+        background: var(--som-white);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .shop-order-management .btn-outline-secondary:hover {
+            background: #6c757d;
+            color: var(--som-white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+        }
+
+    /* ===== ORDERS TABLE CARD ===== */
+    .shop-order-management .orders-card {
+        background: var(--som-white);
+        border-radius: var(--som-radius);
+        box-shadow: var(--som-shadow);
+        overflow: hidden;
+        border: 1px solid rgba(40, 167, 69, 0.1);
+    }
+
+        .shop-order-management .orders-card::before {
+            content: '';
+            height: 4px;
+            background: linear-gradient(90deg, var(--som-primary), var(--som-secondary));
+            display: block;
+        }
+
+    .shop-order-management .card-body {
+        padding: 1.5rem;
+    }
+
+    /* ===== TABLE STYLES ===== */
+    .shop-order-management .table-responsive {
+        border-radius: var(--som-radius);
+        overflow: hidden;
+    }
+
+    .shop-order-management .table {
+        margin: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .shop-order-management .table thead th {
+            background: linear-gradient(45deg, var(--som-light-bg), #e8f5e8);
+            color: var(--som-text);
+            border: none;
+            padding: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .shop-order-management .table tbody td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(40, 167, 69, 0.1);
+            vertical-align: middle;
+            background: var(--som-white);
+            transition: var(--som-transition);
+        }
+
+        .shop-order-management .table tbody tr:hover td {
+            background: rgba(40, 167, 69, 0.05);
+            transform: scale(1.01);
+        }
+
+    /* ===== ORDER ID STYLING ===== */
+    .shop-order-management .order-id {
+        font-weight: 700;
+        color: var(--som-primary);
+        font-family: 'Courier New', monospace;
+        font-size: 1rem;
+        background: var(--som-light-bg);
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+        display: inline-block;
+    }
+
+    /* ===== PRODUCT INFO ===== */
+    .shop-order-management .product-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .shop-order-management .product-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 2px solid var(--som-light-bg);
+        transition: var(--som-transition);
+    }
+
+        .shop-order-management .product-image:hover {
+            transform: scale(1.1);
+            border-color: var(--som-primary);
+        }
+
+    .shop-order-management .product-details .product-name {
+        font-weight: 700;
+        color: var(--som-text);
+        margin-bottom: 0.25rem;
+        line-height: 1.3;
+        max-width: 200px;
+    }
+
+    .shop-order-management .product-price {
+        color: var(--som-primary);
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+    /* ===== CUSTOMER INFO ===== */
+    .shop-order-management .customer-name {
+        font-weight: 600;
+        color: var(--som-text);
+    }
+
+    .shop-order-management .contact-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .shop-order-management .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        color: var(--som-gray);
+    }
+
+        .shop-order-management .contact-item i {
+            color: var(--som-primary);
+            width: 16px;
+            text-align: center;
+        }
+
+    /* ===== ORDER DATE ===== */
+    .shop-order-management .order-date {
+        font-family: 'Courier New', monospace;
+        font-weight: 600;
+        color: var(--som-text);
+        font-size: 0.9rem;
+    }
+
+    /* ===== STATUS BADGES ===== */
+    .shop-order-management .status-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .shop-order-management .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .shop-order-management .bg-warning {
+        background: linear-gradient(45deg, #ffc107, #ffca2c) !important;
+        color: #212529;
+    }
+
+    .shop-order-management .bg-info {
+        background: linear-gradient(45deg, #17a2b8, #20c997) !important;
+        color: var(--som-white);
+    }
+
+    .shop-order-management .bg-primary {
+        background: linear-gradient(45deg, #007bff, #0056b3) !important;
+        color: var(--som-white);
+    }
+
+    .shop-order-management .bg-success {
+        background: linear-gradient(45deg, var(--som-primary), var(--som-secondary)) !important;
+        color: var(--som-white);
+    }
+
+    .shop-order-management .bg-danger {
+        background: linear-gradient(45deg, #dc3545, #c82333) !important;
+        color: var(--som-white);
+    }
+
+    .shop-order-management .cancel-reason {
+        font-size: 0.8rem;
+        color: var(--som-gray);
+        font-style: italic;
+        max-width: 150px;
+        line-height: 1.3;
+    }
+
+    /* ===== ACTION BUTTONS ===== */
+    .shop-order-management .btn-outline-primary {
+        border: 2px solid var(--som-primary);
+        color: var(--som-primary);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        transition: var(--som-transition);
+        background: var(--som-white);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+        .shop-order-management .btn-outline-primary:hover {
+            background: var(--som-primary);
+            color: var(--som-white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+    /* ===== EMPTY STATE ===== */
+    .shop-order-management .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: linear-gradient(135deg, var(--som-light-bg), #e8f5e8);
+        border-radius: var(--som-radius);
+        margin: 2rem 0;
+    }
+
+    .shop-order-management .empty-icon {
+        font-size: 4rem;
+        color: var(--som-primary);
+        margin-bottom: 1.5rem;
+        opacity: 0.7;
+    }
+
+    .shop-order-management .empty-state h4 {
+        color: var(--som-text);
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    .shop-order-management .empty-state p {
+        color: var(--som-gray);
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    /* ===== PAGINATION ===== */
+    .shop-order-management .pagination-wrapper {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+    }
+
+    .shop-order-management .pagination {
+        gap: 0.5rem;
+    }
+
+    .shop-order-management .page-item {
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .shop-order-management .page-link {
+        background: var(--som-white);
+        border: 2px solid rgba(40, 167, 69, 0.2);
+        color: var(--som-primary);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        transition: var(--som-transition);
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        .shop-order-management .page-link:hover {
+            background: var(--som-light-bg);
+            border-color: var(--som-primary);
+            color: var(--som-primary);
+            transform: translateY(-2px);
+        }
+
+    .shop-order-management .page-item.active .page-link {
+        background: linear-gradient(45deg, var(--som-primary), var(--som-secondary));
+        border-color: var(--som-primary);
+        color: var(--som-white);
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1200px) {
+    .shop-order-management .table-responsive {
+        font-size: 0.9rem;
+    }
+
+    .shop-order-management .product-details .product-name {
+        max-width: 150px;
+    }
+}
+
+@media (max-width: 992px) {
+    .shop-order-management .filter-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .shop-order-management .btn-primary,
+    .shop-order-management .btn-outline-secondary {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .shop-order-management {
+        padding: 1rem 0;
+    }
+
+        .shop-order-management .page-header {
+            margin: -1rem -15px 1.5rem -15px;
+            padding: 1.5rem 0;
+        }
+
+        .shop-order-management .page-title {
+            font-size: 1.5rem;
+        }
+
+        .shop-order-management .card-body {
+            padding: 1rem;
+        }
+
+        .shop-order-management .table {
+            font-size: 0.8rem;
+        }
+
+            .shop-order-management .table thead th,
+            .shop-order-management .table tbody td {
+                padding: 0.75rem 0.5rem;
+            }
+
+        .shop-order-management .product-info {
+            flex-direction: column;
+            text-align: center;
+            gap: 0.5rem;
+        }
+
+        .shop-order-management .product-image {
+            width: 40px;
+            height: 40px;
+        }
+
+        .shop-order-management .product-details .product-name {
+            max-width: 120px;
+            font-size: 0.9rem;
+        }
+
+        .shop-order-management .contact-info {
+            gap: 0.125rem;
+        }
+
+        .shop-order-management .contact-item {
+            font-size: 0.8rem;
+        }
+}
+
+@media (max-width: 576px) {
+    .shop-order-management .table-responsive {
+        margin: -0.5rem;
+    }
+
+    .shop-order-management .table {
+        min-width: 650px;
+    }
+
+    .shop-order-management .filter-card .card-body {
+        padding: 1rem;
+    }
+
+    .shop-order-management .empty-state {
+        padding: 2rem 1rem;
+    }
+
+    .shop-order-management .empty-icon {
+        font-size: 3rem;
+    }
+}
+
+/* ===== LOADING STATES ===== */
+.shop-order-management .btn.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+    .shop-order-management .btn.loading::after {
+        content: "";
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin-left: 8px;
+        border: 2px solid transparent;
+        border-top-color: currentColor;
+        border-radius: 50%;
+        animation: somSpin 1s linear infinite;
+    }
+
+@keyframes somSpin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ===== ANIMATIONS ===== */
+.shop-order-management .table tbody tr {
+    animation: somFadeInUp 0.6s ease-out;
+    animation-fill-mode: both;
+}
+
+    .shop-order-management .table tbody tr:nth-child(1) {
+        animation-delay: 0.1s;
+    }
+
+    .shop-order-management .table tbody tr:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .shop-order-management .table tbody tr:nth-child(3) {
+        animation-delay: 0.3s;
+    }
+
+    .shop-order-management .table tbody tr:nth-child(4) {
+        animation-delay: 0.4s;
+    }
+
+    .shop-order-management .table tbody tr:nth-child(5) {
+        animation-delay: 0.5s;
+    }
+
+@keyframes somFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== FOCUS STATES ===== */
+.shop-order-management .btn:focus,
+.shop-order-management .form-select:focus,
+.shop-order-management .page-link:focus {
+    outline: 3px solid rgba(40, 167, 69, 0.3);
+    outline-offset: 2px;
+}

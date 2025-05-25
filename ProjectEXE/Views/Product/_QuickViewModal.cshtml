@@ -1,0 +1,146 @@
+﻿@model ProjectEXE.ViewModel.ProductViewModel.ProductDetailViewModel
+
+<div class="modal fade" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content quick-view-content">
+            <div class="modal-header quick-view-header">
+                <h5 class="modal-title" id="quickViewModalLabel">
+                    <i class="fas fa-eye me-2"></i>Xem Nhanh Sản Phẩm
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row g-0">
+                    <!-- Phần hình ảnh -->
+                    <div class="col-md-6">
+                        <div class="quick-view-images">
+                            @if (Model.ImageUrls.Any())
+                            {
+                                <div id="quickViewCarousel" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+                                        @for (int i = 0; i < Model.ImageUrls.Count; i++)
+                                        {
+                                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                                <img src="@Model.ImageUrls[i]" class="d-block w-100 quick-view-img" alt="@Model.ProductName">
+                                            </div>
+                                        }
+                                    </div>
+                                    @if (Model.ImageUrls.Count > 1)
+                                    {
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#quickViewCarousel" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#quickViewCarousel" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        </button>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <img src="/images/placeholder.png" class="quick-view-img" alt="@Model.ProductName">
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Phần thông tin -->
+                    <div class="col-md-6">
+                        <div class="quick-view-info p-4">
+                            <div class="product-badges mb-3">
+                                @if (!Model.IsInStock)
+                                {
+                                    <span class="badge bg-danger">Hết hàng</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">Còn hàng</span>
+                                }
+                            </div>
+
+                            <h4 class="product-title mb-3">@Model.ProductName</h4>
+
+                            <div class="price-section mb-4">
+                                <span class="current-price">@Model.Price.ToString("N0")đ</span>
+                            </div>
+
+                            <div class="product-details mb-4">
+                                <div class="detail-row">
+                                    <span class="detail-label">Tình trạng:</span>
+                                    <span class="detail-value">@Model.Condition</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Danh mục:</span>
+                                    <span class="detail-value">@Model.Category</span>
+                                </div>
+                                @if (!string.IsNullOrEmpty(Model.Brand))
+                                {
+                                    <div class="detail-row">
+                                        <span class="detail-label">Thương hiệu:</span>
+                                        <span class="detail-value">@Model.Brand</span>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.Size))
+                                {
+                                    <div class="detail-row">
+                                        <span class="detail-label">Kích cỡ:</span>
+                                        <span class="detail-value">@Model.Size</span>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.Color))
+                                {
+                                    <div class="detail-row">
+                                        <span class="detail-label">Màu sắc:</span>
+                                        <span class="detail-value">@Model.Color</span>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.Material))
+                                {
+                                    <div class="detail-row">
+                                        <span class="detail-label">Chất liệu:</span>
+                                        <span class="detail-value">@Model.Material</span>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.Gender))
+                                {
+                                    <div class="detail-row">
+                                        <span class="detail-label">Giới tính:</span>
+                                        <span class="detail-value">@Model.Gender</span>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="shop-info mb-4">
+                                <div class="d-flex align-items-center">
+                                    <img src="@(Model.Shop.ProfileImage ?? "/images/default-avatar.png")" class="shop-avatar me-3" alt="@Model.Shop.ShopName">
+                                    <div>
+                                        <h6 class="shop-name mb-1">@Model.Shop.ShopName</h6>
+                                        <small class="text-muted">@Model.Shop.ProductCount sản phẩm</small>
+                                        @if (!string.IsNullOrEmpty(Model.Shop.Location))
+                                        {
+                                            <div><small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i>@Model.Shop.Location</small></div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(Model.Description))
+                            {
+                                <div class="description-section mb-4">
+                                    <h6>Mô tả:</h6>
+                                    <p class="description-text">@Model.Description</p>
+                                </div>
+                            }
+
+                            <div class="action-buttons">
+                                <a asp-controller="Product" asp-action="ProductDetails" asp-route-id="@Model.ProductId"
+                                   class="btn btn-primary btn-lg w-100">
+                                    <i class="fas fa-info-circle me-1"></i>Xem Chi Tiết Đầy Đủ
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

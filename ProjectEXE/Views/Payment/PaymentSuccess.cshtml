@@ -3,7 +3,7 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/payment-status.css" />
+    <link rel="stylesheet" href="~/css/payment-status.css?v=@DateTime.Now.Ticks" />
 }
 
 <div class="payment-page payment-success-page">
@@ -11,9 +11,9 @@
     <div class="confetti-container" id="confettiContainer"></div>
 
     <!-- Floating Success Elements -->
-    <div class="floating-success floating-star">⭐</div>
-    <div class="floating-success floating-star">✨</div>
-    <div class="floating-success floating-star">🎉</div>
+    <div class="floating-success">⭐</div>
+    <div class="floating-success">✨</div>
+    <div class="floating-success">🎉</div>
 
     <div class="container-custom">
         <!-- Main Card -->
@@ -180,3 +180,41 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Confetti animation
+        function createConfetti() {
+            const container = document.getElementById('confettiContainer');
+            if (!container) return;
+
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                container.appendChild(confetti);
+            }
+
+            // Remove confetti after animation
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        // Copy transaction code
+        document.querySelector('.transaction-code')?.addEventListener('click', function() {
+            navigator.clipboard.writeText(this.textContent).then(() => {
+                const original = this.textContent;
+                this.textContent = 'Đã sao chép!';
+                setTimeout(() => {
+                    this.textContent = original;
+                }, 1500);
+            });
+        });
+
+        // Start confetti on page load
+        window.addEventListener('load', createConfetti);
+    </script>
+}
