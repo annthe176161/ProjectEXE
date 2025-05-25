@@ -3,85 +3,269 @@
     ViewData["Title"] = "Đăng ký";
 }
 
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">Đăng ký tài khoản</h3>
+@section Styles {
+    <link rel="stylesheet" href="~/css/register.css?v=@DateTime.Now.Ticks" />
+}
+
+<div class="register-wrapper">
+    <div class="register-container">
+        <div class="register-card">
+            <!-- Register Header -->
+            <div class="register-header">
+                <div class="header-icon">
+                    <i class="fas fa-user-plus"></i>
                 </div>
-                <div class="card-body">
-                    <form asp-action="Register" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <h2 class="register-title">Tạo tài khoản mới</h2>
+                <p class="register-subtitle">Tham gia cộng đồng mua bán thời trang của chúng tôi</p>
+            </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="FullName" class="form-label"></label>
-                                <input asp-for="FullName" class="form-control" placeholder="Nhập họ tên của bạn" />
-                                <span asp-validation-for="FullName" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Email" class="form-label"></label>
-                                <input asp-for="Email" class="form-control" placeholder="Nhập email của bạn" />
-                                <span asp-validation-for="Email" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="PhoneNumber" class="form-label"></label>
-                                <input asp-for="PhoneNumber" class="form-control" placeholder="Nhập số điện thoại của bạn" />
-                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Address" class="form-label"></label>
-                                <input asp-for="Address" class="form-control" placeholder="Nhập địa chỉ của bạn" />
-                                <span asp-validation-for="Address" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Password" class="form-label"></label>
-                                <input asp-for="Password" class="form-control" placeholder="Nhập mật khẩu" />
-                                <span asp-validation-for="Password" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="ConfirmPassword" class="form-label"></label>
-                                <input asp-for="ConfirmPassword" class="form-control" placeholder="Xác nhận mật khẩu" />
-                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Vai trò</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="RoleId" id="roleBuyer" value="2" checked>
-                                <label class="form-check-label" for="roleBuyer">
-                                    Người mua
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="RoleId" id="roleSeller" value="3">
-                                <label class="form-check-label" for="roleSeller">
-                                    Người bán
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Đăng ký</button>
-                        </div>
-                    </form>
+            <!-- Progress Steps -->
+            <div class="progress-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-circle">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="step-label">Thông tin cá nhân</span>
                 </div>
-                <div class="card-footer text-center">
-                    <p class="mb-0">Đã có tài khoản? <a asp-action="Login">Đăng nhập ngay</a></p>
+                <div class="step" data-step="2">
+                    <div class="step-circle">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <span class="step-label">Bảo mật</span>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-circle">
+                        <i class="fas fa-user-tag"></i>
+                    </div>
+                    <span class="step-label">Vai trò</span>
                 </div>
             </div>
+
+            <!-- Register Form -->
+            <div class="register-body">
+                <form asp-action="Register" method="post" id="registerForm">
+                    <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+                    <!-- Step 1: Personal Information -->
+                    <div class="form-step active" data-step="1">
+                        <h4 class="step-title">
+                            <i class="fas fa-user me-2"></i>
+                            Thông tin cá nhân
+                        </h4>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="FullName" class="form-control" placeholder="Nhập họ tên của bạn" autocomplete="name" />
+                                    <label asp-for="FullName">Họ và tên</label>
+                                    <i class="fas fa-user input-icon"></i>
+                                    <span asp-validation-for="FullName" class="field-validation-error"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Email" type="email" class="form-control" placeholder="Nhập email của bạn" autocomplete="email" />
+                                    <label asp-for="Email">Địa chỉ email</label>
+                                    <i class="fas fa-envelope input-icon"></i>
+                                    <span asp-validation-for="Email" class="field-validation-error"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="PhoneNumber" type="tel" class="form-control" placeholder="Nhập số điện thoại của bạn" autocomplete="tel" />
+                                    <label asp-for="PhoneNumber">Số điện thoại</label>
+                                    <i class="fas fa-phone input-icon"></i>
+                                    <span asp-validation-for="PhoneNumber" class="field-validation-error"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Address" class="form-control" placeholder="Nhập địa chỉ của bạn" autocomplete="address-line1" />
+                                    <label asp-for="Address">Địa chỉ</label>
+                                    <i class="fas fa-map-marker-alt input-icon"></i>
+                                    <span asp-validation-for="Address" class="field-validation-error"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-navigation">
+                            <button type="button" class="btn-next" data-next="2">
+                                Tiếp theo
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Security -->
+                    <div class="form-step" data-step="2">
+                        <h4 class="step-title">
+                            <i class="fas fa-lock me-2"></i>
+                            Thông tin bảo mật
+                        </h4>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Password" type="password" class="form-control" placeholder="Nhập mật khẩu" autocomplete="new-password" id="passwordInput" />
+                                    <label asp-for="Password">Mật khẩu</label>
+                                    <button type="button" class="password-toggle" onclick="togglePassword('passwordInput', 'passwordIcon1')">
+                                        <i class="fas fa-eye" id="passwordIcon1"></i>
+                                    </button>
+                                    <span asp-validation-for="Password" class="field-validation-error"></span>
+                                </div>
+
+                                <!-- Password Strength Indicator -->
+                                <div class="password-strength">
+                                    <div class="strength-bar">
+                                        <div class="strength-fill" id="strengthFill"></div>
+                                    </div>
+                                    <div class="strength-text" id="strengthText">Độ mạnh mật khẩu</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Xác nhận mật khẩu" autocomplete="new-password" id="confirmPasswordInput" />
+                                    <label asp-for="ConfirmPassword">Xác nhận mật khẩu</label>
+                                    <button type="button" class="password-toggle" onclick="togglePassword('confirmPasswordInput', 'passwordIcon2')">
+                                        <i class="fas fa-eye" id="passwordIcon2"></i>
+                                    </button>
+                                    <span asp-validation-for="ConfirmPassword" class="field-validation-error"></span>
+                                </div>
+
+                                <!-- Password Match Indicator -->
+                                <div class="password-match" id="passwordMatch" style="display: none;">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Mật khẩu khớp</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Password Requirements -->
+                        <div class="password-requirements">
+                            <h6>Yêu cầu mật khẩu:</h6>
+                            <ul id="passwordRequirements">
+                                <li data-requirement="length">
+                                    <i class="fas fa-times"></i>
+                                    Ít nhất 8 ký tự
+                                </li>
+                                <li data-requirement="uppercase">
+                                    <i class="fas fa-times"></i>
+                                    Ít nhất 1 chữ hoa
+                                </li>
+                                <li data-requirement="lowercase">
+                                    <i class="fas fa-times"></i>
+                                    Ít nhất 1 chữ thường
+                                </li>
+                                <li data-requirement="number">
+                                    <i class="fas fa-times"></i>
+                                    Ít nhất 1 số
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="step-navigation">
+                            <button type="button" class="btn-prev" data-prev="1">
+                                <i class="fas fa-arrow-left"></i>
+                                Quay lại
+                            </button>
+                            <button type="button" class="btn-next" data-next="3">
+                                Tiếp theo
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Role Selection -->
+                    <div class="form-step" data-step="3">
+                        <h4 class="step-title">
+                            <i class="fas fa-user-tag me-2"></i>
+                            Chọn vai trò của bạn
+                        </h4>
+
+                        <div class="role-selection">
+                            <div class="role-option">
+                                <input class="role-input" type="radio" name="RoleId" id="roleBuyer" value="2" checked>
+                                <label class="role-card" for="roleBuyer">
+                                    <div class="role-icon buyer-icon">
+                                        <i class="fas fa-shopping-bag"></i>
+                                    </div>
+                                    <div class="role-content">
+                                        <h5>Người mua</h5>
+                                        <p>Tìm kiếm và mua sắm các sản phẩm thời trang yêu thích</p>
+                                        <ul class="role-features">
+                                            <li><i class="fas fa-check"></i> Duyệt sản phẩm</li>
+                                            <li><i class="fas fa-check"></i> Đặt hàng trực tuyến</li>
+                                            <li><i class="fas fa-check"></i> Theo dõi đơn hàng</li>
+                                            <li><i class="fas fa-check"></i> Đánh giá sản phẩm</li>
+                                        </ul>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="role-option">
+                                <input class="role-input" type="radio" name="RoleId" id="roleSeller" value="3">
+                                <label class="role-card" for="roleSeller">
+                                    <div class="role-icon seller-icon">
+                                        <i class="fas fa-store"></i>
+                                    </div>
+                                    <div class="role-content">
+                                        <h5>Người bán</h5>
+                                        <p>Mở cửa hàng và bán các sản phẩm thời trang của bạn</p>
+                                        <ul class="role-features">
+                                            <li><i class="fas fa-check"></i> Tạo cửa hàng</li>
+                                            <li><i class="fas fa-check"></i> Đăng sản phẩm</li>
+                                            <li><i class="fas fa-check"></i> Quản lý đơn hàng</li>
+                                            <li><i class="fas fa-check"></i> Thống kê doanh thu</li>
+                                        </ul>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="step-navigation">
+                            <button type="button" class="btn-prev" data-prev="2">
+                                <i class="fas fa-arrow-left"></i>
+                                Quay lại
+                            </button>
+                            <button type="submit" class="btn-register" id="registerButton">
+                                <i class="fas fa-user-plus"></i>
+                                <span id="registerText">Tạo tài khoản</span>
+                                <div class="btn-loader" id="btnLoader"></div>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Register Footer -->
+            <div class="register-footer">
+                <p class="mb-0">
+                    Đã có tài khoản?
+                    <a asp-action="Login" class="login-link">Đăng nhập ngay</a>
+                </p>
+                <div class="terms-text">
+                    Bằng việc đăng ký, bạn đồng ý với
+                    <a href="#" class="terms-link">Điều khoản sử dụng</a> và
+                    <a href="#" class="terms-link">Chính sách bảo mật</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Background Decoration -->
+        <div class="decoration-elements">
+            <div class="decoration-circle circle-1"></div>
+            <div class="decoration-circle circle-2"></div>
+            <div class="decoration-circle circle-3"></div>
+            <div class="decoration-circle circle-4"></div>
         </div>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script src="~/js/register.js?v=@DateTime.Now.Ticks"></script>
 }
