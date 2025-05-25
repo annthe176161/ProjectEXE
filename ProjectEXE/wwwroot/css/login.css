@@ -409,34 +409,3 @@
         font-size: 16px;
     }
 }
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    .login-wrapper {
-        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-    }
-
-    .login-card {
-        background: #2d2d2d;
-        border-color: rgba(40, 167, 69, 0.3);
-    }
-
-    .form-floating .form-control {
-        background: rgba(255, 255, 255, 0.05);
-        color: var(--white);
-        border-color: rgba(40, 167, 69, 0.3);
-    }
-
-    .form-floating label {
-        color: rgba(255, 255, 255, 0.7);
-    }
-
-    .custom-checkbox label {
-        color: var(--white);
-    }
-
-    .login-footer {
-        background: rgba(0, 0, 0, 0.3);
-        color: var(--white);
-    }
-}
