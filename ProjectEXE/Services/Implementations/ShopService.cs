@@ -531,13 +531,14 @@ namespace ProjectEXE.Services.Implementations
                     return (false, "Không thể kết nối cơ sở dữ liệu sản phẩm.");
                 }
 
-                var product = await _context.Products
+                var product = await _context.Products.Include(p => p.ProductImages)
                     .FirstOrDefaultAsync(p => p.ProductId == productId && p.ShopId == shopId);
 
                 if (product == null)
                 {
                     return (false, "Không tìm thấy sản phẩm hoặc bạn không có quyền xóa sản phẩm này.");
                 }
+                _context.ProductImages.RemoveRange(product.ProductImages);
 
                 _context.Products.Remove(product);
                 await _context.SaveChangesAsync();
