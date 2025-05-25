@@ -144,11 +144,11 @@ namespace ProjectEXE.Controllers
             bool success = await _adminService.deleteServiceById(id); // Xem xét đổi tên phương thức trong service
             if (success)
             {
-                TempData["SuccessMessage"] = "Xóa gói dịch vụ thành công!";
+                TempData["Success"] = "Xóa gói dịch vụ thành công!";
             }
             else
             {
-                TempData["ErrorMessage"] = "Không thể xóa gói dịch vụ.";
+                TempData["Error"] = "Không thể xóa gói dịch vụ.";
             }
             return RedirectToAction("Dashboard", new { fragment = "packages-section" });
         }
