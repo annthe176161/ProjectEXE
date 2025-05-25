@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectEXE.Services.Interfaces;
 using ProjectEXE.ViewModel.ShopViewModel;
+using System.Composition;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ProjectEXE.Controllers
 {
@@ -92,6 +94,33 @@ namespace ProjectEXE.Controllers
 
             ModelState.AddModelError(string.Empty, "Không thể tạo gian hàng. Tên gian hàng có thể đã được sử dụng.");
             return View(model);
+        }
+
+        public async Task<IActionResult> AddNewProduct()
+        {
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            //lấy id của shop
+            int shopId = await _shopService.GetShopIdByUserId(userId);
+            //check shop đã đăng ký hay chưa
+            if (shopId == null)
+            {
+                TempData["Error"] = "Shop của bạn chưa được kích hoạt, vui lòng kích hoạt";
+                return RedirectToAction("ActiveShop", "Shop");
+            }
+            //check hạn gói đăng ký dịch vụ của shop
+            if (!await _shopService.CheckExpiryDate(shopId))
+            {
+                TempData["Error"] = "Shop của bạn đã hết hạn gói dịch vụ, vui lòng gia hạn để tiếp tục sử dụng dịch vụ!!";
+                return RedirectToAction("Index", "Package");
+            }
+            //kiểm tra xem còn số lượng thêm sản phẩm theo gói dịch vụ hay không
+            if (await _shopService.CanAddProductAsync(shopId))
+            {
+                TempData["Error"] = "Bạn đã đạt giới hạn sản phẩm của gói hiện tại. Nâng cấp gói để đăng thêm sản phẩm và tăng doanh thu!";
+                return RedirectToAction("Index", "Package");
+            }
+
+            return View();
         }
 
     }

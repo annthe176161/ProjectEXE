@@ -21,5 +21,7 @@ namespace ProjectEXE.Services.Interfaces
         Task<bool> CreateShopAsync(CreateShopViewModel model, int userId);
         Task<bool> UpdateShopAsync(CreateShopViewModel model, int shopId);
         Task<bool> HasShopAsync(int userId);
+        Task<bool> CheckExpiryDate(int shopId);
+        Task<bool> CanAddProductAsync(int shopId);
     }
 }

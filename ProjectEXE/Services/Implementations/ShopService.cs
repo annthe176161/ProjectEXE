@@ -80,6 +80,41 @@ namespace ProjectEXE.Services.Implementations
             return shop.ShopId;
         }
 
+        public async Task<bool> CheckExpiryDate(int shopId)
+        {
+            var subscription = await _context.PackageSubscriptions
+                .Where(p => p.ShopId == shopId)
+                .OrderByDescending(p => p.EndDate) // lấy gói mới nhất
+                .FirstOrDefaultAsync();
+
+            if (subscription == null)
+                return false; // không có gói nào => hết hạn
+
+            return subscription.EndDate >= DateTime.UtcNow; // còn hạn thì trả true
+        }
+
+        public async Task<bool> CanAddProductAsync(int shopId)
+        {
+            // 1. Lấy gói hiện tại của shop (chưa hết hạn)
+            var activeSubscription = await _context.PackageSubscriptions
+                                    .Include(s => s.Package) 
+                                    .Where(s => s.ShopId == shopId && s.EndDate >= DateTime.Now)
+                                    .OrderByDescending(s => s.EndDate)
+                                    .FirstOrDefaultAsync();
+
+            if (activeSubscription == null)
+                return false; // Không có gói còn hạn
+
+            int productLimit = activeSubscription.Package.ProductLimit;
+
+            // Đếm số sản phẩm hiện có của shop
+            int currentProductCount = await _context.Products
+                .CountAsync(p => p.ShopId == shopId);
+
+            // Kiểm tra xem còn slot để thêm sản phẩm không
+            return currentProductCount < productLimit;
+        }
+
         public async Task<bool> IsShopPremiumAsync(int shopId)
         {
             var activeSubscription = await _context.PackageSubscriptions
