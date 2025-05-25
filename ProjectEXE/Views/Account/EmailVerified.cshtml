@@ -1,25 +1,38 @@
 ﻿@{
-    ViewData["Title"] = "Email đã xác thực";
+    ViewData["Title"] = "Email đã được xác nhận";
 }
 
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow">
-                <div class="card-header bg-success text-white">
-                    <h3 class="mb-0">Xác thực email thành công</h3>
-                </div>
                 <div class="card-body text-center">
-                    <i class="fas fa-check-circle fa-4x mb-3 text-success"></i>
-                    <h4>Email của bạn đã được xác thực!</h4>
-                    <p>Tài khoản của bạn đã được kích hoạt thành công. Bạn có thể bắt đầu sử dụng tất cả các tính năng ngay bây giờ.</p>
-                </div>
-                <div class="card-footer">
-                    <div class="d-grid gap-2">
-                        <a asp-controller="Home" asp-action="Index" class="btn btn-success">Đi đến trang chủ</a>
+                    <div class="mb-4">
+                        <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
                     </div>
+                    <h3 class="text-success mb-3">Email đã được xác nhận!</h3>
+                    <p class="mb-4">Chào mừng bạn đến với hệ thống. Bạn sẽ được chuyển đến trang chủ trong <span id="countdown">3</span> giây...</p>
+                               
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@if (ViewBag.RedirectToHome == true)
+{
+    <script>
+        let countdown = 3;
+        const countdownElement = document.getElementById('countdown');
+        
+        const timer = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(timer);
+                window.location.href = '@Url.Action("Index", "Home")';
+            }
+        }, 1000);
+    </script>
+}

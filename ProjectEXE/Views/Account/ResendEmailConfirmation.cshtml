@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Email xác nhận đã được gửi lại";
+    ViewData["Title"] = "Xác nhận gửi lại email";
 }
 
 <div class="container my-5">
@@ -7,13 +7,31 @@
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-header bg-info text-white">
-                    <h3 class="mb-0">Kiểm tra email của bạn</h3>
+                    <h3 class="mb-0">Gửi lại email xác nhận</h3>
                 </div>
                 <div class="card-body text-center">
-                    <i class="fas fa-paper-plane fa-4x mb-3 text-info"></i>
-                    <h4>Email xác nhận đã được gửi lại</h4>
-                    <p>Nếu bạn đã đăng ký với email này trước đó và chưa xác nhận, chúng tôi đã gửi một liên kết xác nhận mới.</p>
-                    <p>Vui lòng kiểm tra hộp thư đến (và thư mục spam) của bạn.</p>
+                    @if (TempData["Success"] != null)
+                    {
+                        <i class="fas fa-check-circle fa-4x mb-3 text-success"></i>
+                        <h4 class="text-success">@TempData["Success"]</h4>
+                        <p>Vui lòng kiểm tra hộp thư đến (và thư mục spam) của bạn.</p>
+                    }
+                    else if (TempData["Info"] != null)
+                    {
+                        <i class="fas fa-info-circle fa-4x mb-3 text-info"></i>
+                        <h4 class="text-info">@TempData["Info"]</h4>
+                    }
+                    else if (TempData["Warning"] != null)
+                    {
+                        <i class="fas fa-exclamation-triangle fa-4x mb-3 text-warning"></i>
+                        <h4 class="text-warning">@TempData["Warning"]</h4>
+                    }
+                    else
+                    {
+                        <i class="fas fa-envelope-open-text fa-4x mb-3 text-info"></i>
+                        <h4>Email đã được xử lý</h4>
+                        <p>Nếu email tồn tại và chưa được xác nhận, chúng tôi đã gửi lại email xác nhận.</p>
+                    }
                 </div>
                 <div class="card-footer">
                     <div class="d-grid gap-2">

@@ -24,49 +24,26 @@ namespace ProjectEXE.Services.Implementations
         public async Task<User> GetUserByEmailAsync(string email)
         {
             // Xóa cache của tất cả User entities trong ChangeTracker
-            var trackedEntries = _context.ChangeTracker.Entries<User>()
-                .Where(e => e.Entity.Email.ToLower() == email.ToLower())
-                .ToList();
-
-            foreach (var entry in trackedEntries)
-            {
-                entry.State = EntityState.Detached;
-            }
-
-            // Lấy dữ liệu mới từ database - bao gồm cả tài khoản chưa xác thực (IsActive = 2)
             return await _context.Users
-                .Include(u => u.Role)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() && (u.IsActive == 1 || u.IsActive == 2));
+            .Include(u => u.Role)
+            .AsNoTracking()
+             .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() &&
+                             (u.IsActive == 1 || u.IsActive == 2));
         }
         public async Task<bool> ValidatePasswordAsync(User user, string password)
         {
-            // Thêm logging chi tiết
-            Console.WriteLine($"ValidatePasswordAsync called for email: {user?.Email}");
-
-            if (user == null)
-            {
-                Console.WriteLine("ValidatePasswordAsync: user is null");
+            if (user == null || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(user.PasswordHash))
                 return false;
-            }
 
-            string passwordHash = user.PasswordHash;
-            Console.WriteLine($"ValidatePasswordAsync: password hash = {passwordHash}");
-
-            // Sử dụng trực tiếp BCrypt.Verify thay vì gọi VerifyPassword
-            bool result;
             try
             {
-                result = BCrypt.Net.BCrypt.Verify(password, passwordHash);
-                Console.WriteLine($"BCrypt.Verify result: {result}");
+                return BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"BCrypt.Verify exception: {ex.Message}");
-                result = false;
+                Console.WriteLine($"Password verification error: {ex.Message}");
+                return false;
             }
-
-            return result;
         }
 
         public async Task<User> GetUserDomainModelByIdAsync(int userId)
@@ -85,7 +62,7 @@ namespace ProjectEXE.Services.Implementations
                 PhoneNumber = phoneNumber,
                 Address = address,
                 RoleId = roleId,
-                IsActive = 2, 
+                IsActive = 2, // 
                 CreatedAt = DateTime.Now
             };
 
@@ -173,7 +150,7 @@ namespace ProjectEXE.Services.Implementations
             var user = await _context.Users.FindAsync(userId);
             if (user == null)
             {
-                return false; 
+                return false;
             }
 
             user.IsActive = isActive ? 1 : 0;
@@ -316,7 +293,7 @@ namespace ProjectEXE.Services.Implementations
          .AsNoTracking()
          .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
 
-            return user?.IsActive == 1; 
+            return user?.IsActive == 1;
         }
         public async Task<bool> IsEmailPendingVerificationAsync(string email)
         {
@@ -324,7 +301,7 @@ namespace ProjectEXE.Services.Implementations
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
 
-            return user?.IsActive == 2; 
+            return user?.IsActive == 2;
         }
     }
 }
