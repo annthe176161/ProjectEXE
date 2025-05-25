@@ -40,6 +40,7 @@ namespace ProjectEXE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+
             if (ModelState.IsValid)
             {
                 var user = await _userService.GetUserByEmailAsync(model.Email);
@@ -47,9 +48,12 @@ namespace ProjectEXE.Controllers
 
                 if (user != null && isPasswordValid)
                 {
-
-        
-                 
+                    // Kiểm tra email đã xác thực chưa
+                    if (!await TokenStore.IsEmailVerifiedAsync(user.Email))
+                    {
+                        TempData["Warning"] = "Vui lòng xác nhận email của bạn trước khi đăng nhập.";
+                        return View(model);
+                    }
 
                     var principal = _userService.CreateClaimsPrincipal(user);
 
