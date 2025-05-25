@@ -1,4 +1,5 @@
 ﻿using ProjectEXE.Models;
+using ProjectEXE.ViewModel;
 using ProjectEXE.ViewModel.ProductViewModel;
 using ProjectEXE.ViewModel.Shop;
 using ProjectEXE.ViewModel.ShopViewModel;
@@ -25,5 +26,11 @@ namespace ProjectEXE.Services.Interfaces
         Task<List<ConditionViewModel>> GetConditionsAsync();
         Task<bool> CreateProductAsync(ProductFormViewModel model, int shopId);
         Task<ProductFormViewModel> GetProductFormDataAsync(int? productId, int shopId);
+        Task<IEnumerable<Category>> GetAllCategoriesAsync();
+        Task<Product> GetProductByIdForEditAsync(int productId, int shopId);
+        Task<IEnumerable<ProductCondition>> GetAllProductConditionsAsync();
+        Task<bool> UpdateProductAsync(ProductEditViewModel model, int shopId);
+        Task<(bool Success, string ErrorMessage)> DeleteProductAsync(int productId, int shopId);
+        Task<IEnumerable<ShopProductViewModel>> GetProductsByShopIdAsync(int shopId);
     }
 }

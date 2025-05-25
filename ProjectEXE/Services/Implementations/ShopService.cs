@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectEXE.Models;
 using ProjectEXE.Services.Interfaces;
+using ProjectEXE.ViewModel;
 using ProjectEXE.ViewModel.ProductViewModel;
 using ProjectEXE.ViewModel.Shop;
 using ProjectEXE.ViewModel.ShopViewModel;
@@ -419,6 +420,173 @@ namespace ProjectEXE.Services.Implementations
             }
 
             return viewModel;
+        }
+
+        public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
+        {
+            try
+            {
+                if (_context.Categories == null)
+                {
+                    return Enumerable.Empty<Category>();
+                }
+
+                var categories = await _context.Categories
+                    .OrderBy(c => c.CategoryName)
+                    .ToListAsync();
+
+                return categories;
+            }
+            catch (Exception ex)
+            {
+                return Enumerable.Empty<Category>();
+            }
+        }
+
+        public async Task<Product> GetProductByIdForEditAsync(int productId, int shopId)
+        {
+            try
+            {
+                if (_context.Products == null)
+                {
+                    return null;
+                }
+
+                var product = await _context.Products
+                    .FirstOrDefaultAsync(p => p.ProductId == productId && p.ShopId == shopId);
+                return product;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<ProductCondition>> GetAllProductConditionsAsync()
+        {
+            try
+            {
+                if (_context.ProductConditions == null)
+                {
+                    return Enumerable.Empty<ProductCondition>();
+                }
+
+                var conditions = await _context.ProductConditions
+                    .OrderBy(pc => pc.ConditionName)
+                    .ToListAsync();
+
+                return conditions;
+            }
+            catch (Exception ex)
+            {
+                return Enumerable.Empty<ProductCondition>();
+            }
+        }
+
+        public async Task<bool> UpdateProductAsync(ProductEditViewModel model, int shopId)
+        {
+            try
+            {
+                if (model == null || _context.Products == null)
+                {
+                    return false;
+                }
+
+                var product = await _context.Products
+                    .FirstOrDefaultAsync(p => p.ProductId == model.ProductId && p.ShopId == shopId);
+
+                if (product == null)
+                {
+                    return false;
+                }
+
+                product.ProductName = model.ProductName;
+                product.Description = model.Description;
+                product.Price = model.Price;
+                product.CategoryId = model.CategoryId;
+                product.ConditionId = model.ConditionId;
+                product.Gender = model.Gender;
+                product.Size = model.Size;
+                product.Color = model.Color;
+                product.Brand = model.Brand;
+                product.Material = model.Material;
+                product.IsInStock = model.IsInStock;
+                product.IsVisible = model.IsVisible;
+
+                var result = await _context.SaveChangesAsync();
+
+                return result > 0;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<(bool Success, string ErrorMessage)> DeleteProductAsync(int productId, int shopId)
+        {
+            try
+            {
+                if (_context.Products == null)
+                {
+                    return (false, "Không thể kết nối cơ sở dữ liệu sản phẩm.");
+                }
+
+                var product = await _context.Products
+                    .FirstOrDefaultAsync(p => p.ProductId == productId && p.ShopId == shopId);
+
+                if (product == null)
+                {
+                    return (false, "Không tìm thấy sản phẩm hoặc bạn không có quyền xóa sản phẩm này.");
+                }
+
+                _context.Products.Remove(product);
+                var result = await _context.SaveChangesAsync();
+
+                return (true, "Xóa sản phẩm thành công.");
+            }
+            catch (Exception ex)
+            {
+                return (false, "Đã có lỗi xảy ra khi xóa sản phẩm.");
+            }
+        }
+        public async Task<IEnumerable<ShopProductViewModel>> GetProductsByShopIdAsync(int shopId)
+        {
+            try
+            {
+                if (_context.Products == null)
+                {
+                    return Enumerable.Empty<ShopProductViewModel>();
+                }
+
+                var products = await _context.Products
+                    .Where(p => p.ShopId == shopId)
+                    .Include(p => p.Category)
+                    .Include(p => p.Condition)
+                    .OrderByDescending(p => p.CreatedAt)
+                    .Select(p => new ShopProductViewModel
+                    {
+                        ProductId = p.ProductId,
+                        ProductName = p.ProductName,
+                        Description = p.Description,
+                        Price = p.Price,
+                        CategoryName = p.Category != null ? p.Category.CategoryName : "N/A",
+                        Size = p.Size,
+                        ConditionName = p.Condition != null ? p.Condition.ConditionName : "N/A",
+                        Brand = p.Brand,
+                        Color = p.Color,
+                        Material = p.Material,
+                        CreatedAt = p.CreatedAt,
+                        IsVisible = p.IsVisible
+                    })
+                    .ToListAsync();
+
+                return products;
+            }
+            catch (Exception ex)
+            {
+                return Enumerable.Empty<ShopProductViewModel>();
+            }
         }
     }
 }

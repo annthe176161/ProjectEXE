@@ -1,21 +1,21 @@
 ﻿@model ProjectEXE.ViewModel.ProductEditViewModel
 
 @{
-    ViewData["Title"] = "Thêm sản phẩm mới";
-    Layout = "~/Views/Shared/_Layout.cshtml"; // Hoặc layout dành cho Seller nếu có
+    ViewData["Title"] = "Chỉnh sửa sản phẩm";
 }
 
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-header">
-            <h2 class="mb-0">@ViewData["Title"]</h2>
+            <h2 class="mb-0">@ViewData["Title"]: <span class="text-primary">@Model.ProductName</span></h2>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-10 col-lg-8 mx-auto">
-                    <form asp-action="Create" method="post" enctype="multipart/form-data">
-                        @* Thêm enctype nếu xử lý upload file *@
+                    <form asp-action="Edit" asp-route-id="@Model.ProductId" method="post" enctype="multipart/form-data">
+                        @* Thêm enctype nếu xử lý file *@
                         @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="ProductId" />
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                         <div class="mb-3">
@@ -38,7 +38,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Gender" class="form-label"></label>
-                                <input asp-for="Gender" class="form-control" placeholder="Ví dụ: Nam, Nữ, Unisex" />
+                                <input asp-for="Gender" class="form-control" />
                                 <span asp-validation-for="Gender" class="text-danger"></span>
                             </div>
                         </div>
@@ -63,12 +63,12 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Size" class="form-label"></label>
-                                <input asp-for="Size" class="form-control" placeholder="Ví dụ: S, M, Freesize" />
+                                <input asp-for="Size" class="form-control" />
                                 <span asp-validation-for="Size" class="text-danger"></span>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Color" class="form-label"></label>
-                                <input asp-for="Color" class="form-control" placeholder="Ví dụ: Đỏ, Xanh, Họa tiết" />
+                                <input asp-for="Color" class="form-control" />
                                 <span asp-validation-for="Color" class="text-danger"></span>
                             </div>
                         </div>
@@ -101,22 +101,33 @@
                             </div>
                         </div>
 
-                        @* Khu vực upload ảnh (Cần logic backend phức tạp hơn để xử lý file)
+                        @* Khu vực hiển thị/upload ảnh
+                        @if (Model.ExistingImageUrls != null && Model.ExistingImageUrls.Any())
+                        {
                         <div class="mb-3">
-                        <label asp-for="MainImageFile" class="form-label">Ảnh đại diện</label>
+                        <p>Ảnh hiện tại:</p>
+                        @foreach (var imageUrl in Model.ExistingImageUrls)
+                        {
+                        <img src="@imageUrl" alt="Product Image" style="width: 100px; height: 100px; object-fit: cover; margin: 5px;" />
+                        // Thêm nút xóa ảnh nếu cần
+                        }
+                        </div>
+                        }
+                        <div class="mb-3">
+                        <label asp-for="MainImageFile" class="form-label">Thay đổi/Thêm ảnh đại diện</label>
                         <input asp-for="MainImageFile" type="file" class="form-control">
                         <span asp-validation-for="MainImageFile" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                        <label asp-for="OtherImageFiles" class="form-label">Ảnh khác (chọn nhiều file)</label>
+                        <label asp-for="OtherImageFiles" class="form-label">Thay đổi/Thêm ảnh khác</label>
                         <input asp-for="OtherImageFiles" type="file" multiple class="form-control">
                         <span asp-validation-for="OtherImageFiles" class="text-danger"></span>
                         </div>
                         *@
 
                         <div class="mt-4">
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu sản phẩm</button>
-                            <a asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu thay đổi</button>
+                            <a asp-action="ManageProduct" class="btn btn-secondary ms-2">Hủy</a>
                         </div>
                     </form>
                 </div>
