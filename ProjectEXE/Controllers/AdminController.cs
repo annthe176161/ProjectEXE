@@ -141,14 +141,14 @@ namespace ProjectEXE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id) // Đổi tên thành DeleteServicePackage để rõ ràng hơn
         {
-            bool success = await _adminService.deleteServiceById(id); // Xem xét đổi tên phương thức trong service
-            if (success)
+            if (!_adminService.HasActivePackage(id))
             {
+                await _adminService.DeleteServiceById(id);
                 TempData["Success"] = "Xóa gói dịch vụ thành công!";
             }
             else
             {
-                TempData["Error"] = "Không thể xóa gói dịch vụ.";
+                TempData["Error"] = "Gói dịch vụ này đã được đăng ký nên không thể xóa!";
             }
             return RedirectToAction("Dashboard", new { fragment = "packages-section" });
         }
