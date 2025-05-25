@@ -130,15 +130,6 @@
         uploadArea.parentNode.insertAdjacentElement('afterend', previewContainer);
     }
 
-    // Format price
-    function formatPrice(e) {
-        let value = e.target.value.replace(/[^\d]/g, '');
-        if (value) {
-            value = parseInt(value).toLocaleString('vi-VN');
-        }
-        e.target.value = value;
-    }
-
     // Handle form submit
     function handleSubmit(e) {
         if (!validateForm()) {
