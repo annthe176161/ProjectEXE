@@ -5,6 +5,7 @@ using ProjectEXE.Models;
 using ProjectEXE.Services;
 using ProjectEXE.Services.Implementations;
 using ProjectEXE.Services.Interfaces;
+using ProjectEXE.Services.TokenStorage;
 using System.Text.Json.Serialization;
 
 namespace ProjectEXE
@@ -43,6 +44,7 @@ namespace ProjectEXE
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IShopServiceOfAdmin, ShopServiceOfAdmin>();
+            builder.Services.AddScoped<TokenStore >();
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                             .AddCookie(options =>

@@ -14,8 +14,8 @@ namespace ProjectEXE.ViewModel.AccountViewModel
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Số điện thoại là bắt buộc")]
-        [Phone(ErrorMessage = "Số điện thoại không hợp lệ")]
+        [Required(ErrorMessage = "Vui lòng nhập số điện thoại")]
+        [RegularExpression(@"^0\d{9}$", ErrorMessage = "Số điện thoại phải có 10 số và bắt đầu bằng số 0")]
         [Display(Name = "Số điện thoại")]
         public string PhoneNumber { get; set; }
 

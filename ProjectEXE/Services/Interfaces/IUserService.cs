@@ -38,6 +38,7 @@ namespace ProjectEXE.Services.Interfaces
         Task UpdateUserAsync(User user);
         Task<bool> DeleteUserAsync(int userId);
         Task<bool> IsEmailVerifiedAsync(string email);
+        Task<bool> IsEmailPendingVerificationAsync(string email);
     }
     
 }

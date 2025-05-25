@@ -30,12 +30,8 @@ namespace ProjectEXE.Services.TokenStorage
                 tokenInfo.Token == token &&
                 tokenInfo.ExpiresAt > DateTime.UtcNow)
             {
-                // For password reset, remove the token after validation (one-time use)
-                if (tokenType == "PasswordReset")
-                {
-                    _tokens.TryRemove(key, out _);
-                }
-
+                // KHÔNG XÓA TOKEN Ở ĐÂY - chỉ validate
+                // Token sẽ được xóa sau khi sử dụng thành công
                 return Task.FromResult(true);
             }
 
