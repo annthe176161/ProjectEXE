@@ -1,4 +1,6 @@
-﻿@{
+﻿@model ProjectEXE.ViewModel.ServicePackages.PaymentResultInformation;
+
+@{
     ViewData["Title"] = "Thanh toán đã hủy - REVA";
 }
 
@@ -61,8 +63,8 @@
                     <div class="package-icon">
                         <i class="fas fa-cube"></i>
                     </div>
-                    <div class="package-name">Shop Xịn Sò</div>
-                    <div class="package-limit">Giới hạn: 200 sản phẩm</div>
+                    <div class="package-name">@Model.PackageName</div>
+                    <div class="package-limit">Giới hạn: @Model.ProductLimit</div>
                 </div>
 
                 <!-- Information Grid -->
@@ -73,27 +75,32 @@
                             Mã giao dịch
                         </div>
                         <div class="info-value">
-                            <span class="transaction-code">REVA2025052401</span>
+                            <span class="transaction-code">@Model.TransactionCode</span>
                         </div>
                     </div>
 
-                    <div class="info-item">
-                        <div class="info-label">
-                            <i class="fas fa-tag"></i>
-                            Gói dịch vụ
-                        </div>
-                        <div class="info-value">Shop Xịn Sò</div>
-                    </div>
+                    @{
+                        var price = Model.Price;
+                        var discountedPrice = Model.DiscountedPrice ?? 0;
 
+                        var discountPercent = 0;
+                        if (price > 0 && discountedPrice < price)
+                        {
+                            discountPercent = (int)Math.Round((1 - (discountedPrice / price)) * 100);
+                        }
+                    }
                     <div class="info-item">
                         <div class="info-label">
                             <i class="fas fa-money-bill-wave"></i>
                             Số tiền
                         </div>
                         <div class="info-value">
-                            <span class="amount-display">99.500₫</span>
-                            <span class="original-price">199.000₫</span>
-                            <span class="discount-badge">Giảm 50%</span>
+                            <span class="amount-display">@Model.DiscountedPrice?.ToString("N0")₫</span>
+                            <span class="original-price">@Model.Price.ToString("N0")₫</span>
+                            @if (discountPercent > 0)
+                            {
+                                <span class="discount-badge">Tiết kiệm @discountPercent%</span>
+                            }
                         </div>
                     </div>
 
@@ -102,15 +109,7 @@
                             <i class="fas fa-clock"></i>
                             Thời gian
                         </div>
-                        <div class="info-value">24/05/2025 14:30</div>
-                    </div>
-
-                    <div class="info-item">
-                        <div class="info-label">
-                            <i class="fas fa-user"></i>
-                            Người đăng ký
-                        </div>
-                        <div class="info-value">Nguyễn Văn A</div>
+                        <div class="info-value">@Model.CreatedDate?.ToString("dd/MM/yyyy HH:mm")</div>
                     </div>
 
                     <div class="info-item">

@@ -112,9 +112,29 @@ namespace ProjectEXE.Controllers
 
         }
 
-        public IActionResult PaymentFail()
+        public async Task<IActionResult> PaymentFail()
         {
-            return View();
+            if (!TempData.ContainsKey("PackageId") || string.IsNullOrEmpty(TempData["PackageId"]?.ToString()))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            //lấy thông tin gói
+            int packageId = int.Parse(TempData["PackageId"].ToString());
+            var package = await _packageService.GetPackageByIdAsync(packageId);
+
+            var response = _payOsService.ProcessReturnUrl(Request.Query);
+
+            var paymentResultInformation = new PaymentResultInformation
+            {
+                ProductLimit = package.ProductLimit,
+                PackageName = package.PackageName,
+                TransactionCode = response.OrderCode.ToString(),
+                Price = package.Price,
+                DiscountedPrice = package.DiscountedPrice,
+                CreatedDate = DateTime.UtcNow
+            };
+
+            return View(paymentResultInformation);
         }
 
         public async Task<IActionResult> PaymentSuccess()
