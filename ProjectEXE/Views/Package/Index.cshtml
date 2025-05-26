@@ -3,89 +3,259 @@
     ViewData["Title"] = "Chọn gói dịch vụ";
 }
 
-<div class="container py-5">
-    <h1 class="mb-5 text-center">Chọn gói dịch vụ cho gian hàng của bạn</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/service-packages.css?v=@DateTime.Now.Ticks">
+}
 
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
-            <i class="fas fa-exclamation-circle me-2"></i> @TempData["ErrorMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-
-    @if (Model.CurrentPackageId.HasValue)
-    {
-        <div class="alert alert-info mb-4">
-            <i class="fas fa-info-circle me-2"></i> Bạn đang sử dụng gói dịch vụ
-            <strong>@Model.Packages.FirstOrDefault(p => p.PackageId == Model.CurrentPackageId)?.PackageName</strong>
-            @if (Model.CurrentSubscriptionEndDate.HasValue)
-            {
-                <span>có hiệu lực đến <strong>@Model.CurrentSubscriptionEndDate.Value.ToString("dd/MM/yyyy")</strong></span>
-            }
-        </div>
-    }
-
-    <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
-        @foreach (var package in Model.Packages)
-        {
-            <div class="col">
-                <div class="card h-100 position-relative @(Model.CurrentPackageId == package.PackageId ? "border-primary" : "")">
-                    @if (Model.CurrentPackageId == package.PackageId)
-                    {
-                        <div class="position-absolute top-0 start-50 translate-middle badge bg-primary px-3 py-2 rounded-pill">
-                            <i class="fas fa-check-circle me-1"></i> Đang sử dụng
-                        </div>
-                    }
-                    <div class="card-header text-center py-3 @(Model.CurrentPackageId == package.PackageId ? "bg-primary text-white" : "")">
-                        <h4 class="mb-0">@package.PackageName</h4>
+<div class="service-packages-page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>
+                        <i class="fas fa-box-open"></i>
+                        Chọn gói dịch vụ
+                    </h1>
+                    <p>Nâng cấp gian hàng của bạn với các gói dịch vụ chuyên nghiệp</p>
+                </div>
+                <div class="header-decoration">
+                    <div class="floating-icons">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-crown"></i>
+                        <i class="fas fa-bolt"></i>
                     </div>
-                    <div class="card-body text-center">
-                        <div class="d-flex justify-content-center align-items-baseline mb-4">
-                            @if (package.DiscountedPrice.HasValue)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container main-content">
+        <!-- Error Message -->
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger custom-alert fade-in" role="alert">
+                <div class="alert-content">
+                    <div class="alert-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="alert-text">
+                        <strong>Có lỗi xảy ra!</strong>
+                        <span>@TempData["ErrorMessage"]</span>
+                    </div>
+                    <button type="button" class="btn-close-custom" data-bs-dismiss="alert" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        }
+
+        <!-- Current Package Info -->
+        @if (Model.CurrentPackageId.HasValue)
+        {
+            <div class="current-package-info fade-in">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Gói dịch vụ hiện tại</h4>
+                        <p>
+                            Bạn đang sử dụng gói
+                            <strong>@Model.Packages.FirstOrDefault(p => p.PackageId == Model.CurrentPackageId)?.PackageName</strong>
+                            @if (Model.CurrentSubscriptionEndDate.HasValue)
                             {
-                                <h2 class="display-5 fw-bold text-primary mb-0">@package.DiscountedPrice.Value.ToString("N0")₫</h2>
-                                <del class="text-muted ms-2">@package.Price.ToString("N0")₫</del>
+                                <span>có hiệu lực đến <strong>@Model.CurrentSubscriptionEndDate.Value.ToString("dd/MM/yyyy")</strong></span>
                             }
-                            else
-                            {
-                                <h2 class="display-5 fw-bold text-primary mb-0">@package.Price.ToString("N0")₫</h2>
-                            }
-                        </div>
-
-                        <ul class="list-unstyled mb-4">
-                            <li class="mb-2"><i class="fas fa-box me-2 text-primary"></i>Tối đa <strong>@package.ProductLimit</strong> sản phẩm</li>
-                            <li class="mb-2"><i class="fas fa-calendar-alt me-2 text-primary"></i>Thời hạn <strong>30</strong> ngày</li>
-                            <li class="mb-2"><i class="fas fa-bolt me-2 text-primary"></i>Ưu tiên hiển thị</li>
-                            <li class="mb-2"><i class="fas fa-chart-line me-2 text-primary"></i>Báo cáo thống kê</li>
-                        </ul>
-
-                        <div class="d-grid">
-                            <form asp-controller="Payment" asp-action="ProcessPayment" method="post" style="display:inline;">
-                                <input type="hidden" name="packageId" value="@package.PackageId" />
-                                <input type="hidden" name="paymentMethod" value="PayOs" />
-                                <button type="submit" class="btn @(Model.CurrentPackageId == package.PackageId ? "btn-outline-primary" : "btn-primary") btn-lg">
-                                    @if (Model.CurrentPackageId == package.PackageId)
-                                    {
-                                        <span><i class="fas fa-sync-alt me-2"></i>Gia hạn gói</span>
-                                    }
-                                    else
-                                    {
-                                        <span><i class="fas fa-shopping-cart me-2"></i>Chọn gói này</span>
-                                    }
-                                </button>
-                            </form>
-
-                        </div>
+                        </p>
                     </div>
                 </div>
             </div>
         }
-    </div>
 
-    <div class="text-center">
-        <a asp-controller="ShopProfile" asp-action="Index" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Quay lại gian hàng
-        </a>
+        <!-- Service Packages Grid -->
+        <div class="packages-section">
+            <div class="packages-grid">
+                @for (int i = 0; i < Model.Packages.Count(); i++)
+                {
+                    var package = Model.Packages.ElementAt(i);
+                    var isCurrentPackage = Model.CurrentPackageId == package.PackageId;
+                    var isRecommended = i == 1; // Middle package as recommended
+
+                    <div class="package-card @(isCurrentPackage ? "current-package" : "") @(isRecommended ? "recommended-package" : "")"
+                         style="animation-delay: @(i * 0.2)s">
+
+                        @if (isRecommended)
+                        {
+                            <div class="recommended-badge">
+                                <i class="fas fa-star"></i>
+                                <span>Phổ biến nhất</span>
+                            </div>
+                        }
+
+                        @if (isCurrentPackage)
+                        {
+                            <div class="current-badge">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Đang sử dụng</span>
+                            </div>
+                        }
+
+                        <div class="package-header">
+                            <div class="package-icon">
+                                @if (i == 0)
+                                {
+                                    <i class="fas fa-seedling"></i>
+                                }
+                                else if (i == 1)
+                                {
+                                    <i class="fas fa-rocket"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-crown"></i>
+                                }
+                            </div>
+                            <h3 class="package-name">@package.PackageName</h3>
+                        </div>
+
+                        <div class="package-pricing">
+                            @if (package.DiscountedPrice.HasValue)
+                            {
+                                <div class="pricing-container">
+                                    <div class="discounted-price">@package.DiscountedPrice.Value.ToString("N0")₫</div>
+                                    <div class="original-price">@package.Price.ToString("N0")₫</div>
+                                    <div class="discount-badge">
+                                        -@Math.Round((decimal)(package.Price - package.DiscountedPrice.Value) / package.Price * 100)%
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="pricing-container">
+                                    <div class="price">@package.Price.ToString("N0")₫</div>
+                                </div>
+                            }
+                            <div class="price-duration">/ 30 ngày</div>
+                        </div>
+
+                        <div class="package-features">
+                            <ul class="features-list">
+                                <li class="feature-item">
+                                    <div class="feature-icon">
+                                        <i class="fas fa-box"></i>
+                                    </div>
+                                    <span>Tối đa <strong>@package.ProductLimit</strong> sản phẩm</span>
+                                </li>
+                                <li class="feature-item">
+                                    <div class="feature-icon">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <span>Thời hạn <strong>30</strong> ngày</span>
+                                </li>
+                                <li class="feature-item">
+                                    <div class="feature-icon">
+                                        <i class="fas fa-bolt"></i>
+                                    </div>
+                                    <span>Ưu tiên hiển thị</span>
+                                </li>
+                                <li class="feature-item">
+                                    <div class="feature-icon">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <span>Báo cáo thống kê</span>
+                                </li>
+                                @if (isRecommended)
+                                {
+                                    <li class="feature-item premium">
+                                        <div class="feature-icon">
+                                            <i class="fas fa-headset"></i>
+                                        </div>
+                                        <span>Hỗ trợ ưu tiên</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+
+                        <div class="package-action">
+                            <form asp-controller="Payment" asp-action="ProcessPayment" method="post">
+                                <input type="hidden" name="packageId" value="@package.PackageId" />
+                                <input type="hidden" name="paymentMethod" value="PayOs" />
+                                <button type="submit" class="btn-select-package @(isCurrentPackage ? "btn-renew" : "btn-select")">
+                                    @if (isCurrentPackage)
+                                    {
+                                        <i class="fas fa-sync-alt"></i>
+                                        <span>Gia hạn gói</span>
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-shopping-cart"></i>
+                                        <span>Chọn gói này</span>
+                                    }
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Benefits Section -->
+        <div class="benefits-section">
+            <div class="section-header">
+                <h2>
+                    <i class="fas fa-gift"></i>
+                    Tại sao nên nâng cấp gói dịch vụ?
+                </h2>
+                <p>Khám phá những lợi ích tuyệt vời khi sử dụng gói dịch vụ của chúng tôi</p>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h4>Tăng khả năng hiển thị</h4>
+                    <p>Sản phẩm của bạn sẽ được ưu tiên hiển thị ở vị trí cao hơn</p>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4>Tiếp cận nhiều khách hàng</h4>
+                    <p>Mở rộng phạm vi tiếp cận và thu hút thêm nhiều khách hàng tiềm năng</p>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h4>Báo cáo chi tiết</h4>
+                    <p>Theo dõi hiệu suất bán hàng với các báo cáo thống kê chuyên sâu</p>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Độ tin cậy cao</h4>
+                    <p>Gian hàng của bạn sẽ có dấu hiệu xác thực tăng độ tin cậy</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="back-section">
+            <a asp-controller="ShopProfile" asp-action="Index" class="btn-back">
+                <i class="fas fa-arrow-left"></i>
+                <span>Quay lại gian hàng</span>
+            </a>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/service-packages.js?v=@DateTime.Now.Ticks"></script>
+}

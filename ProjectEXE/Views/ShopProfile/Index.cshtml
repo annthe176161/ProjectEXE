@@ -1,84 +1,200 @@
 ﻿@model ProjectEXE.Models.Shop
 @{
     ViewData["Title"] = "Gian hàng của bạn";
-
-
-    // DEBUG: Kiểm tra ViewBag
     var totalProducts = ViewBag.TotalProducts ?? "NULL";
     var totalOrders = ViewBag.TotalOrders ?? "NULL";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/shop-dashboard.css?v=@DateTime.Now.Ticks">
+}
 
-
-<div class="container py-5">
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card shadow h-100">
-                <div class="card-body text-center py-5">
-                    @if (!string.IsNullOrEmpty(Model.ProfileImage))
-                    {
-                        <img src="@Model.ProfileImage" alt="@Model.ShopName" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
-                    }
-                    else
-                    {
-                        <div class="bg-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 150px; height: 150px;">
-                            <i class="fas fa-store" style="font-size: 60px; color: #6c757d;"></i>
-                        </div>
-                    }
-
-                    <h3 class="fw-bold mb-0">@Model.ShopName</h3>
-                    <p class="text-muted">Thành viên từ @Model.CreatedAt.ToString("MM/yyyy")</p>
-
-                    <div class="d-grid gap-2 mt-4">
-                        <a asp-controller="Shop" asp-action="EditShop" class="btn btn-primary">
-                            <i class="fas fa-cog me-2"></i>Chỉnh sửa gian hàng
-                        </a>
-                        <a asp-controller="ShopOrder" asp-action="Index" class="btn btn-outline-primary">
-                            <i class="fas fa-shopping-bag me-2"></i>Quản lý đơn hàng
-                        </a>
-                        <a asp-controller="Package" asp-action="Index" class="btn btn-outline-primary">
-                            <i class="fas fa-crown me-2"></i>Nâng cấp gói dịch vụ
-                        </a>
-
-                        <a asp-controller="Shop" asp-action="ManageProduct" class="btn btn-secondary">Quản Lý Sản Phẩm</a>
-                    </div>
+<div class="shop-dashboard">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>
+                        <i class="fas fa-store-alt"></i>
+                        Dashboard Gian Hàng
+                    </h1>
+                    <p>Quản lý và theo dõi hoạt động kinh doanh của bạn</p>
+                </div>
+                <div class="header-decoration">
+                    <div class="decoration-circle circle-1"></div>
+                    <div class="decoration-circle circle-2"></div>
+                    <div class="decoration-circle circle-3"></div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-md-8">
-            <div class="card shadow h-100">
-                <div class="card-header bg-white">
-                    <h4 class="mb-0">Thông tin gian hàng</h4>
-                </div>
-                <div class="card-body">
-                    <div class="mb-4">
-                        <h5 class="border-bottom pb-2 mb-3">Mô tả gian hàng</h5>
-                        <p>@(string.IsNullOrEmpty(Model.Description) ? "Chưa có mô tả" : Model.Description)</p>
+    <!-- Main Content -->
+    <div class="container main-content">
+        <div class="row g-4">
+            <!-- Shop Profile Section -->
+            <div class="col-lg-4">
+                <div class="shop-profile-card">
+                    <div class="card-header">
+                        <h3>
+                            <i class="fas fa-user-circle"></i>
+                            Thông tin cửa hàng
+                        </h3>
                     </div>
 
-                    <div class="mb-4">
-                        <h5 class="border-bottom pb-2 mb-3">Thống kê</h5>
-                        <div class="row text-center">
-                            <div class="col-6">
-                                <div class="border rounded py-4">
-                                    <h3 class="text-primary mb-0">@(ViewBag.TotalProducts ?? 0)</h3>
-                                    <small class="text-muted">Tổng Số Sản phẩm</small>
+                    <div class="card-body">
+                        <!-- Shop Avatar -->
+                        <div class="shop-avatar">
+                            @if (!string.IsNullOrEmpty(Model.ProfileImage))
+                            {
+                                <div class="avatar-wrapper">
+                                    <img src="@Model.ProfileImage" alt="@Model.ShopName" class="shop-image">
+                                    <div class="avatar-overlay">
+                                        <i class="fas fa-camera"></i>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="avatar-placeholder">
+                                    <i class="fas fa-store"></i>
+                                    <div class="avatar-overlay">
+                                        <i class="fas fa-camera"></i>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Shop Info -->
+                        <div class="shop-info">
+                            <h2 class="shop-name">@Model.ShopName</h2>
+                            <div class="shop-meta">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>Thành viên từ @Model.CreatedAt.ToString("MM/yyyy")</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <a asp-controller="Package" asp-action="Index" class="btn btn-premium">
+                                <i class="fas fa-crown"></i>
+                                <span>Nâng cấp gói dịch vụ</span>
+                            </a>
+                            <a asp-controller="Shop" asp-action="EditShop" class="btn btn-primary">
+                                <i class="fas fa-edit"></i>
+                                <span>Chỉnh sửa gian hàng</span>
+                            </a>
+                            <a asp-controller="ShopOrder" asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span>Quản lý đơn hàng</span>
+                            </a>
+                            <a asp-controller="Shop" asp-action="ManageProduct" class="btn btn-outline">
+                                <i class="fas fa-boxes"></i>
+                                <span>Quản lý sản phẩm</span>
+                            </a>
+                            <a href="#" class="quick-action-card">
+                                <div class="action-icon">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                                <div class="action-content">
+                                    <h4>Xem báo cáo</h4>
+                                    <p>Thống kê chi tiết</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="col-lg-8">
+                <div class="dashboard-content">
+                    <!-- Statistics Cards -->
+                    <div class="stats-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-chart-line"></i>
+                            Thống kê tổng quan
+                        </h3>
+
+                        <div class="stats-grid">
+                            <div class="stat-card products-stat">
+                                <div class="stat-icon">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-number">@(ViewBag.TotalProducts ?? 0)</div>
+                                    <div class="stat-label">Tổng sản phẩm</div>
+                                </div>
+                                <div class="stat-trend">
+                                    <i class="fas fa-arrow-up"></i>
                                 </div>
                             </div>
-                            <div class="col-6">
-                                <div class="border rounded py-4">
-                                    <h3 class="text-success mb-0">@(ViewBag.TotalOrders ?? 0)</h3>
-                                    <small class="text-muted">Tổng Số Đơn hàng</small>
+
+                            <div class="stat-card orders-stat">
+                                <div class="stat-icon">
+                                    <i class="fas fa-shopping-cart"></i>
                                 </div>
+                                <div class="stat-content">
+                                    <div class="stat-number">@(ViewBag.TotalOrders ?? 0)</div>
+                                    <div class="stat-label">Tổng đơn hàng</div>
+                                </div>
+                                <div class="stat-trend">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                            </div>
+
+                            <div class="stat-card revenue-stat">
+                                <div class="stat-icon">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-number">0₫</div>
+                                    <div class="stat-label">Doanh thu tháng</div>
+                                </div>
+                                <div class="stat-trend">
+                                    <i class="fas fa-minus"></i>
+                                </div>
+                            </div>
+
+                            <div class="stat-card rating-stat">
+                                <div class="stat-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-number">5.0</div>
+                                    <div class="stat-label">Đánh giá trung bình</div>
+                                </div>
+                                <div class="stat-trend">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shop Description -->
+                    <div class="description-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-align-left"></i>
+                            Mô tả gian hàng
+                        </h3>
+
+                        <div class="description-card">
+                            <div class="description-content">
+                                @if (!string.IsNullOrEmpty(Model.Description))
+                                {
+                                    <p>@Model.Description</p>
+                                }
+                                else
+                                {
+                                    <div class="empty-description">
+                                        <i class="fas fa-edit"></i>
+                                        <p>Chưa có mô tả gian hàng</p>
+                                        <a asp-controller="Shop" asp-action="EditShop" class="btn-add-description">
+                                            Thêm mô tả ngay
+                                        </a>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
@@ -87,3 +203,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/shop-dashboard.js?v=@DateTime.Now.Ticks"></script>
+}

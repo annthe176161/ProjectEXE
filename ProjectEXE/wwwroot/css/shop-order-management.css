@@ -48,7 +48,7 @@
         z-index: 2;
     }
 
-    /* ===== FILTER CARD ===== */
+    /* ===== FILTER CARD - IMPROVED LAYOUT ===== */
     .shop-order-management .filter-card {
         background: var(--som-white);
         border-radius: var(--som-radius);
@@ -69,6 +69,7 @@
             padding: 1.5rem;
         }
 
+    /* ===== FORM ELEMENTS ===== */
     .shop-order-management .form-label {
         font-weight: 600;
         color: var(--som-text);
@@ -76,65 +77,98 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        font-size: 0.9rem;
     }
 
-        .shop-order-management .form-label::before {
-            content: '';
-            width: 4px;
-            height: 16px;
-            background: var(--som-primary);
-            border-radius: 2px;
+        .shop-order-management .form-label i {
+            color: var(--som-primary);
+            font-size: 0.85rem;
         }
 
     .shop-order-management .form-select {
         border: 2px solid #e9ecef;
-        border-radius: 8px;
+        border-radius: 10px;
         padding: 0.75rem 1rem;
         transition: var(--som-transition);
         background: var(--som-white);
+        font-weight: 500;
+        height: 50px;
+        font-size: 0.95rem;
     }
 
         .shop-order-management .form-select:focus {
             border-color: var(--som-primary);
             box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1);
             outline: none;
+            transform: translateY(-1px);
         }
 
+        .shop-order-management .form-select:hover {
+            border-color: rgba(40, 167, 69, 0.5);
+        }
+
+    /* ===== FILTER ACTIONS - FIXED ALIGNMENT ===== */
     .shop-order-management .filter-actions {
         display: flex;
         gap: 0.75rem;
-        align-items: end;
+        align-items: center;
+        justify-content: flex-end;
+        height: 50px;
     }
+
+    .shop-order-management .btn {
+        padding: 0.75rem 1.25rem;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: var(--som-transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        border: none;
+        position: relative;
+        overflow: hidden;
+        white-space: nowrap;
+        height: 50px;
+        justify-content: center;
+    }
+
+        .shop-order-management .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .shop-order-management .btn:hover::before {
+            left: 100%;
+        }
 
     .shop-order-management .btn-primary {
         background: linear-gradient(45deg, var(--som-primary), var(--som-secondary));
-        border: none;
         color: var(--som-white);
-        padding: 0.75rem 1.5rem;
-        border-radius: 25px;
-        font-weight: 600;
-        transition: var(--som-transition);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        min-width: 140px;
     }
 
         .shop-order-management .btn-primary:hover {
+            background: linear-gradient(45deg, var(--som-primary-dark), var(--som-primary));
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+            color: var(--som-white);
         }
 
     .shop-order-management .btn-outline-secondary {
+        background: var(--som-white);
         border: 2px solid #6c757d;
         color: #6c757d;
-        padding: 0.75rem 1.5rem;
-        border-radius: 25px;
-        font-weight: 600;
-        transition: var(--som-transition);
-        background: var(--som-white);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+        box-shadow: 0 2px 8px rgba(108, 117, 125, 0.15);
+        min-width: 120px;
     }
 
         .shop-order-management .btn-outline-secondary:hover {
@@ -142,7 +176,19 @@
             color: var(--som-white);
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+            border-color: #6c757d;
+            text-decoration: none;
         }
+
+    /* ===== ROW ALIGNMENT FIXES ===== */
+    .shop-order-management .row.align-items-end {
+        align-items: flex-end !important;
+    }
+
+    .shop-order-management .g-3 {
+        --bs-gutter-x: 1rem;
+        --bs-gutter-y: 1rem;
+    }
 
     /* ===== ORDERS TABLE CARD ===== */
     .shop-order-management .orders-card {
@@ -337,11 +383,11 @@
     }
 
     /* ===== ACTION BUTTONS ===== */
-    .shop-order-management .btn-outline-primary {
+    .shop-order-management .btn-action {
         border: 2px solid var(--som-primary);
         color: var(--som-primary);
         padding: 0.5rem 1rem;
-        border-radius: 20px;
+        border-radius: 8px;
         font-weight: 600;
         transition: var(--som-transition);
         background: var(--som-white);
@@ -350,13 +396,16 @@
         align-items: center;
         gap: 0.5rem;
         font-size: 0.85rem;
+        height: auto;
+        min-width: auto;
     }
 
-        .shop-order-management .btn-outline-primary:hover {
+        .shop-order-management .btn-action:hover {
             background: var(--som-primary);
             color: var(--som-white);
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            text-decoration: none;
         }
 
     /* ===== EMPTY STATE ===== */
@@ -441,14 +490,12 @@
 
 @media (max-width: 992px) {
     .shop-order-management .filter-actions {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.5rem;
+        justify-content: flex-start;
+        margin-top: 0.5rem;
     }
 
-    .shop-order-management .btn-primary,
-    .shop-order-management .btn-outline-secondary {
-        justify-content: center;
+    .shop-order-management .btn {
+        min-width: 120px;
     }
 }
 
@@ -468,6 +515,22 @@
 
         .shop-order-management .card-body {
             padding: 1rem;
+        }
+
+        .shop-order-management .filter-actions {
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            height: auto;
+        }
+
+        .shop-order-management .btn {
+            width: 100%;
+            min-width: auto;
+        }
+
+        .shop-order-management .btn-text {
+            display: inline;
         }
 
         .shop-order-management .table {
@@ -523,6 +586,10 @@
 
     .shop-order-management .empty-icon {
         font-size: 3rem;
+    }
+
+    .shop-order-management .btn-text {
+        font-size: 0.8rem;
     }
 }
 
@@ -598,4 +665,17 @@
 .shop-order-management .page-link:focus {
     outline: 3px solid rgba(40, 167, 69, 0.3);
     outline-offset: 2px;
+}
+
+/* ===== BUTTON ACTIVE STATES ===== */
+.shop-order-management .btn:active {
+    transform: translateY(0px) !important;
+    transition: transform 0.1s ease;
+}
+
+/* ===== UTILITY CLASSES ===== */
+.shop-order-management .text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

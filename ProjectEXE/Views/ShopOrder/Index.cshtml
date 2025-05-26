@@ -23,9 +23,13 @@
         <div class="filter-card card mb-4">
             <div class="card-body">
                 <form method="get" id="filterForm">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Trạng thái đơn hàng</label>
+                    <div class="row align-items-end g-3">
+                        <!-- Status Filter Column -->
+                        <div class="col-lg-8 col-md-7">
+                            <label class="form-label">
+                                <i class="fas fa-filter me-1"></i>
+                                Trạng thái đơn hàng
+                            </label>
                             <select class="form-select" name="statusFilter" id="statusFilter">
                                 <option value="">Tất cả trạng thái</option>
                                 @foreach (var status in Model.StatusOptions)
@@ -34,15 +38,17 @@
                                 }
                             </select>
                         </div>
-                        <div class="col-md-6 mb-3">
+
+                        <!-- Action Buttons Column -->
+                        <div class="col-lg-4 col-md-5">
                             <div class="filter-actions">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-filter"></i>
-                                    Lọc đơn hàng
+                                    <i class="fas fa-search"></i>
+                                    <span class="btn-text">Lọc đơn hàng</span>
                                 </button>
                                 <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
                                     <i class="fas fa-redo"></i>
-                                    Đặt lại bộ lọc
+                                    <span class="btn-text">Đặt lại</span>
                                 </a>
                             </div>
                         </div>
@@ -119,9 +125,9 @@
                                         </td>
                                         <td>
                                             <a href="@Url.Action("OrderDetail", new { id = order.OrderId })"
-                                               class="btn btn-outline-primary">
+                                               class="btn btn-outline-primary btn-action">
                                                 <i class="fas fa-eye"></i>
-                                                Chi tiết
+                                                <span class="btn-text">Chi tiết</span>
                                             </a>
                                         </td>
                                     </tr>
