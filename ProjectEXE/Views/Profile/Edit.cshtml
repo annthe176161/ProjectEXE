@@ -4,87 +4,167 @@
     ViewData["Title"] = "Cập nhật thông tin";
 }
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <!-- Breadcrumb -->
-            <nav aria-label="breadcrumb" class="mb-4">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
-                    <li class="breadcrumb-item"><a asp-controller="Profile" asp-action="Index">Tài khoản</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Cập nhật thông tin</li>
+@section Styles {
+    <link rel="stylesheet" href="~/css/editprofile.css" />
+}
+
+<div class="edit-profile-container">
+    <div class="edit-profile-wrapper">
+        <div class="edit-profile-content">
+            <!-- Enhanced Breadcrumb -->
+            <nav aria-label="breadcrumb" class="breadcrumb-nav">
+                <ol class="breadcrumb-custom">
+                    <li class="breadcrumb-item">
+                        <a asp-controller="Home" asp-action="Index">
+                            <i class="fas fa-home me-1"></i>
+                            <span>Trang chủ</span>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-separator">
+                        <i class="fas fa-chevron-right"></i>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-controller="Profile" asp-action="Index">
+                            <i class="fas fa-user me-1"></i>
+                            <span>Tài khoản</span>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-separator">
+                        <i class="fas fa-chevron-right"></i>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <i class="fas fa-edit me-1"></i>
+                        <span>Cập nhật thông tin</span>
+                    </li>
                 </ol>
             </nav>
 
-            <!-- Card chỉnh sửa thông tin -->
-            <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
-                <div class="card-header bg-primary text-white py-3">
-                    <h4 class="card-title mb-0">
-                        <i class="fas fa-user-edit me-2"></i>Cập nhật thông tin cá nhân
-                    </h4>
+            <!-- Main Edit Form Card -->
+            <div class="edit-form-card">
+                <!-- Card Header -->
+                <div class="edit-form-header">
+                    <div class="header-content">
+                        <div class="header-icon">
+                            <i class="fas fa-user-edit"></i>
+                        </div>
+                        <div class="header-text">
+                            <h2>Cập nhật thông tin cá nhân</h2>
+                            <p>Thay đổi thông tin cá nhân của bạn</p>
+                        </div>
+                    </div>
+                    <div class="header-decoration"></div>
                 </div>
-                <div class="card-body p-4">
-                    <form asp-action="Edit" method="post">
-                        <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3" role="alert"></div>
 
-                        <!-- Họ tên -->
-                        <div class="form-group mb-4">
-                            <label asp-for="FullName" class="form-label fw-semibold"></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-primary bg-opacity-10 border-end-0 text-primary">
-                                    <i class="fas fa-user"></i>
-                                </span>
-                                <input asp-for="FullName" class="form-control border-start-0" />
+                <!-- Card Body -->
+                <div class="edit-form-body">
+                    <form asp-action="Edit" method="post" class="profile-form">
+                        <!-- Validation Summary -->
+                        <div asp-validation-summary="ModelOnly" class="validation-summary" role="alert">
+                            <div class="validation-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
                             </div>
-                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                            <div class="validation-content">
+                                <h6>Vui lòng kiểm tra lại thông tin</h6>
+                            </div>
                         </div>
 
-                        <!-- Email -->
-                        <div class="form-group mb-4">
-                            <label asp-for="Email" class="form-label fw-semibold"></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-primary bg-opacity-10 border-end-0 text-primary">
-                                    <i class="fas fa-envelope"></i>
-                                </span>
-                                <input asp-for="Email" class="form-control border-start-0" />
+                        <!-- Form Fields Grid -->
+                        <div class="form-grid">
+                            <!-- Họ tên -->
+                            <div class="form-field-wrapper">
+                                <label asp-for="FullName" class="form-label-custom">
+                                    <i class="fas fa-user label-icon"></i>
+                                    <span>Họ và tên</span>
+                                    <span class="required-indicator">*</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <div class="input-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <input asp-for="FullName" class="form-control-custom" placeholder="Nhập họ và tên đầy đủ" />
+                                    <div class="input-border"></div>
+                                </div>
+                                <span asp-validation-for="FullName" class="field-validation"></span>
                             </div>
-                            <span asp-validation-for="Email" class="text-danger small"></span>
+
+                            <!-- Email -->
+                            <div class="form-field-wrapper">
+                                <label asp-for="Email" class="form-label-custom">
+                                    <i class="fas fa-envelope label-icon"></i>
+                                    <span>Địa chỉ email</span>
+                                    <span class="required-indicator">*</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <div class="input-icon">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <input asp-for="Email" class="form-control-custom" placeholder="example@email.com" />
+                                    <div class="input-border"></div>
+                                </div>
+                                <span asp-validation-for="Email" class="field-validation"></span>
+                            </div>
+
+                            <!-- Số điện thoại -->
+                            <div class="form-field-wrapper">
+                                <label asp-for="PhoneNumber" class="form-label-custom">
+                                    <i class="fas fa-phone label-icon"></i>
+                                    <span>Số điện thoại</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <div class="input-icon">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    <input asp-for="PhoneNumber" class="form-control-custom" placeholder="0123 456 789" />
+                                    <div class="input-border"></div>
+                                </div>
+                                <span asp-validation-for="PhoneNumber" class="field-validation"></span>
+                            </div>
+
+                            <!-- Địa chỉ -->
+                            <div class="form-field-wrapper full-width">
+                                <label asp-for="Address" class="form-label-custom">
+                                    <i class="fas fa-map-marker-alt label-icon"></i>
+                                    <span>Địa chỉ</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <div class="input-icon">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <input asp-for="Address" class="form-control-custom" placeholder="Nhập địa chỉ chi tiết" />
+                                    <div class="input-border"></div>
+                                </div>
+                                <span asp-validation-for="Address" class="field-validation"></span>
+                            </div>
                         </div>
 
-                        <!-- Số điện thoại -->
-                        <div class="form-group mb-4">
-                            <label asp-for="PhoneNumber" class="form-label fw-semibold"></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-primary bg-opacity-10 border-end-0 text-primary">
-                                    <i class="fas fa-phone"></i>
-                                </span>
-                                <input asp-for="PhoneNumber" class="form-control border-start-0" />
-                            </div>
-                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
-                        </div>
-
-                        <!-- Địa chỉ -->
-                        <div class="form-group mb-4">
-                            <label asp-for="Address" class="form-label fw-semibold"></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-primary bg-opacity-10 border-end-0 text-primary">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                </span>
-                                <input asp-for="Address" class="form-control border-start-0" />
-                            </div>
-                            <span asp-validation-for="Address" class="text-danger small"></span>
-                        </div>
-
-                        <!-- Nút submit & quay lại -->
-                        <div class="form-group d-flex gap-3 mt-5">
-                            <a asp-action="Index" class="btn btn-outline-secondary px-4">
-                                <i class="fas fa-arrow-left me-2"></i> Quay lại
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <a asp-action="Index" class="btn-secondary-custom">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                <span>Quay lại</span>
                             </a>
-                            <button type="submit" class="btn btn-primary px-4">
-                                <i class="fas fa-save me-2"></i> Lưu
+                            <button type="submit" class="btn-primary-custom">
+                                <i class="fas fa-save me-2"></i>
+                                <span>Lưu thay đổi</span>
+                                <div class="btn-ripple"></div>
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+
+            <!-- Additional Info Card -->
+            <div class="info-card">
+                <div class="info-header">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Lưu ý quan trọng</span>
+                </div>
+                <div class="info-content">
+                    <ul class="info-list">
+                        <li><i class="fas fa-check-circle"></i> Thông tin cá nhân sẽ được bảo mật tuyệt đối</li>
+                        <li><i class="fas fa-check-circle"></i> Email được sử dụng để đăng nhập và nhận thông báo</li>
+                        <li><i class="fas fa-check-circle"></i> Số điện thoại giúp liên hệ khi cần thiết</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -95,72 +175,76 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-}
 
-@section Styles {
-    <style>
-        .input-group-text {
-            border-radius: 0.375rem 0 0 0.375rem;
-        }
+    <script>
+        // Form enhancement JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Input focus effects
+            const inputs = document.querySelectorAll('.form-control-custom');
 
-        .form-control {
-            border-radius: 0 0.375rem 0.375rem 0;
-            padding: 0.7rem 1rem;
-            font-size: 1rem;
-        }
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.closest('.input-wrapper').classList.add('focused');
+                });
 
-        .input-group .form-control:focus {
-            border-color: #86b7fe;
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
-            z-index: 1;
-        }
+                input.addEventListener('blur', function() {
+                    this.closest('.input-wrapper').classList.remove('focused');
+                    if (this.value.trim() !== '') {
+                        this.closest('.input-wrapper').classList.add('has-value');
+                    } else {
+                        this.closest('.input-wrapper').classList.remove('has-value');
+                    }
+                });
 
-        .breadcrumb {
-            background-color: transparent;
-            padding: 0.75rem 0;
-        }
+                // Check initial values
+                if (input.value.trim() !== '') {
+                    input.closest('.input-wrapper').classList.add('has-value');
+                }
+            });
 
-        .breadcrumb-item a {
-            color: #0d6efd;
-            text-decoration: none;
-        }
+            // Button ripple effect
+            const submitBtn = document.querySelector('.btn-primary-custom');
+            submitBtn.addEventListener('click', function(e) {
+                const ripple = this.querySelector('.btn-ripple');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
 
-            .breadcrumb-item a:hover {
-                text-decoration: underline;
-            }
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple-animate');
 
-        .breadcrumb-item.active {
-            color: #6c757d;
-        }
+                setTimeout(() => {
+                    ripple.classList.remove('ripple-animate');
+                }, 600);
+            });
 
-        .form-label {
-            margin-bottom: 0.5rem;
-            color: #495057;
-        }
+            // Form validation enhancement
+            const form = document.querySelector('.profile-form');
+            form.addEventListener('submit', function(e) {
+                const requiredFields = form.querySelectorAll('input[data-val-required]');
+                let isValid = true;
 
-        .btn-primary,
-        .btn-outline-secondary {
-            font-weight: 500;
-            padding: 0.6rem 1.5rem;
-            border-radius: 0.375rem;
-            transition: all 0.3s ease;
-        }
+                requiredFields.forEach(field => {
+                    if (field.value.trim() === '') {
+                        field.closest('.input-wrapper').classList.add('error');
+                        isValid = false;
+                    } else {
+                        field.closest('.input-wrapper').classList.remove('error');
+                    }
+                });
 
-            .btn-primary:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 5px 15px rgba(13, 110, 253, 0.2);
-            }
-
-            .btn-outline-secondary:hover {
-                transform: translateY(-2px);
-            }
-
-        .card {
-            transition: all 0.3s ease;
-        }
-
-            .card:hover {
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
-            }
-    </style>
+                if (!isValid) {
+                    e.preventDefault();
+                    // Scroll to first error
+                    const firstError = form.querySelector('.input-wrapper.error');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+        });
+    </script>
 }
