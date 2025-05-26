@@ -1,16 +1,11 @@
-﻿using CloudinaryDotNet.Actions;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using ProjectEXE.Models;
 using ProjectEXE.Services.Interfaces;
-using ProjectEXE.Services.TokenStorage;
 using ProjectEXE.ViewModel.AccountViewModel;
-using System.Security.Cryptography;
 
 namespace ProjectEXE.Controllers
 {
@@ -18,12 +13,14 @@ namespace ProjectEXE.Controllers
     {
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
+        private readonly ISessionService _sessionService;
         private readonly RevaContext _context;
 
-        public AccountController(IUserService userService, IEmailService emailService, RevaContext context)
+        public AccountController(IUserService userService, IEmailService emailService, ISessionService sessionService, RevaContext context)
         {
             _userService = userService;
             _emailService = emailService;
+            _sessionService = sessionService;
             _context = context;
         }
 
@@ -153,14 +150,14 @@ namespace ProjectEXE.Controllers
 
                     if (user != null)
                     {
-                        // Generate a verification token
-                        string token = GenerateRandomToken();
+                        // Generate a unique session ID instead of token
+                        string sessionId = GenerateSessionId();
 
-                        // Store the token
-                        await TokenStore.StoreTokenAsync(model.Email, token, "EmailVerification");
+                        // Store email verification session
+                        await _sessionService.StoreEmailVerificationAsync(sessionId, model.Email);
 
-                        // Send verification email
-                        await _emailService.SendVerificationEmailAsync(model.Email, token);
+                        // Send verification email with session ID
+                        await _emailService.SendVerificationEmailAsync(model.Email, sessionId);
 
                         // Redirect to confirmation page
                         return RedirectToAction("RegisterConfirmation");
@@ -188,37 +185,31 @@ namespace ProjectEXE.Controllers
 
         [HttpGet]
 
-        public async Task<IActionResult> VerifyEmail(string email, string token)
+        public async Task<IActionResult> VerifyEmail(string email, string sessionId)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(sessionId))
             {
-                return BadRequest("Email hoặc token không hợp lệ");
+                return BadRequest("Email hoặc session không hợp lệ");
             }
 
-            bool isValid = await TokenStore.ValidateTokenAsync(email, token, "EmailVerification");
+            // Validate session
+            bool isValid = await _sessionService.ValidateAndGetEmailAsync(sessionId, email, "EmailVerify");
 
             if (isValid)
             {
                 var user = await _userService.GetUserByEmailAsync(email);
-                if (user != null && user.IsActive == 2)
+                if (user != null && user.IsActive == 2) // Chưa verify
                 {
-                    user.IsActive = 1;
+                    user.IsActive = 1; // Kích hoạt tài khoản
                     await _userService.UpdateUserAsync(user);
 
+                    // Tự động đăng nhập
                     var principal = _userService.CreateClaimsPrincipal(user);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-                    await HttpContext.SignInAsync(
-                        CookieAuthenticationDefaults.AuthenticationScheme,
-                        principal,
-                        new AuthenticationProperties
-                        {
-                            IsPersistent = true,
-                            ExpiresUtc = DateTime.UtcNow.AddDays(30)
-                        });
+                    // Xóa session
+                    await _sessionService.RemoveSessionAsync(sessionId, "EmailVerify");
 
-                    await TokenStore.RemoveTokenAsync(email, "EmailVerification");
-
-                    // Hiển thị trang thành công với auto redirect
                     ViewBag.RedirectToHome = true;
                     return View("EmailVerified");
                 }
@@ -226,6 +217,7 @@ namespace ProjectEXE.Controllers
 
             return View("EmailVerificationFailed");
         }
+
 
 
 
@@ -241,89 +233,103 @@ namespace ProjectEXE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    var user = await _userService.GetUserByEmailAsync(model.Email);
-
-                    // Kiểm tra user có tồn tại không (đã được đăng ký chưa)
-                    if (user == null)
-                    {
-                        // Không tiết lộ thông tin email không tồn tại để bảo mật
-                        // Nhưng log lại để admin theo dõi
-                        
-                        TempData["Warning"] = "Email này chưa được đăng ký trong hệ thống.";
-                        return View(model);
-                    }
-
-                    // Kiểm tra trạng thái tài khoản
-                    if (user.IsActive == 0)
-                    {
-                        TempData["Warning"] = "Tài khoản này đã bị vô hiệu hóa. Vui lòng liên hệ quản trị viên.";
-                        return View(model);
-                    }
-
-                    if (user.IsActive == 2)
-                    {
-                        TempData["Warning"] = "Email này chưa được xác nhận. Vui lòng xác nhận email trước khi đặt lại mật khẩu.";
-                        return View(model);
-                    }
-
-                    // Chỉ gửi email reset nếu tài khoản hợp lệ (IsActive == 1)
-                    if (user.IsActive == 1)
-                    {
-                        // Generate token
-                        string token = GenerateRandomToken();
-
-                        // Store the token
-                        await TokenStore.StoreTokenAsync(model.Email, token, "PasswordReset");
-
-                        // Send email
-                        try
-                        {
-                            await _emailService.SendPasswordResetEmailAsync(model.Email, token);
-
-                            // Debug URL - chỉ log trong development
-                            var baseUrl = HttpContext.Request.Scheme + "://" + HttpContext.Request.Host;
-                            var resetUrl = $"{baseUrl}/Account/ResetPassword?email={Uri.EscapeDataString(model.Email)}&token={Uri.EscapeDataString(token)}";
-                            Console.WriteLine($"Password Reset URL: {resetUrl}");
-
-                            return View("ForgotPasswordConfirmation");
-                        }
-                        catch (Exception emailEx)
-                        {
-                          
-                            TempData["Warning"] = "Có lỗi xảy ra khi gửi email. Vui lòng thử lại sau.";
-                            return View(model);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                
-                    TempData["Warning"] = "Có lỗi xảy ra. Vui lòng thử lại sau.";
-                    return View(model);
-                }
+                return View(model);
             }
 
-            return View(model);
+            try
+            {
+                // Kiểm tra email có tồn tại không
+                var user = await _userService.GetUserByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    TempData["Warning"] = "Email này không tồn tại trong hệ thống.";
+                    return View(model);
+                }
+
+                if (user.IsActive == 0)
+                {
+                    TempData["Warning"] = "Tài khoản đã bị vô hiệu hóa. Vui lòng liên hệ admin.";
+                    return View(model);
+                }
+
+                if (user.IsActive == 2)
+                {
+                    TempData["Warning"] = "Tài khoản chưa được xác nhận email. Vui lòng xác nhận email trước khi reset mật khẩu.";
+                    TempData["ShowResendLink"] = true; // Để hiển thị link gửi lại email xác nhận
+                    return View(model);
+                }
+
+
+                if (user.IsActive == 1) // Chỉ user đã kích hoạt mới được reset password
+                {
+                    // Tạo session ID thay vì token
+                    string sessionId = Guid.NewGuid().ToString("N");
+
+                    // Lưu session cho password reset
+                    await _sessionService.StorePasswordResetAsync(sessionId, model.Email);
+
+                    // Gửi email reset password
+                    await _emailService.SendPasswordResetEmailAsync(model.Email, sessionId);
+
+                    Console.WriteLine($"✅ Đã tạo password reset session: {sessionId} cho email: {model.Email}");
+                }
+
+                // Luôn hiển thị thông báo thành công để bảo mật (không tiết lộ email có tồn tại hay không)
+                TempData["Success"] = "Nếu email tồn tại trong hệ thống, chúng tôi đã gửi liên kết reset mật khẩu.";
+                return RedirectToAction("ForgotPasswordConfirmation");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Lỗi ForgotPassword: {ex.Message}");
+                TempData["Warning"] = "Có lỗi xảy ra. Vui lòng thử lại.";
+                return View(model);
+            }
+        }
+        [HttpGet]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
         }
 
         [HttpGet]
-        public IActionResult ResetPassword(string email, string token)
+        public async Task<IActionResult> ResetPassword(string email, string sessionId)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+            Console.WriteLine($"🔑 ResetPassword GET: email={email}, sessionId={sessionId}");
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(sessionId))
             {
-                return BadRequest("Email hoặc token không hợp lệ");
+                Console.WriteLine("❌ Email hoặc sessionId không hợp lệ");
+                return BadRequest("Email hoặc session không hợp lệ");
+            }
+
+            // Validate session
+            bool isValid = await _sessionService.ValidateAndGetEmailAsync(sessionId, email, "PasswordReset");
+
+            if (!isValid)
+            {
+                Console.WriteLine($"❌ Session không hợp lệ: {sessionId}");
+                TempData["Warning"] = "Liên kết reset mật khẩu không hợp lệ hoặc đã hết hạn.";
+                return RedirectToAction("ForgotPassword");
+            }
+
+            // Kiểm tra user có tồn tại không
+            var user = await _userService.GetUserByEmailAsync(email);
+            if (user == null || user.IsActive != 1)
+            {
+                Console.WriteLine($"❌ User không hợp lệ: {email}");
+                TempData["Warning"] = "Tài khoản không hợp lệ.";
+                return RedirectToAction("ForgotPassword");
             }
 
             var model = new ResetPasswordViewModel
             {
                 Email = email,
-                Token = token
+                SessionId = sessionId
             };
 
+            Console.WriteLine($"✅ Hiển thị form reset password cho: {email}");
             return View(model);
         }
 
@@ -331,59 +337,47 @@ namespace ProjectEXE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+
+            try
             {
-                try
+                // Validate + Get user + Update password (như trên)
+                if (!await _sessionService.ValidateAndGetEmailAsync(model.SessionId, model.Email, "PasswordReset"))
                 {
-                    bool isValid = await TokenStore.ValidateTokenAsync(
-                        model.Email, model.Token, "PasswordReset");
-
-                    if (isValid)
-                    {
-                        var user = await _userService.GetUserByEmailAsync(model.Email);
-                        if (user == null || user.IsActive != 1)
-                        {
-                            TempData["Warning"] = "Tài khoản không hợp lệ.";
-                            return View(model);
-                        }
-
-                        // FIX: Sử dụng SQL thuần để update password
-                        var newPasswordHash = _userService.HashPassword(model.Password);
-
-                        // Cập nhật trực tiếp bằng SQL để tránh cache
-                        var rowsAffected = await _context.Database.ExecuteSqlRawAsync(
-                            "UPDATE Users SET PasswordHash = {0} WHERE Email = {1}",
-                            newPasswordHash, model.Email);
-
-                        if (rowsAffected > 0)
-                        {
-                            _context.ChangeTracker.Clear();
-
-                            // XÓA TOKEN SAU KHI SỬ DỤNG THÀNH CÔNG
-                            await TokenStore.RemoveTokenAsync(model.Email, "PasswordReset");
-
-                            TempData["Success"] = "Mật khẩu đã được đặt lại thành công. Vui lòng đăng nhập bằng mật khẩu mới.";
-                            return RedirectToAction("Login");
-                        }
-                        else
-                        {
-                            TempData["Warning"] = "Không thể cập nhật mật khẩu. Vui lòng thử lại.";
-                        }
-                    }
-                    else
-                    {
-                        TempData["Warning"] = "Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.";
-                    }
+                    TempData["Warning"] = "Liên kết không hợp lệ.";
+                    return RedirectToAction("ForgotPassword");
                 }
-                catch (Exception ex)
+
+                _context.ChangeTracker.Clear();
+                var user = await _context.Users.Include(u => u.Role)
+                    .FirstOrDefaultAsync(u => u.Email.ToLower() == model.Email.ToLower());
+
+                if (user == null)
                 {
-                    Console.WriteLine($"ResetPassword error: {ex.Message}");
-                    TempData["Warning"] = "Có lỗi xảy ra. Vui lòng thử lại.";
+                    TempData["Warning"] = "Tài khoản không tồn tại.";
+                    return RedirectToAction("ForgotPassword");
                 }
+
+                user.PasswordHash = _userService.HashPassword(model.NewPassword);
+                user.IsActive = 1;
+                await _context.SaveChangesAsync();
+
+                // ✅ TỰ ĐỘNG ĐĂNG NHẬP LUÔN
+                var principal = _userService.CreateClaimsPrincipal(user);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                await _sessionService.RemoveSessionAsync(model.SessionId, "PasswordReset");
+
+                TempData["Success"] = "Mật khẩu đã được đặt lại và bạn đã được đăng nhập!";
+                return RedirectToAction("Index", "Home"); // ✅ THẲNG VỀ HOME
             }
-
-            return View(model);
+            catch (Exception ex)
+            {
+                TempData["Warning"] = "Có lỗi xảy ra.";
+                return View(model);
+            }
         }
+
 
 
         [HttpPost]
@@ -414,17 +408,7 @@ namespace ProjectEXE.Controllers
             return View();
         }
 
-        // Helper method to generate random token
-        private string GenerateRandomToken()
-        {
-            var randomBytes = new byte[32];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(randomBytes);
-            return Convert.ToBase64String(randomBytes)
-                .Replace("+", "-")
-                .Replace("/", "_")
-                .Replace("=", "");
-        }
+      
 
         // Thêm phương thức để gửi lại email xác nhận
         [HttpGet]
@@ -437,7 +421,6 @@ namespace ProjectEXE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResendEmailConfirmation(EmailViewModel model)
         {
-
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -445,31 +428,62 @@ namespace ProjectEXE.Controllers
 
             var user = await _userService.GetUserByEmailAsync(model.Email);
 
-            // FIX: Sử dụng IsActive thay vì TokenStore.IsEmailVerifiedAsync
-            if (user != null && user.IsActive == 2) // Chưa xác thực email
+            if (user != null && user.IsActive == 2) // Chưa verify
             {
-                // Generate a new verification token
-                string token = GenerateRandomToken();
+                // Tạo session ID mới
+                string sessionId = Guid.NewGuid().ToString("N");
 
-                // Store the token
-                await TokenStore.StoreTokenAsync(model.Email, token, "EmailVerification");
+                // Lưu session mới
+                await _sessionService.StoreEmailVerificationAsync(sessionId, model.Email);
 
-                // Send verification email
-                await _emailService.SendVerificationEmailAsync(model.Email, token);
+                // Gửi email
+                await _emailService.SendVerificationEmailAsync(model.Email, sessionId);
 
-                TempData["Success"] = "Email xác nhận đã được gửi lại thành công.";
+                TempData["Success"] = "Email xác nhận đã được gửi lại.";
             }
             else if (user != null && user.IsActive == 1)
             {
-                TempData["Info"] = "Email này đã được xác nhận trước đó.";
+                TempData["Info"] = "Email đã được xác nhận trước đó.";
             }
             else
             {
-                TempData["Warning"] = "Email không tồn tại trong hệ thống.";
+                TempData["Warning"] = "Email không tồn tại.";
             }
 
-            // Always show success message
             return View("ResendEmailConfirmationConfirmation");
+        }
+
+
+        private string GenerateSessionId()
+        {
+            return Guid.NewGuid().ToString("N") + DateTime.UtcNow.Ticks.ToString("x");
+        }
+        [HttpGet]
+        public async Task<IActionResult> CheckUserStatus(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return Json(new { error = "Email is required" });
+            }
+
+            _context.ChangeTracker.Clear();
+            var user = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+
+            if (user == null)
+            {
+                return Json(new { error = "User not found" });
+            }
+
+            return Json(new
+            {
+                email = user.Email,
+                isActive = user.IsActive,
+                userId = user.UserId,
+                createdAt = user.CreatedAt,
+                roleId = user.RoleId
+            });
         }
     }
 }
