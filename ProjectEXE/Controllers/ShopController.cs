@@ -276,8 +276,11 @@ namespace ProjectEXE.Controllers
             return RedirectToAction("Index", "ShopProfile");
         }
 
-        
-
+        public IActionResult ViewReport()
+        {
+            TempData["Warning"] = "Tính năng đang trong quá trình phát triển";
+            return RedirectToAction("Index", "ShopProfile");
+        }
 
 
     }

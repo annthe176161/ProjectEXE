@@ -294,7 +294,7 @@
     }
 
 .btn-outline {
-    background: transparent;
+    background: #cddc39;
     color: var(--primary-green);
     border-color: var(--primary-green);
 }
