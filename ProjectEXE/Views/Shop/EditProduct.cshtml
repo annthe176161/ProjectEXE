@@ -4,130 +4,273 @@
     ViewData["Title"] = "Chỉnh sửa sản phẩm";
 }
 
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header">
-            <h2 class="mb-0">@ViewData["Title"]: <span class="text-primary">@Model.ProductName</span></h2>
+@section Styles {
+    <link rel="stylesheet" href="~/css/edit-product.css?v=@DateTime.Now.Ticks">
+}
+
+<div class="edit-product-page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>
+                        <i class="fas fa-edit"></i>
+                        Chỉnh sửa sản phẩm
+                    </h1>
+                    <div class="product-name-display">
+                        <span class="product-label">Đang chỉnh sửa:</span>
+                        <span class="product-name">@Model.ProductName</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <a asp-action="ManageProduct" class="btn btn-back">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Trở về danh sách</span>
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-10 col-lg-8 mx-auto">
-                    <form asp-action="EditProduct" asp-route-id="@Model.ProductId" method="post" enctype="multipart/form-data">
-                        @* Thêm enctype nếu xử lý file *@
+    </div>
+
+    <!-- Main Content -->
+    <div class="container main-content">
+        <div class="row justify-content-center">
+            <div class="col-xl-10">
+                <div class="edit-form-card">
+                    <form asp-action="EditProduct" asp-route-id="@Model.ProductId" method="post"
+                          enctype="multipart/form-data">
                         @Html.AntiForgeryToken()
                         <input type="hidden" asp-for="ProductId" />
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                        <div class="mb-3">
-                            <label asp-for="ProductName" class="form-label"></label>
-                            <input asp-for="ProductName" class="form-control" />
-                            <span asp-validation-for="ProductName" class="text-danger"></span>
-                        </div>
+                        <!-- Validation Summary - Giữ nguyên như cũ -->
+                        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
 
-                        <div class="mb-3">
-                            <label asp-for="Description" class="form-label"></label>
-                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
-                            <span asp-validation-for="Description" class="text-danger"></span>
-                        </div>
+                        <!-- Form Sections -->
+                        <div class="form-sections">
+                            <!-- Basic Information Section -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h3>
+                                        <i class="fas fa-info-circle"></i>
+                                        Thông tin cơ bản
+                                    </h3>
+                                    <p>Cập nhật thông tin chính của sản phẩm</p>
+                                </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Price" class="form-label"></label>
-                                <input asp-for="Price" type="number" step="any" class="form-control" />
-                                <span asp-validation-for="Price" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Gender" class="form-label"></label>
-                                <input asp-for="Gender" class="form-control" />
-                                <span asp-validation-for="Gender" class="text-danger"></span>
-                            </div>
-                        </div>
+                                <div class="section-content">
+                                    <div class="form-group">
+                                        <label asp-for="ProductName" class="form-label">
+                                            <i class="fas fa-tag"></i>
+                                            <span>@Html.DisplayNameFor(m => m.ProductName)</span>
+                                        </label>
+                                        <input asp-for="ProductName" class="form-control" />
+                                        <span asp-validation-for="ProductName" class="validation-message"></span>
+                                    </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="CategoryId" class="form-label"></label>
-                                <select asp-for="CategoryId" class="form-select" asp-items="Model.CategoriesList">
-                                    <option value="">-- Chọn danh mục --</option>
-                                </select>
-                                <span asp-validation-for="CategoryId" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="ConditionId" class="form-label"></label>
-                                <select asp-for="ConditionId" class="form-select" asp-items="Model.ConditionsList">
-                                    <option value="">-- Chọn tình trạng --</option>
-                                </select>
-                                <span asp-validation-for="ConditionId" class="text-danger"></span>
-                            </div>
-                        </div>
+                                    <div class="form-group">
+                                        <label asp-for="Description" class="form-label">
+                                            <i class="fas fa-align-left"></i>
+                                            <span>@Html.DisplayNameFor(m => m.Description)</span>
+                                        </label>
+                                        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                                        <span asp-validation-for="Description" class="validation-message"></span>
+                                    </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Size" class="form-label"></label>
-                                <input asp-for="Size" class="form-control" />
-                                <span asp-validation-for="Size" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Color" class="form-label"></label>
-                                <input asp-for="Color" class="form-control" />
-                                <span asp-validation-for="Color" class="text-danger"></span>
-                            </div>
-                        </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label asp-for="Price" class="form-label">
+                                                <i class="fas fa-dollar-sign"></i>
+                                                <span>@Html.DisplayNameFor(m => m.Price)</span>
+                                            </label>
+                                            <div class="input-with-currency">
+                                                <input asp-for="Price" type="number" step="any" class="form-control" />
+                                                <span class="currency-symbol">₫</span>
+                                            </div>
+                                            <span asp-validation-for="Price" class="validation-message"></span>
+                                        </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Brand" class="form-label"></label>
-                                <input asp-for="Brand" class="form-control" />
-                                <span asp-validation-for="Brand" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Material" class="form-label"></label>
-                                <input asp-for="Material" class="form-control" />
-                                <span asp-validation-for="Material" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" asp-for="IsInStock" />
-                                    <label class="form-check-label" asp-for="IsInStock"></label>
+                                        <div class="form-group col-md-6">
+                                            <label asp-for="Gender" class="form-label">
+                                                <i class="fas fa-venus-mars"></i>
+                                                <span>@Html.DisplayNameFor(m => m.Gender)</span>
+                                            </label>
+                                            <input asp-for="Gender" class="form-control" />
+                                            <span asp-validation-for="Gender" class="validation-message"></span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" asp-for="IsVisible" />
-                                    <label class="form-check-label" asp-for="IsVisible"></label>
+
+                            <!-- Category & Condition Section -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h3>
+                                        <i class="fas fa-folder-open"></i>
+                                        Phân loại sản phẩm
+                                    </h3>
+                                    <p>Chọn danh mục và tình trạng phù hợp</p>
+                                </div>
+
+                                <div class="section-content">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label asp-for="CategoryId" class="form-label">
+                                                <i class="fas fa-list"></i>
+                                                <span>@Html.DisplayNameFor(m => m.CategoryId)</span>
+                                            </label>
+                                            <select asp-for="CategoryId" class="form-select" asp-items="Model.CategoriesList">
+                                                <option value="">-- Chọn danh mục --</option>
+                                            </select>
+                                            <span asp-validation-for="CategoryId" class="validation-message"></span>
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <label asp-for="ConditionId" class="form-label">
+                                                <i class="fas fa-star"></i>
+                                                <span>@Html.DisplayNameFor(m => m.ConditionId)</span>
+                                            </label>
+                                            <select asp-for="ConditionId" class="form-select" asp-items="Model.ConditionsList">
+                                                <option value="">-- Chọn tình trạng --</option>
+                                            </select>
+                                            <span asp-validation-for="ConditionId" class="validation-message"></span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
+                            <!-- Product Details Section -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h3>
+                                        <i class="fas fa-cogs"></i>
+                                        Thông tin chi tiết
+                                    </h3>
+                                    <p>Các thông số kỹ thuật và đặc điểm của sản phẩm</p>
+                                </div>
+
+                                <div class="section-content">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label asp-for="Size" class="form-label">
+                                                <i class="fas fa-expand-arrows-alt"></i>
+                                                <span>@Html.DisplayNameFor(m => m.Size)</span>
+                                            </label>
+                                            <input asp-for="Size" class="form-control" />
+                                            <span asp-validation-for="Size" class="validation-message"></span>
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <label asp-for="Color" class="form-label">
+                                                <i class="fas fa-palette"></i>
+                                                <span>@Html.DisplayNameFor(m => m.Color)</span>
+                                            </label>
+                                            <input asp-for="Color" class="form-control" />
+                                            <span asp-validation-for="Color" class="validation-message"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label asp-for="Brand" class="form-label">
+                                                <i class="fas fa-crown"></i>
+                                                <span>@Html.DisplayNameFor(m => m.Brand)</span>
+                                            </label>
+                                            <input asp-for="Brand" class="form-control" />
+                                            <span asp-validation-for="Brand" class="validation-message"></span>
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <label asp-for="Material" class="form-label">
+                                                <i class="fas fa-tshirt"></i>
+                                                <span>@Html.DisplayNameFor(m => m.Material)</span>
+                                            </label>
+                                            <input asp-for="Material" class="form-control" />
+                                            <span asp-validation-for="Material" class="validation-message"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Status Settings Section -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h3>
+                                        <i class="fas fa-toggle-on"></i>
+                                        Cài đặt trạng thái
+                                    </h3>
+                                    <p>Quản lý tình trạng hiển thị và tồn kho</p>
+                                </div>
+
+                                <div class="section-content">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <div class="custom-switch-group">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" asp-for="IsInStock" />
+                                                    <label class="form-check-label" asp-for="IsInStock">
+                                                        <span class="switch-title">@Html.DisplayNameFor(m => m.IsInStock)</span>
+                                                        <span class="switch-description">Sản phẩm đang có sẵn để bán</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <div class="custom-switch-group">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" asp-for="IsVisible" />
+                                                    <label class="form-check-label" asp-for="IsVisible">
+                                                        <span class="switch-title">@Html.DisplayNameFor(m => m.IsVisible)</span>
+                                                        <span class="switch-description">Khách hàng có thể xem sản phẩm này</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @* Image Upload Section - Giữ nguyên comment như cũ
+                            @if (Model.ExistingImageUrls != null && Model.ExistingImageUrls.Any())
+                            {
+                            <div class="mb-3">
+                            <p>Ảnh hiện tại:</p>
+                            @foreach (var imageUrl in Model.ExistingImageUrls)
+                            {
+                            <img src="@imageUrl" alt="Product Image" style="width: 100px; height: 100px; object-fit: cover; margin: 5px;" />
+                            // Thêm nút xóa ảnh nếu cần
+                            }
+                            </div>
+                            }
+                            <div class="mb-3">
+                            <label asp-for="MainImageFile" class="form-label">Thay đổi/Thêm ảnh đại diện</label>
+                            <input asp-for="MainImageFile" type="file" class="form-control">
+                            <span asp-validation-for="MainImageFile" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                            <label asp-for="OtherImageFiles" class="form-label">Thay đổi/Thêm ảnh khác</label>
+                            <input asp-for="OtherImageFiles" type="file" multiple class="form-control">
+                            <span asp-validation-for="OtherImageFiles" class="text-danger"></span>
+                            </div>
+                            *@
                         </div>
 
-                        @* Khu vực hiển thị/upload ảnh
-                        @if (Model.ExistingImageUrls != null && Model.ExistingImageUrls.Any())
-                        {
-                        <div class="mb-3">
-                        <p>Ảnh hiện tại:</p>
-                        @foreach (var imageUrl in Model.ExistingImageUrls)
-                        {
-                        <img src="@imageUrl" alt="Product Image" style="width: 100px; height: 100px; object-fit: cover; margin: 5px;" />
-                        // Thêm nút xóa ảnh nếu cần
-                        }
-                        </div>
-                        }
-                        <div class="mb-3">
-                        <label asp-for="MainImageFile" class="form-label">Thay đổi/Thêm ảnh đại diện</label>
-                        <input asp-for="MainImageFile" type="file" class="form-control">
-                        <span asp-validation-for="MainImageFile" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                        <label asp-for="OtherImageFiles" class="form-label">Thay đổi/Thêm ảnh khác</label>
-                        <input asp-for="OtherImageFiles" type="file" multiple class="form-control">
-                        <span asp-validation-for="OtherImageFiles" class="text-danger"></span>
-                        </div>
-                        *@
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <div class="actions-content">
+                                <div class="action-buttons">
+                                    <button type="submit" class="btn btn-save">
+                                        <i class="fas fa-save"></i>
+                                        <span>Lưu thay đổi</span>
+                                    </button>
 
-                        <div class="mt-4">
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu thay đổi</button>
-                            <a asp-action="ManageProduct" class="btn btn-secondary ms-2">Hủy</a>
+                                    <a asp-action="ManageProduct" class="btn btn-cancel">
+                                        <i class="fas fa-times"></i>
+                                        <span>Hủy bỏ</span>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>

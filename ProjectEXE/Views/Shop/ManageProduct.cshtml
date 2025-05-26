@@ -4,202 +4,296 @@
     ViewData["Title"] = "Sản phẩm của Shop";
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1>@ViewData["Title"]</h1>
-        <div>
-            <span class="badge bg-info me-2">Tổng: @(Model?.Count() ?? 0) sản phẩm</span>
-            <a asp-controller="Shop" asp-action="AddNewProduct" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Thêm sản phẩm mới
-            </a>
+@section Styles {
+    <link rel="stylesheet" href="~/css/manage-products.css?v=@DateTime.Now.Ticks">
+}
+
+<div class="manage-products-page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>
+                        <i class="fas fa-boxes"></i>
+                        Quản lý sản phẩm
+                    </h1>
+                    <p>Tổng quan và quản lý tất cả sản phẩm trong cửa hàng của bạn</p>
+                </div>
+                <div class="header-actions">
+                    <div class="product-count">
+                        <span class="count-number">@(Model?.Count() ?? 0)</span>
+                        <span class="count-label">Sản phẩm</span>
+                    </div>
+                    <a asp-controller="Shop" asp-action="AddNewProduct" class="btn btn-add-product">
+                        <i class="fas fa-plus"></i>
+                        <span>Thêm sản phẩm mới</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
-    @if (Model != null && Model.Any())
-    {
-        <!-- Filter và Search bar -->
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="input-group">
-                    <span class="input-group-text"><i class="fas fa-search"></i></span>
-                    <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm sản phẩm...">
-                </div>
-            </div>
-            <div class="col-md-3">
-                <select id="statusFilter" class="form-select">
-                    <option value="">Tất cả trạng thái</option>
-                    <option value="visible">Đang hiển thị</option>
-                    <option value="hidden">Đang ẩn</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <select id="stockFilter" class="form-select">
-                    <option value="">Tất cả hàng hóa</option>
-                    <option value="instock">Còn hàng</option>
-                    <option value="outofstock">Hết hàng</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="table-responsive shadow-sm rounded bg-white p-3">
-            <table class="table table-striped table-hover" id="productsTable">
-                <thead class="table-dark">
-                    <tr>
-                        <th style="width: 5%;">ID</th>
-                        <th style="width: 25%;">@Html.DisplayNameFor(model => model.First().ProductName)</th>
-                        <th style="width: 12%;" class="text-end">@Html.DisplayNameFor(model => model.First().Price)</th>
-                        <th style="width: 15%;">@Html.DisplayNameFor(model => model.First().CategoryName)</th>
-                        <th style="width: 12%;">@Html.DisplayNameFor(model => model.First().ConditionName)</th>
-                        <th style="width: 10%;" class="text-center">Trạng thái</th>
-                        <th style="width: 12%;">@Html.DisplayNameFor(model => model.First().CreatedAt)</th>
-                        <th style="width: 9%;" class="text-center">Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr data-product-name="@item.ProductName.ToLower()"
-                            data-category="@item.CategoryName.ToLower()"
-                            data-visible="@item.IsVisible.ToString().ToLower()"
-                        @* data-stock="@item.IsInStock.ToString().ToLower()" *@>
-                            <td>
-                                <span class="badge bg-light text-dark">#@item.ProductId</span>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    @* Placeholder cho ảnh *@
-                                    <div class="me-2">
-                                        <div class="bg-light d-flex align-items-center justify-content-center"
-                                             style="width: 40px; height: 40px; border-radius: 4px;">
-                                            <i class="fas fa-image text-muted"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="fw-semibold">@Html.DisplayFor(modelItem => item.ProductName)</div>
-                                        @if (!string.IsNullOrEmpty(item.Brand))
-                                        {
-                                            <small class="text-muted">@item.Brand</small>
-                                        }
+    <div class="container-fluid main-content">
+        @if (Model != null && Model.Any())
+        {
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="filter-card">
+                    <div class="filter-header">
+                        <h3>
+                            <i class="fas fa-filter"></i>
+                            Bộ lọc và tìm kiếm
+                        </h3>
+                    </div>
+                    <div class="filter-body">
+                        <div class="filter-row">
+                            <div class="filter-group search-group">
+                                <label class="filter-label">
+                                    <i class="fas fa-search"></i>
+                                    Tìm kiếm sản phẩm
+                                </label>
+                                <div class="search-wrapper">
+                                    <input type="text" id="searchInput" class="search-input" 
+                                           placeholder="Nhập tên sản phẩm hoặc danh mục...">
+                                    <div class="search-icon">
+                                        <i class="fas fa-search"></i>
                                     </div>
                                 </div>
-                            </td>
-                            <td class="text-end">
-                                <span class="fw-bold text-success">@item.Price.ToString("N0") VNĐ</span>
-                            </td>
-                            <td>
-                                <span class="badge bg-primary bg-opacity-10 text-primary">@Html.DisplayFor(modelItem => item.CategoryName)</span>
-                            </td>
-                            <td>
-                                <span class="badge bg-secondary bg-opacity-10 text-secondary">@Html.DisplayFor(modelItem => item.ConditionName)</span>
-                            </td>
-                            <td class="text-center">
-                                @if (item.IsVisible)
-                                {
-                                    <span class="badge bg-success">
-                                        <i class="fas fa-eye me-1"></i>Hiển thị
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-secondary">
-                                        <i class="fas fa-eye-slash me-1"></i>Ẩn
-                                    </span>
-                                }
-                                @* Nếu có IsInStock trong ViewModel *@
-                                @* <br>
-                                @if (item.IsInStock)
-                                {
-                                    <span class="badge bg-success mt-1">Còn hàng</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-warning">Hết hàng</span>
-                                } *@
-                            </td>
-                            <td>
-                                <div>@item.CreatedAt.ToString("dd/MM/yyyy")</div>
-                                <small class="text-muted">@item.CreatedAt.ToString("HH:mm")</small>
-                            </td>
-                            <td class="text-center">
-                                <div class="btn-group btn-group-sm" role="group">
-                                    <a asp-action="EditProduct" asp-route-id="@item.ProductId"
-                                       class="btn btn-outline-primary" title="Chỉnh sửa sản phẩm">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <button type="button" class="btn btn-outline-danger"
-                                            onclick="confirmDelete(@item.ProductId, '@item.ProductName')"
-                                            title="Xóa sản phẩm">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Statistics Summary -->
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <div class="card bg-light">
-                    <div class="card-body">
-                        <div class="row text-center">
-                            <div class="col-md-3">
-                                <h5 class="text-primary">@Model.Count()</h5>
-                                <small class="text-muted">Tổng sản phẩm</small>
                             </div>
-                            <div class="col-md-3">
-                                <h5 class="text-success">@Model.Count(p => p.IsVisible)</h5>
-                                <small class="text-muted">Đang hiển thị</small>
+                            
+                            <div class="filter-group">
+                                <label class="filter-label">
+                                    <i class="fas fa-eye"></i>
+                                    Trạng thái hiển thị
+                                </label>
+                                <select id="statusFilter" class="filter-select">
+                                    <option value="">Tất cả trạng thái</option>
+                                    <option value="visible">Đang hiển thị</option>
+                                    <option value="hidden">Đang ẩn</option>
+                                </select>
                             </div>
-                            <div class="col-md-3">
-                                <h5 class="text-secondary">@Model.Count(p => !p.IsVisible)</h5>
-                                <small class="text-muted">Đang ẩn</small>
-                            </div>
-                            <div class="col-md-3">
-                                <h5 class="text-info">@Model.Select(p => p.CategoryName).Distinct().Count()</h5>
-                                <small class="text-muted">Danh mục</small>
+                            
+                            <div class="filter-group">
+                                <label class="filter-label">
+                                    <i class="fas fa-warehouse"></i>
+                                    Tình trạng kho
+                                </label>
+                                <select id="stockFilter" class="filter-select">
+                                    <option value="">Tất cả hàng hóa</option>
+                                    <option value="instock">Còn hàng</option>
+                                    <option value="outofstock">Hết hàng</option>
+                                </select>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    }
-    else
-    {
-        <div class="text-center mt-5">
-            <div class="mb-4">
-                <i class="fas fa-box-open fa-5x text-muted"></i>
+
+            <!-- Products Table -->
+            <div class="products-section">
+                <div class="products-card">
+                    <div class="card-header">
+                        <h3>
+                            <i class="fas fa-list"></i>
+                            Danh sách sản phẩm
+                        </h3>
+                        <div class="table-actions">
+                            <button class="btn-export">
+                                <i class="fas fa-download"></i>
+                                Xuất Excel
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="products-table" id="productsTable">
+                            <thead>
+                                <tr>
+                                    <th class="col-id">ID</th>
+                                    <th class="col-product">Sản phẩm</th>
+                                    <th class="col-price">Giá bán</th>
+                                    <th class="col-category">Danh mục</th>
+                                    <th class="col-condition">Tình trạng</th>
+                                    <th class="col-status">Trạng thái</th>
+                                    <th class="col-date">Ngày tạo</th>
+                                    <th class="col-actions">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr class="product-row" 
+                                        data-product-name="@item.ProductName.ToLower()"
+                                        data-category="@item.CategoryName.ToLower()"
+                                        data-visible="@item.IsVisible.ToString().ToLower()">
+                                        <td class="product-id">
+                                            <span class="id-badge">#@item.ProductId</span>
+                                        </td>
+                                        <td class="product-info">
+                                            <div class="product-item">
+                                                <div class="product-image">
+                                                    <i class="fas fa-image"></i>
+                                                </div>
+                                                <div class="product-details">
+                                                    <div class="product-name">@item.ProductName</div>
+                                                    @if (!string.IsNullOrEmpty(item.Brand))
+                                                    {
+                                                        <div class="product-brand">@item.Brand</div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="product-price">
+                                            <span class="price-value">@item.Price.ToString("N0")₫</span>
+                                        </td>
+                                        <td class="product-category">
+                                            <span class="category-badge">@item.CategoryName</span>
+                                        </td>
+                                        <td class="product-condition">
+                                            <span class="condition-badge">@item.ConditionName</span>
+                                        </td>
+                                        <td class="product-status">
+                                            @if (item.IsVisible)
+                                            {
+                                                <span class="status-badge status-visible">
+                                                    <i class="fas fa-eye"></i>
+                                                    Hiển thị
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="status-badge status-hidden">
+                                                    <i class="fas fa-eye-slash"></i>
+                                                    Ẩn
+                                                </span>
+                                            }
+                                        </td>
+                                        <td class="product-date">
+                                            <div class="date-display">
+                                                <div class="date">@item.CreatedAt.ToString("dd/MM/yyyy")</div>
+                                                <div class="time">@item.CreatedAt.ToString("HH:mm")</div>
+                                            </div>
+                                        </td>
+                                        <td class="product-actions">
+                                            <div class="action-buttons">
+                                                <a asp-action="EditProduct" asp-route-id="@item.ProductId"
+                                                   class="btn-action btn-edit" title="Chỉnh sửa sản phẩm">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button type="button" class="btn-action btn-delete"
+                                                        onclick="confirmDelete(@item.ProductId, '@item.ProductName')"
+                                                        title="Xóa sản phẩm">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <h4 class="text-muted">Chưa có sản phẩm nào</h4>
-            <p class="text-muted mb-4">Bạn chưa có sản phẩm nào trong shop. Hãy thêm sản phẩm đầu tiên để bắt đầu bán hàng!</p>
-            <a asp-action="Create" class="btn btn-primary btn-lg">
-                <i class="fas fa-plus me-2"></i>Thêm sản phẩm đầu tiên
-            </a>
-        </div>
-    }
+
+            <!-- Statistics Summary -->
+            <div class="statistics-section">
+                <h3 class="section-title">
+                    <i class="fas fa-chart-bar"></i>
+                    Thống kê tổng quan
+                </h3>
+                
+                <div class="stats-grid">
+                    <div class="stat-card total-products">
+                        <div class="stat-icon">
+                            <i class="fas fa-boxes"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number">@Model.Count()</div>
+                            <div class="stat-label">Tổng sản phẩm</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card visible-products">
+                        <div class="stat-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number">@Model.Count(p => p.IsVisible)</div>
+                            <div class="stat-label">Đang hiển thị</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card hidden-products">
+                        <div class="stat-icon">
+                            <i class="fas fa-eye-slash"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number">@Model.Count(p => !p.IsVisible)</div>
+                            <div class="stat-label">Đang ẩn</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card categories">
+                        <div class="stat-icon">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number">@Model.Select(p => p.CategoryName).Distinct().Count()</div>
+                            <div class="stat-label">Danh mục</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <!-- Empty State -->
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-box-open"></i>
+                </div>
+                <h2>Chưa có sản phẩm nào</h2>
+                <p>Bạn chưa có sản phẩm nào trong shop. Hãy thêm sản phẩm đầu tiên để bắt đầu bán hàng!</p>
+                <a asp-action="Create" class="btn btn-add-first">
+                    <i class="fas fa-plus"></i>
+                    Thêm sản phẩm đầu tiên
+                </a>
+            </div>
+        }
+    </div>
 </div>
 
-<!-- Delete confirmation modal -->
+<!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Xác nhận xóa sản phẩm</h5>
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                    Xác nhận xóa sản phẩm
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>Bạn có chắc chắn muốn xóa sản phẩm <strong id="productNameToDelete"></strong> không?</p>
-                <p class="text-muted">Hành động này không thể hoàn tác.</p>
+                <div class="delete-confirmation">
+                    <p>Bạn có chắc chắn muốn xóa sản phẩm <strong id="productNameToDelete"></strong> không?</p>
+                    <div class="warning-note">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Hành động này không thể hoàn tác và sẽ xóa vĩnh viễn sản phẩm khỏi hệ thống.</span>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                    Hủy bỏ
+                </button>
                 <form id="deleteForm" method="post" class="d-inline">
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash me-1"></i>Xóa
+                    <button type="submit" class="btn btn-delete-confirm">
+                        <i class="fas fa-trash"></i>
+                        Xóa sản phẩm
                     </button>
                 </form>
             </div>
@@ -208,62 +302,5 @@
 </div>
 
 @section Scripts {
-    <script>
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('keyup', function() {
-            filterTable();
-        });
-
-        document.getElementById('statusFilter').addEventListener('change', function() {
-            filterTable();
-        });
-
-        document.getElementById('stockFilter').addEventListener('change', function() {
-            filterTable();
-        });
-
-        function filterTable() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const statusFilter = document.getElementById('statusFilter').value;
-            const stockFilter = document.getElementById('stockFilter').value;
-            const rows = document.querySelectorAll('#productsTable tbody tr');
-
-            rows.forEach(row => {
-                const productName = row.getAttribute('data-product-name');
-                const category = row.getAttribute('data-category');
-                const visible = row.getAttribute('data-visible');
-                const stock = row.getAttribute('data-stock');
-
-                let showRow = true;
-
-                // Search filter
-                if (searchTerm && !productName.includes(searchTerm) && !category.includes(searchTerm)) {
-                    showRow = false;
-                }
-
-                // Status filter
-                if (statusFilter) {
-                    if (statusFilter === 'visible' && visible !== 'true') showRow = false;
-                    if (statusFilter === 'hidden' && visible !== 'false') showRow = false;
-                }
-
-                // Stock filter
-                if (stockFilter && stock) {
-                    if (stockFilter === 'instock' && stock !== 'true') showRow = false;
-                    if (stockFilter === 'outofstock' && stock !== 'false') showRow = false;
-                }
-
-                row.style.display = showRow ? '' : 'none';
-            });
-        }
-
-        // Delete confirmation
-        function confirmDelete(productId, productName) {
-            document.getElementById('productNameToDelete').textContent = productName;
-            document.getElementById('deleteForm').action = '@Url.Action("DeleteProduct")/' + productId;
-
-            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            modal.show();
-        }
-    </script>
+    <script src="~/js/manage-products.js?v=@DateTime.Now.Ticks"></script>
 }
