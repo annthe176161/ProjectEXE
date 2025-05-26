@@ -3,6 +3,7 @@
     ViewData["Title"] = "Gian hàng của bạn";
     var totalProducts = ViewBag.TotalProducts ?? "NULL";
     var totalOrders = ViewBag.TotalOrders ?? "NULL";
+    var monthlyRevenue = ViewBag.MonthlyRevenue ?? 0m;
 }
 
 @section Styles {
@@ -149,8 +150,8 @@
                                     <i class="fas fa-dollar-sign"></i>
                                 </div>
                                 <div class="stat-content">
-                                    <div class="stat-number">0₫</div>
-                                    <div class="stat-label">Doanh thu tháng</div>
+                                    <div class="stat-number">@monthlyRevenue.ToString("N0")₫</div>
+                                    <div class="stat-label">Doanh thu tháng @DateTime.Now.Month</div>
                                 </div>
                                 <div class="stat-trend">
                                     <i class="fas fa-minus"></i>

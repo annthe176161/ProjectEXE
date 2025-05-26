@@ -17,7 +17,7 @@ namespace ProjectEXE.Services.Implementations
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICloudinaryService _cloudinaryService;
 
-        public ShopService(RevaContext context, IWebHostEnvironment webHostEnvironment, 
+        public ShopService(RevaContext context, IWebHostEnvironment webHostEnvironment,
                     IHttpContextAccessor httpContextAccessor, ICloudinaryService cloudinaryService)
         {
             _context = context;
@@ -78,7 +78,7 @@ namespace ProjectEXE.Services.Implementations
         public async Task ActivePackagePayment(PackagePayment packagePayment)
         {
             await _context.PackagePayments.AddAsync(packagePayment);
-            await _context.SaveChangesAsync();  
+            await _context.SaveChangesAsync();
         }
 
         public async Task<int> GetShopIdByUserId(int userId)
@@ -104,7 +104,7 @@ namespace ProjectEXE.Services.Implementations
         {
             // 1. Lấy gói hiện tại của shop (chưa hết hạn)
             var activeSubscription = await _context.PackageSubscriptions
-                                    .Include(s => s.Package) 
+                                    .Include(s => s.Package)
                                     .Where(s => s.ShopId == shopId)
                                     .OrderByDescending(s => s.EndDate)
                                     .FirstOrDefaultAsync();
@@ -143,7 +143,7 @@ namespace ProjectEXE.Services.Implementations
         }
 
         public async Task<bool> CreateProductAsync(ProductFormViewModel model, int shopId)
-        { 
+        {
             try
             {
                 var product = new Product
@@ -320,7 +320,7 @@ namespace ProjectEXE.Services.Implementations
             return await _context.Shops
                 .FirstOrDefaultAsync(s => s.UserId == userId);
         }
-        
+
         public async Task<bool> UpdateShopAsync(CreateShopViewModel model, int shopId)
         {
             var shop = await _context.Shops.FindAsync(shopId);
@@ -638,6 +638,45 @@ namespace ProjectEXE.Services.Implementations
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in GetTotalOrdersByShopIdAsync: {ex.Message}");
+                return 0;
+            }
+        }
+
+
+        // Total month
+        public async Task<decimal> GetCurrentMonthRevenueByShopIdAsync(int shopId)
+        {
+            var currentDate = DateTime.Now;
+            return await GetMonthlyRevenueByShopIdAsync(shopId, currentDate.Year, currentDate.Month);
+        }
+        public async Task<decimal> GetMonthlyRevenueByShopIdAsync(int shopId, int year, int month)
+        {
+            try
+            {
+                var shop = await _context.Shops
+                    .FirstOrDefaultAsync(s => s.ShopId == shopId);
+
+                if (shop == null)
+                {
+                    Console.WriteLine($"Shop not found for shopId: {shopId}");
+                    return 0;
+                }
+
+                // ✅ SỬA: Thêm điều kiện lọc theo tháng và năm
+                var revenue = await _context.Orders
+                    .Include(o => o.Product)
+                    .Where(o => o.SellerId == shop.UserId &&
+                               o.StatusId == 4 && // Đã hoàn thành
+                               o.OrderDate.Year == year &&
+                               o.OrderDate.Month == month)
+                    .SumAsync(o => o.Product.Price);
+
+                Console.WriteLine($"Monthly revenue for shopId {shopId} ({month}/{year}): {revenue:C}");
+                return revenue;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetMonthlyRevenueByShopIdAsync: {ex.Message}");
                 return 0;
             }
         }
