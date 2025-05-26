@@ -25,7 +25,7 @@
                 <!-- Hình ảnh chính -->
                 <div class="main-image-container mb-3">
                     <img id="main-product-image" src="@Model.MainImageUrl"
-                         alt="@Model.ProductName" class="img-fluid">
+                    alt="@Model.ProductName" class="img-fluid">
                 </div>
 
                 <!-- Swiper cho gallery -->
@@ -36,7 +36,7 @@
                             @foreach (var image in Model.ImageUrls)
                             {
                                 <div class="swiper-slide thumbnail-item @(image == Model.MainImageUrl ? "active" : "")"
-                                     data-img="@image">
+                                data-img="@image">
                                     <img src="@image" alt="@Model.ProductName" class="img-fluid">
                                 </div>
                             }
@@ -114,9 +114,12 @@
 
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <a asp-controller="Product" asp-action="ConfirmPurchase" asp-route-id="@Model.ProductId" class="btn btn-outline-primary btn-lg ms-2">
-                            <i class="fas fa-shopping-bag me-2"></i> Mua hàng
-                        </a>
+                        if (User.IsInRole("Buyer"))
+                        {
+                            <a asp-controller="Product" asp-action="ConfirmPurchase" asp-route-id="@Model.ProductId" class="btn btn-outline-primary btn-lg ms-2">
+                                <i class="fas fa-shopping-bag me-2"></i> Mua hàng
+                            </a>
+                        }
                     }
                     else
                     {
