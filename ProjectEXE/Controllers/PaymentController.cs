@@ -80,7 +80,8 @@ namespace ProjectEXE.Controllers
         public async Task<IActionResult> PaymentCallbackPayOS()
         {
             var response = _payOsService.ProcessReturnUrl(Request.Query);
-
+            string transactionCode = response.OrderCode.ToString();
+            TempData["OrderCode"] = transactionCode;
             if (response == null || response.Code != "00")
             {
                 return RedirectToAction("PaymentFail");
@@ -90,7 +91,6 @@ namespace ProjectEXE.Controllers
                 var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 var shopId = await _shopService.GetShopIdByUserId(userId);
                 int packageId = int.Parse(TempData["PackageId"].ToString());
-                string transactionCode = response.OrderCode.ToString();
                 decimal amount = decimal.Parse(TempData["Amount"].ToString());
 
                 var paymentpackageModel = new PackagePayment
@@ -121,14 +121,13 @@ namespace ProjectEXE.Controllers
             //lấy thông tin gói
             int packageId = int.Parse(TempData["PackageId"].ToString());
             var package = await _packageService.GetPackageByIdAsync(packageId);
-
-            var response = _payOsService.ProcessReturnUrl(Request.Query);
+            string transactionCode = TempData["OrderCode"]?.ToString();
 
             var paymentResultInformation = new PaymentResultInformation
             {
                 ProductLimit = package.ProductLimit,
                 PackageName = package.PackageName,
-                TransactionCode = response.OrderCode.ToString(),
+                TransactionCode = transactionCode,
                 Price = package.Price,
                 DiscountedPrice = package.DiscountedPrice,
                 CreatedDate = DateTime.UtcNow
@@ -146,14 +145,13 @@ namespace ProjectEXE.Controllers
             //lấy thông tin gói
             int packageId = int.Parse(TempData["PackageId"].ToString());
             var package = await _packageService.GetPackageByIdAsync(packageId);
-
-            var response = _payOsService.ProcessReturnUrl(Request.Query);
+            string transactionCode = TempData["OrderCode"]?.ToString();
 
             var paymentResultInformation = new PaymentResultInformation
             {
                 ProductLimit = package.ProductLimit,
                 PackageName = package.PackageName,
-                TransactionCode = response.OrderCode.ToString(),
+                TransactionCode = transactionCode,
                 Price = package.Price,
                 DiscountedPrice = package.DiscountedPrice,
                 CreatedDate = DateTime.UtcNow,
