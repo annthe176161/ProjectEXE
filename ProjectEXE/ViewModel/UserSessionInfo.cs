@@ -1,4 +1,4 @@
-﻿namespace ProjectEXE.Views.Account
+﻿namespace ProjectEXE.ViewModel
 {
     public class UserSessionInfo
     {
