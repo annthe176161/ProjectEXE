@@ -777,16 +777,18 @@
                             {
                                 <tr>
                                     <td>@item.ProductId</td>
-                                    <td><img src="@item.ProductImages.FirstOrDefault()?.ImageUrl" alt="Sản phẩm" class="img-thumbnail"></td>
+                                    <td>
+                                        <img src="@item.ProductImages.FirstOrDefault()?.ImageUrl"
+                                             alt="Sản phẩm"
+                                             class="img-thumbnail"
+                                             style="width: 100px; height: 100px; object-fit: cover;" />
+                                    </td>
                                     <td>@item.ProductName</td>
                                     <td>@item.Category.CategoryName</td>
                                     <td>@item.Shop.ShopName</td>
                                     <td>@item.Price.ToString("#,0", new System.Globalization.CultureInfo("vi-VN"))đ</td>
                                     <td><span class="status-badge @(item.IsVisible ? "badge-active" : "badge-expired")">@(item.IsVisible ? "Hiển thị" : "Ẩn")</span></td>
                                     <td>
-                                        @*
-                                <button class="btn btn-action btn-view"><i class="fas fa-eye"></i></button>
-                                *@
                                         <button class="btn btn-action btn-edit" onclick="editProduct(@item.ProductId)"><i class="fas fa-edit"></i></button>
                                         <button class="btn btn-action btn-delete" onclick="showDeleteModal(@item.ProductId, '@Url.Action("DeleteProduct", "Admin")', 'Xác nhận xóa sản phẩm', 'Bạn có chắc muốn xóa sản phẩm này?')"><i class="fas fa-trash"></i></button>
                                     </td>
