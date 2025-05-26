@@ -40,6 +40,7 @@ namespace ProjectEXE.Controllers
             // Truyền thống kê qua ViewBag
             ViewBag.TotalProducts = statistics.TotalProducts;
             ViewBag.TotalOrders = statistics.TotalOrders;
+            ViewBag.MonthlyRevenue = statistics.MonthlyRevenue; // ✅ THÊM
 
             // DEBUG: Confirm ViewBag
             //Console.WriteLine($"ViewBag.TotalProducts: {ViewBag.TotalProducts}");
@@ -57,19 +58,23 @@ namespace ProjectEXE.Controllers
             {
                 var totalProducts = await _shopService.GetTotalProductsByShopIdAsync(shopId);
                 var totalOrders = await _shopService.GetTotalOrdersByShopIdAsync(shopId);
+                var monthlyRevenue = await _shopService.GetCurrentMonthRevenueByShopIdAsync(shopId); 
+
+
 
                 Console.WriteLine($"From Service - TotalProducts: {totalProducts}, TotalOrders: {totalOrders}");
 
                 return new ShopStatistics
                 {
                     TotalProducts = totalProducts,
-                    TotalOrders = totalOrders
+                    TotalOrders = totalOrders,
+                    MonthlyRevenue = monthlyRevenue
                 };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in GetShopStatisticsAsync: {ex.Message}");
-                return new ShopStatistics { TotalProducts = 0, TotalOrders = 0 };
+                return new ShopStatistics { TotalProducts = 0, TotalOrders = 0, MonthlyRevenue = 0 };
             }
         }
     }
@@ -79,6 +84,7 @@ namespace ProjectEXE.Controllers
     {
         public int TotalProducts { get; set; }
         public int TotalOrders { get; set; }
+        public decimal MonthlyRevenue { get; set; }
     }
 }
 

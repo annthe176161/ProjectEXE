@@ -1,4 +1,6 @@
-﻿namespace ProjectEXE.Services.Interfaces
+﻿
+
+namespace ProjectEXE.Services.Interfaces
 {
     public  interface ISessionService
     {

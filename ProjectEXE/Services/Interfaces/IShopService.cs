@@ -37,5 +37,11 @@ namespace ProjectEXE.Services.Interfaces
         // Thêm vào interface IShopService (nếu chưa có)
         Task<int> GetTotalProductsByShopIdAsync(int shopId);
         Task<int> GetTotalOrdersByShopIdAsync(int shopId);
+
+
+        // Doanh thu theo tháng
+        Task<decimal> GetMonthlyRevenueByShopIdAsync(int shopId, int year, int month); 
+        Task<decimal> GetCurrentMonthRevenueByShopIdAsync(int shopId); 
+
     }
 }
