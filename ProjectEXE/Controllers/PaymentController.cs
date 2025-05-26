@@ -7,6 +7,9 @@ using ProjectEXE.Services.Implementations;
 using ProjectEXE.Services.Interfaces;
 using System.Security.Claims;
 using System.Text.Json;
+using ProjectEXE.ViewModel.ServicePackages;
+using System.Threading.Tasks;
+using Azure;
 
 namespace ProjectEXE.Controllers
 {
@@ -114,9 +117,30 @@ namespace ProjectEXE.Controllers
             return View();
         }
 
-        public IActionResult PaymentSuccess()
+        public async Task<IActionResult> PaymentSuccess()
         {
-            return View();
+            if (!TempData.ContainsKey("PackageId") || string.IsNullOrEmpty(TempData["PackageId"]?.ToString()))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            //lấy thông tin gói
+            int packageId = int.Parse(TempData["PackageId"].ToString());
+            var package = await _packageService.GetPackageByIdAsync(packageId);
+
+            var response = _payOsService.ProcessReturnUrl(Request.Query);
+
+            var paymentResultInformation = new PaymentResultInformation
+            {
+                ProductLimit = package.ProductLimit,
+                PackageName = package.PackageName,
+                TransactionCode = response.OrderCode.ToString(),
+                Price = package.Price,
+                DiscountedPrice = package.DiscountedPrice,
+                CreatedDate = DateTime.UtcNow,
+                ExpiredDate = DateTime.UtcNow.AddDays(30)
+            };
+
+            return View(paymentResultInformation);
         }
     }
 }

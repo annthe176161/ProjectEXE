@@ -1,4 +1,6 @@
-﻿@{
+﻿@model ProjectEXE.ViewModel.ServicePackages.PaymentResultInformation
+
+@{
     ViewData["Title"] = "Thanh toán thành công - REVA";
 }
 
@@ -56,7 +58,7 @@
                     <div class="package-benefits">
                         <div class="benefit-item">
                             <div class="benefit-icon">📦</div>
-                            <div class="benefit-text">200 sản phẩm</div>
+                            <div class="benefit-text">@Model.ProductLimit</div>
                         </div>
                         <div class="benefit-item">
                             <div class="benefit-icon">⚡</div>
@@ -81,7 +83,7 @@
                             Mã giao dịch
                         </div>
                         <div class="info-value">
-                            <span class="transaction-code">REVA2025052401</span>
+                            <span class="transaction-code">@Model.TransactionCode</span>
                         </div>
                     </div>
 
@@ -90,18 +92,30 @@
                             <i class="fas fa-tag"></i>
                             Gói dịch vụ
                         </div>
-                        <div class="info-value">Shop Xịn Sò</div>
+                        <div class="info-value">@Model.PackageName</div>
                     </div>
+                    @{
+                        var price = Model.Price;
+                        var discountedPrice = Model.DiscountedPrice ?? 0;
 
+                        var discountPercent = 0;
+                        if (price > 0 && discountedPrice < price)
+                        {
+                            discountPercent = (int)Math.Round((1 - (discountedPrice / price)) * 100);
+                        }
+                    }
                     <div class="info-item">
                         <div class="info-label">
                             <i class="fas fa-money-bill-wave"></i>
                             Số tiền đã thanh toán
                         </div>
                         <div class="info-value">
-                            <span class="amount-display">99.500₫</span>
-                            <span class="original-price">199.000₫</span>
-                            <span class="discount-badge">Tiết kiệm 50%</span>
+                            <span class="amount-display">@Model.DiscountedPrice?.ToString("N0")₫</span>
+                            <span class="original-price">@Model.Price.ToString("N0")₫</span>
+                            @if (discountPercent > 0)
+                            {
+                                <span class="discount-badge">Tiết kiệm @discountPercent%</span>
+                            }
                         </div>
                     </div>
 
