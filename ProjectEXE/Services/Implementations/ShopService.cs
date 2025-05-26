@@ -588,5 +588,58 @@ namespace ProjectEXE.Services.Implementations
                 return Enumerable.Empty<ShopProductViewModel>();
             }
         }
+
+
+        //tuan anh code phan thong ke
+
+
+        // Thêm vào class ShopService implementation
+
+        public async Task<int> GetTotalProductsByShopIdAsync(int shopId)
+        {
+            try
+            {
+                var count = await _context.Products
+                    .Where(p => p.ShopId == shopId && p.IsVisible == true)
+                    .CountAsync();
+
+                Console.WriteLine($"Products count for shopId {shopId}: {count}");
+                return count;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetTotalProductsByShopIdAsync: {ex.Message}");
+                return 0;
+            }
+        }
+
+        public async Task<int> GetTotalOrdersByShopIdAsync(int shopId)
+        {
+            try
+            {
+                // Lấy thông tin shop để có UserId
+                var shop = await _context.Shops
+                    .FirstOrDefaultAsync(s => s.ShopId == shopId);
+
+                if (shop == null)
+                {
+                    Console.WriteLine($"Shop not found for shopId: {shopId}");
+                    return 0;
+                }
+
+                // Đếm orders dựa trên SellerId (chính là UserId của shop owner)
+                var count = await _context.Orders
+                    .Where(o => o.SellerId == shop.UserId)
+                    .CountAsync();
+
+                Console.WriteLine($"Orders count for shopId {shopId} (UserId: {shop.UserId}): {count}");
+                return count;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetTotalOrdersByShopIdAsync: {ex.Message}");
+                return 0;
+            }
+        }
     }
 }

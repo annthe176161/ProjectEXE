@@ -32,5 +32,10 @@ namespace ProjectEXE.Services.Interfaces
         Task<bool> UpdateProductAsync(ProductEditViewModel model, int shopId);
         Task<(bool Success, string ErrorMessage)> DeleteProductAsync(int productId, int shopId);
         Task<IEnumerable<ShopProductViewModel>> GetProductsByShopIdAsync(int shopId);
+
+        //tuan anh code phan thong ke 
+        // Thêm vào interface IShopService (nếu chưa có)
+        Task<int> GetTotalProductsByShopIdAsync(int shopId);
+        Task<int> GetTotalOrdersByShopIdAsync(int shopId);
     }
 }

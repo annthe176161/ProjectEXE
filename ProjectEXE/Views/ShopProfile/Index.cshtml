@@ -1,7 +1,14 @@
 ﻿@model ProjectEXE.Models.Shop
 @{
     ViewData["Title"] = "Gian hàng của bạn";
+
+
+    // DEBUG: Kiểm tra ViewBag
+    var totalProducts = ViewBag.TotalProducts ?? "NULL";
+    var totalOrders = ViewBag.TotalOrders ?? "NULL";
 }
+
+
 
 <div class="container py-5">
     @if (TempData["SuccessMessage"] != null)
@@ -59,29 +66,18 @@
                     </div>
 
                     <div class="mb-4">
-                        <h5 class="border-bottom pb-2 mb-3">Thông tin liên hệ</h5>
-                        <p><i class="fas fa-address-card me-2 text-primary"></i>@(string.IsNullOrEmpty(Model.ContactInfo) ? "Chưa cập nhật thông tin liên hệ" : Model.ContactInfo)</p>
-                    </div>
-
-                    <div class="mb-4">
                         <h5 class="border-bottom pb-2 mb-3">Thống kê</h5>
                         <div class="row text-center">
-                            <div class="col-4">
-                                <div class="border rounded py-3">
-                                    <h3 class="text-primary mb-0">0</h3>
-                                    <small class="text-muted">Sản phẩm</small>
+                            <div class="col-6">
+                                <div class="border rounded py-4">
+                                    <h3 class="text-primary mb-0">@(ViewBag.TotalProducts ?? 0)</h3>
+                                    <small class="text-muted">Tổng Số Sản phẩm</small>
                                 </div>
                             </div>
-                            <div class="col-4">
-                                <div class="border rounded py-3">
-                                    <h3 class="text-success mb-0">0</h3>
-                                    <small class="text-muted">Đơn hàng</small>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="border rounded py-3">
-                                    <h3 class="text-warning mb-0">0</h3>
-                                    <small class="text-muted">Đánh giá</small>
+                            <div class="col-6">
+                                <div class="border rounded py-4">
+                                    <h3 class="text-success mb-0">@(ViewBag.TotalOrders ?? 0)</h3>
+                                    <small class="text-muted">Tổng Số Đơn hàng</small>
                                 </div>
                             </div>
                         </div>
