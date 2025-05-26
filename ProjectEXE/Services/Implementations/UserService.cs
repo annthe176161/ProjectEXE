@@ -1,14 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ProjectEXE.Models;
 using ProjectEXE.Services.Interfaces;
 using ProjectEXE.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Security.Claims;
-using System.Security.Cryptography;
 
 namespace ProjectEXE.Services.Implementations
 {
@@ -23,12 +17,12 @@ namespace ProjectEXE.Services.Implementations
 
         public async Task<User> GetUserByEmailAsync(string email)
         {
-            // Xóa cache của tất cả User entities trong ChangeTracker
+            
             return await _context.Users
             .Include(u => u.Role)
             .AsNoTracking()
-             .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() &&
-                             (u.IsActive == 1 || u.IsActive == 2));
+             .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+                            
         }
         public async Task<bool> ValidatePasswordAsync(User user, string password)
         {
@@ -287,21 +281,8 @@ namespace ProjectEXE.Services.Implementations
             }
         }
 
-        public async Task<bool> IsEmailVerifiedAsync(string email)
-        {
-            var user = await _context.Users
-         .AsNoTracking()
-         .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
-
-            return user?.IsActive == 1;
-        }
-        public async Task<bool> IsEmailPendingVerificationAsync(string email)
-        {
-            var user = await _context.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
-
-            return user?.IsActive == 2;
-        }
+       
+        
+        
     }
 }

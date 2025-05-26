@@ -5,8 +5,6 @@ using ProjectEXE.Models;
 using ProjectEXE.Services;
 using ProjectEXE.Services.Implementations;
 using ProjectEXE.Services.Interfaces;
-using ProjectEXE.Services.TokenStorage;
-using System.Text.Json.Serialization;
 
 namespace ProjectEXE
 {
@@ -17,6 +15,10 @@ namespace ProjectEXE
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddDbContext<RevaContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MyCnn")));
+
+
+            builder.Services.AddMemoryCache();
+            builder.Services.AddScoped<ISessionService, SessionService>();
 
 
             // Add services to the container.
@@ -44,7 +46,7 @@ namespace ProjectEXE
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IShopServiceOfAdmin, ShopServiceOfAdmin>();
-            builder.Services.AddScoped<TokenStore >();
+           
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                             .AddCookie(options =>
@@ -56,7 +58,7 @@ namespace ProjectEXE
                                 options.Cookie.HttpOnly = true;
                                 options.Cookie.SameSite = SameSiteMode.Lax;
                                 options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-                                options.ExpireTimeSpan = TimeSpan.FromDays(30);
+                                options.ExpireTimeSpan = TimeSpan.FromDays(10);
                                 options.SlidingExpiration = true;
                             });
 
