@@ -3,6 +3,7 @@
 
 
 @{
+    Layout = "_AdminLayout";
     ViewData["Title"] = "Admin Dashboard";
     // Lấy danh sách thanh toán gần đây từ ViewBag
     var recentPaymentsList = ViewBag.RecentPackagePayments as IEnumerable<ProjectEXE.ViewModel.RecentPackagePaymentDto>;
@@ -291,6 +292,23 @@
         color: white;
     }
 
+    .sidebar-logout-btn {
+        display: block;
+        padding: 12px 20px !important;
+        color: rgba(255, 255, 255, 0.8) !important;
+        text-decoration: none;
+        transition: all 0.3s;
+        border-left: 3px solid transparent;
+        font-size: inherit;
+        font-family: inherit;
+    }
+
+        .sidebar-logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white !important;
+            border-left-color: var(--secondary-color);
+        }
+
     /* Responsive */
     @@media (max-width: 992px) {
         .sidebar {
@@ -350,9 +368,13 @@
         </li>
 
         <li>
-            <a asp-action="Logout" asp-controller="Account">
-                <i class="fas fa-sign-out-alt"></i> Đăng xuất
-            </a>
+            <form asp-action="Logout" asp-controller="Account" method="post" class="d-inline">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-link text-white p-0 sidebar-logout-btn"
+                        style="text-decoration: none; border: none; background: none; width: 100%; text-align: left;">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+            </form>
         </li>
     </ul>
 </div>
@@ -366,7 +388,7 @@
         </button>
         <h1 class="h4 mb-0">Dashboard Admin</h1>
         <div class="user-profile">
-            <img src="https://via.placeholder.com/40" alt="Admin User">
+            <img src="~/images/admin.jpg" alt="Admin User">
             <div>
                 <span class="d-block fw-bold">Quản trị viên</span>
                 <small>admin@reva.com</small>
