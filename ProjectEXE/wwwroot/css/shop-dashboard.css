@@ -416,8 +416,10 @@
 /* ===== STATISTICS SECTION ===== */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr); /* 2 cột */
+    gap: 20px; /* khoảng cách giữa các thẻ */
+    max-width: 800px; /* tùy chọn: giới hạn chiều rộng nếu cần */
+    margin: 0 auto; /* căn giữa nếu cần */
 }
 
 .stat-card {

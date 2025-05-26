@@ -10,27 +10,9 @@
 }
 
 <div class="shop-dashboard">
-    <!-- Success Message -->
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="success-notification">
-            <div class="container">
-                <div class="alert alert-success">
-                    <div class="alert-content">
-                        <i class="fas fa-check-circle"></i>
-                        <span>@TempData["SuccessMessage"]</span>
-                    </div>
-                    <button type="button" class="alert-close" data-bs-dismiss="alert">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    }
-
     <!-- Page Header -->
     <div class="page-header">
-        <div class="container-fluid">
+        <div class="container">
             <div class="header-content">
                 <div class="header-title">
                     <h1>
@@ -49,7 +31,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="container-fluid main-content">
+    <div class="container main-content">
         <div class="row g-4">
             <!-- Shop Profile Section -->
             <div class="col-lg-4">
@@ -110,6 +92,15 @@
                             <a asp-controller="Shop" asp-action="ManageProduct" class="btn btn-outline">
                                 <i class="fas fa-boxes"></i>
                                 <span>Quản lý sản phẩm</span>
+                            </a>
+                            <a href="#" class="quick-action-card">
+                                <div class="action-icon">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                                <div class="action-content">
+                                    <h4>Xem báo cáo</h4>
+                                    <p>Thống kê chi tiết</p>
+                                </div>
                             </a>
                         </div>
                     </div>
@@ -205,56 +196,6 @@
                                     </div>
                                 }
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Quick Actions -->
-                    <div class="quick-actions-section">
-                        <h3 class="section-title">
-                            <i class="fas fa-bolt"></i>
-                            Thao tác nhanh
-                        </h3>
-
-                        <div class="quick-actions-grid">
-                            <a href="#" class="quick-action-card">
-                                <div class="action-icon">
-                                    <i class="fas fa-plus"></i>
-                                </div>
-                                <div class="action-content">
-                                    <h4>Thêm sản phẩm mới</h4>
-                                    <p>Đăng bán sản phẩm mới</p>
-                                </div>
-                            </a>
-
-                            <a href="#" class="quick-action-card">
-                                <div class="action-icon">
-                                    <i class="fas fa-chart-bar"></i>
-                                </div>
-                                <div class="action-content">
-                                    <h4>Xem báo cáo</h4>
-                                    <p>Thống kê chi tiết</p>
-                                </div>
-                            </a>
-
-                            <a href="#" class="quick-action-card">
-                                <div class="action-icon">
-                                    <i class="fas fa-comments"></i>
-                                </div>
-                                <div class="action-content">
-                                    <h4>Hỗ trợ khách hàng</h4>
-                                    <p>Chat với khách hàng</p>
-                                </div>
-                            </a>
-
-                            <a href="#" class="quick-action-card">
-                                <div class="action-icon">
-                                    <i class="fas fa-cog"></i>
-                                </div>
-                                <div class="action-content">
-                                    <h4>Cài đặt</h4>
-                                    <p>Tùy chỉnh gian hàng</p>
-                                </div>
-                            </a>
                         </div>
                     </div>
                 </div>
