@@ -820,8 +820,8 @@
                         {
                             <li class="page-item @(i == 0 ? "active" : "")" @(i != 0 ? "onclick=loadProducts(" + (i + 1) + ")" : "")><a class="page-link" href="#">@(i + 1)</a></li>
                         }
-                        <li class="page-item @((int)ViewData["ProductPages"] > 1 ? "" : "disabled")">
-                            <a class="page-link" href="#" @((int)ViewData["ProductPages"] > 1 ? "onclick=loadProducts(2)" : "")">Sau</a>
+                        <li class="page-item @((int)ViewData["ProductPages"] > 1 ? "" : "disabled")" @((int)ViewData["ProductPages"] > 1 ? "onclick=loadProducts(2)" : "")>
+                            <a class="page-link" href="#">Sau</a>
                         </li>
                     </ul>
                 </nav>
@@ -1290,7 +1290,10 @@
                             tbody += `
                                         <tr>
                                             <td>#${p.productId}</td>
-                                            <td><img src="${p.imageUrl || '/placeholder.png'}" alt="Sản phẩm" class="img-thumbnail"></td>
+                                                            <td><img src="${p.imageUrl || '/placeholder.png'}"
+                                                             alt="Sản phẩm"
+                                                             class="img-thumbnail"
+                                                             style="width: 100px; height: 100px; object-fit: cover;" ></td>
                                             <td>${p.productName}</td>
                                             <td>${p.category}</td>
                                             <td>${p.shop}</td>

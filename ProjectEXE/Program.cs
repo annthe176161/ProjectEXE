@@ -87,6 +87,7 @@ namespace ProjectEXE
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.MapHub<PaymentHub>("/paymentHub");
+
             app.Run();
         }
     }
