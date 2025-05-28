@@ -58,7 +58,7 @@ namespace ProjectEXE.ViewModel
         public string FormattedPrice => $"{Price:N0} VNĐ";
 
         // Optional: thêm ảnh đại diện
-        // public string MainImageUrl { get; set; } = string.Empty;
+        public string MainImageUrl { get; set; } 
 
         // Optional: thêm số lượng đã bán
         // public int SoldCount { get; set; }

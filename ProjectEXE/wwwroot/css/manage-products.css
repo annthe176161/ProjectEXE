@@ -406,16 +406,11 @@
 }
 
 .product-image {
+    height: 48px; /* hoặc 40px tùy chiều cao dòng của bạn */
     width: 48px;
-    height: 48px;
-    background: var(--mp-light-bg);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--mp-primary);
-    font-size: 18px;
-    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 
 .product-details {

@@ -132,9 +132,7 @@
                                         </td>
                                         <td class="product-info">
                                             <div class="product-item">
-                                                <div class="product-image">
-                                                    <i class="fas fa-image"></i>
-                                                </div>
+                                                <img class="product-image" src="@item.MainImageUrl" alt="@item.ProductName" />
                                                 <div class="product-details">
                                                     <div class="product-name">@item.ProductName</div>
                                                     @if (!string.IsNullOrEmpty(item.Brand))
@@ -144,6 +142,7 @@
                                                 </div>
                                             </div>
                                         </td>
+
                                         <td class="product-price">
                                             <span class="price-value">@item.Price.ToString("N0")₫</span>
                                         </td>

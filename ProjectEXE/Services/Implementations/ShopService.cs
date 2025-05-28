@@ -559,27 +559,31 @@ namespace ProjectEXE.Services.Implementations
                     return Enumerable.Empty<ShopProductViewModel>();
                 }
 
-                var products = await _context.Products
+                var productEntities = await _context.Products
                     .Where(p => p.ShopId == shopId)
                     .Include(p => p.Category)
                     .Include(p => p.Condition)
+                    .Include(p => p.ProductImages)
                     .OrderByDescending(p => p.CreatedAt)
-                    .Select(p => new ShopProductViewModel
-                    {
-                        ProductId = p.ProductId,
-                        ProductName = p.ProductName,
-                        Description = p.Description,
-                        Price = p.Price,
-                        CategoryName = p.Category != null ? p.Category.CategoryName : "N/A",
-                        Size = p.Size,
-                        ConditionName = p.Condition != null ? p.Condition.ConditionName : "N/A",
-                        Brand = p.Brand,
-                        Color = p.Color,
-                        Material = p.Material,
-                        CreatedAt = p.CreatedAt,
-                        IsVisible = p.IsVisible
-                    })
-                    .ToListAsync();
+                    .ToListAsync(); 
+
+                var products = productEntities.Select(p => new ShopProductViewModel
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    Description = p.Description,
+                    Price = p.Price,
+                    CategoryName = p.Category != null ? p.Category.CategoryName : "N/A",
+                    Size = p.Size,
+                    ConditionName = p.Condition != null ? p.Condition.ConditionName : "N/A",
+                    Brand = p.Brand,
+                    Color = p.Color,
+                    Material = p.Material,
+                    CreatedAt = p.CreatedAt,
+                    IsVisible = p.IsVisible,
+                    MainImageUrl = p.ProductImages.FirstOrDefault(img => img.IsMainImage == true)?.ImageUrl ?? "default.jpg"
+                }).ToList();
+
 
                 return products;
             }

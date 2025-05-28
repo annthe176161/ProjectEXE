@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=123
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqldata:/var/opt/mssql
+
+  projectexe:
+    build: .
+    ports:
+      - "8081:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__MyCnn=Server=sqlserver;Database=REVA;User Id=sa;Password=123;TrustServerCertificate=True;
+    depends_on:
+      - sqlserver
+
+volumes:
+  sqldata:
