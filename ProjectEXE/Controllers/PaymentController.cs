@@ -10,6 +10,8 @@ using System.Text.Json;
 using ProjectEXE.ViewModel.ServicePackages;
 using System.Threading.Tasks;
 using Azure;
+using CloudinaryDotNet;
+using System.Transactions;
 
 namespace ProjectEXE.Controllers
 {
@@ -47,6 +49,26 @@ namespace ProjectEXE.Controllers
 
             //lấy thông tin của gói thanh toán
             var package = await _packageService.GetPackageByIdAsync(packageId);
+
+            if (package.DiscountedPrice == 0)
+            {
+                var uniqueCode = $"free-{Guid.NewGuid()}";
+                var paymentpackageModel = new PackagePayment
+                {
+                    SubscriptionId = await _shopService.CreatePackageSubscription(shop.ShopId, packageId),
+                    UserId = userId,
+                    PackageId = packageId,
+                    TransactionCode = uniqueCode,
+                    Amount = 0,
+                    StatusId = 2,
+                    CreatedAt = DateTime.UtcNow,
+                };
+
+                await _shopService.ActivePackagePayment(paymentpackageModel);
+
+                TempData["Success"] = "Gói dịch vụ đã được kích hoạt miễn phí!";
+                return RedirectToAction("ManageProduct", "Shop");
+            }
 
             //lưu thông tin của packageId
             TempData["PackageId"] = packageId;

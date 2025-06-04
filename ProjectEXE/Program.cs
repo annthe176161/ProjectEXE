@@ -38,7 +38,6 @@ namespace ProjectEXE
             builder.Services.AddTransient<IEmailService, EmailService>();
             builder.Services.AddScoped<IShopOrderService, ShopOrderService>();
             builder.Services.AddScoped<IPackageService, PackageService>();
-            builder.Services.AddScoped<IAdminPackageService, AdminPackageService>();
             builder.Services.AddScoped<IShopProductService, ShopProductService>();
             builder.Services.AddScoped<IAdminService, AdminService>();
             builder.Services.AddScoped<IPayOsService, PayOsService>();
