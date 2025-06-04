@@ -1,0 +1,23 @@
+﻿.category-item {
+    margin-bottom: 8px;
+}
+
+    .category-item .form-check {
+        margin-bottom: 0;
+    }
+
+    .category-item .form-check-label {
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .category-item[style*="margin-left: 0px"] .form-check-label {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .category-item[style*="margin-left: 20px"] .form-check-label,
+    .category-item[style*="margin-left: 40px"] .form-check-label {
+        color: #666;
+    }

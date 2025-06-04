@@ -20,6 +20,8 @@ namespace ProjectEXE.Services.Interfaces
         Task<ProductListViewModel> GetProductListAsync(ProductFilterViewModel filter, int page = 1, int pageSize = 12);
         Task<ProductViewModels> GetProductByIdAsync(int id);
         Task<List<CategoryViewModel>> GetAllCategoriesAsync();
+        Task<List<CategoryHierarchyViewModel>> GetCategoriesHierarchyAsync();
+        Task<List<int>> GetAllChildCategoryIdsAsync(List<int> parentCategoryIds);
         Task<List<ConditionViewModel>> GetAllConditionsAsync();
         // Product Detail
         Task<ProductDetailViewModel> GetProductDetailByIdAsync(int id);

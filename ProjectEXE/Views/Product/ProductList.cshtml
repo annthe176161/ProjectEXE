@@ -27,19 +27,7 @@
                 <form method="get" action="@Url.Action("ProductList", "Product")">
                     <div class="filter-section">
                         <h5>Danh Mục</h5>
-                        @foreach (var category in Model.Filter.Categories)
-                        {
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox"
-                                       value="@category.CategoryId"
-                                       id="category@(category.CategoryId)"
-                                       name="SelectedCategoryIds"
-                                       @(Model.Filter.SelectedCategoryIds != null && Model.Filter.SelectedCategoryIds.Contains(category.CategoryId) ? "checked" : "")>
-                                <label class="form-check-label" for="category@(category.CategoryId)">
-                                    @category.CategoryName
-                                </label>
-                            </div>
-                        }
+                        @await Html.PartialAsync("_CategoryHierarchy", Model.Filter.Categories)
                     </div>
 
                     <div class="filter-section">

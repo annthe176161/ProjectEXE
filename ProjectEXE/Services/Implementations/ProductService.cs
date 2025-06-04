@@ -150,61 +150,15 @@ namespace ProjectEXE.Services.Implementations
         .Include(p => p.ProductImages)
         .Where(p => p.IsVisible);
 
-            // Apply filters
+            // SỬA PHẦN NÀY: Cải thiện logic filter categories
             if (filter.SelectedCategoryIds != null && filter.SelectedCategoryIds.Any())
             {
-                // Lấy tất cả danh mục (bao gồm cả danh mục con) của các danh mục đã chọn
-                var allCategoryIds = new HashSet<int>(filter.SelectedCategoryIds);
-
-                // Thêm các danh mục con
-                var childCategories = await _context.Categories
-                    .Where(c => filter.SelectedCategoryIds.Contains(c.ParentCategoryId ?? 0))
-                    .Select(c => c.CategoryId)
-                    .ToListAsync();
-
-                foreach (var childCategoryId in childCategories)
-                {
-                    allCategoryIds.Add(childCategoryId);
-                }
-
-                // Áp dụng filter
+                // Sử dụng method mới để lấy tất cả category con
+                var allCategoryIds = await GetAllChildCategoryIdsAsync(filter.SelectedCategoryIds);
                 query = query.Where(p => allCategoryIds.Contains(p.CategoryId));
             }
 
-            if (filter.MinPrice.HasValue)
-            {
-                query = query.Where(p => p.Price >= filter.MinPrice.Value);
-            }
-
-            if (filter.MaxPrice.HasValue)
-            {
-                query = query.Where(p => p.Price <= filter.MaxPrice.Value);
-            }
-
-            if (filter.SelectedConditionIds != null && filter.SelectedConditionIds.Any())
-            {
-                query = query.Where(p => filter.SelectedConditionIds.Contains(p.ConditionId));
-            }
-
-            if (filter.ShowPremiumOnly)
-            {
-                // Get shops with active premium subscription
-                var premiumShopIds = await _context.PackageSubscriptions
-                    .Where(ps => ps.EndDate >= DateTime.Now && ps.StatusId == 1) // Assuming status 1 is 'Active'
-                    .Select(ps => ps.ShopId)
-                    .ToListAsync();
-
-                query = query.Where(p => premiumShopIds.Contains(p.ShopId));
-            }
-
-            // Apply sorting
-            query = filter.SortBy switch
-            {
-                "price_asc" => query.OrderBy(p => p.Price),
-                "price_desc" => query.OrderByDescending(p => p.Price),
-                "popular" => query.OrderByDescending(p => p.Orders.Count),
-                _ => query.OrderByDescending(p => p.CreatedAt) // Default is "newest"
-            };
+            // ... giữ nguyên phần còn lại của method ...
 
             // Get total count for pagination
             var totalItems = await query.CountAsync();
@@ -225,10 +179,7 @@ namespace ProjectEXE.Services.Implementations
                                 ?? product.ProductImages.FirstOrDefault()?.ImageUrl
                                 ?? "/images/placeholder.png";
 
-                // Determine if product is new (e.g., created in the last 7 days)
                 var isNew = (DateTime.Now - product.CreatedAt).TotalDays <= 7;
-
-                // Determine if product is bestseller (e.g., has more than 5 orders)
                 var isBestSeller = product.Orders.Count > 5;
 
                 productViewModels.Add(new ProductViewModels
@@ -245,6 +196,13 @@ namespace ProjectEXE.Services.Implementations
                     IsNew = isNew,
                     IsBestSeller = isBestSeller
                 });
+            }
+
+            // THÊM: Lấy categories hierarchy và đánh dấu đã chọn
+            filter.Categories = await GetCategoriesHierarchyAsync();
+            if (filter.SelectedCategoryIds != null && filter.SelectedCategoryIds.Any())
+            {
+                MarkSelectedCategories(filter.Categories, filter.SelectedCategoryIds);
             }
 
             return new ProductListViewModel
@@ -420,6 +378,70 @@ namespace ProjectEXE.Services.Implementations
             }
 
             return productViewModels;
+        }
+
+        public async Task<List<CategoryHierarchyViewModel>> GetCategoriesHierarchyAsync()
+        {
+            var allCategories = await _context.Categories
+    .OrderBy(c => c.CategoryName)
+    .ToListAsync();
+
+            return BuildCategoryHierarchy(allCategories, null, 0);
+        }
+
+        private List<CategoryHierarchyViewModel> BuildCategoryHierarchy(
+    List<Category> allCategories,
+    int? parentId,
+    int level)
+        {
+            return allCategories
+                .Where(c => c.ParentCategoryId == parentId)
+                .Select(c => new CategoryHierarchyViewModel
+                {
+                    CategoryId = c.CategoryId,
+                    CategoryName = c.CategoryName,
+                    ParentCategoryId = c.ParentCategoryId,
+                    Level = level,
+                    Children = BuildCategoryHierarchy(allCategories, c.CategoryId, level + 1)
+                })
+                .ToList();
+        }
+
+        public async Task<List<int>> GetAllChildCategoryIdsAsync(List<int> parentCategoryIds)
+        {
+            var allChildIds = new HashSet<int>(parentCategoryIds);
+            var categoriesToCheck = new Queue<int>(parentCategoryIds);
+
+            while (categoriesToCheck.Count > 0)
+            {
+                var currentId = categoriesToCheck.Dequeue();
+                var childCategories = await _context.Categories
+                    .Where(c => c.ParentCategoryId == currentId)
+                    .Select(c => c.CategoryId)
+                    .ToListAsync();
+
+                foreach (var childId in childCategories)
+                {
+                    if (allChildIds.Add(childId)) // Add returns false if item already exists
+                    {
+                        categoriesToCheck.Enqueue(childId);
+                    }
+                }
+            }
+
+            return allChildIds.ToList();
+        }
+
+        private void MarkSelectedCategories(List<CategoryHierarchyViewModel> categories, List<int> selectedIds)
+        {
+            foreach (var category in categories)
+            {
+                category.IsSelected = selectedIds.Contains(category.CategoryId);
+                if (category.Children.Any())
+                {
+                    MarkSelectedCategories(category.Children, selectedIds);
+                }
+            }
         }
     }
 }

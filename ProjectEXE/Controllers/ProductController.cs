@@ -42,7 +42,6 @@ namespace ProjectEXE.Controllers
             }
 
             // Lấy danh sách danh mục và điều kiện cho bộ lọc
-            filter.Categories = await _productService.GetAllCategoriesAsync();
             filter.Conditions = await _productService.GetAllConditionsAsync();
 
             // Lấy danh sách sản phẩm theo bộ lọc và phân trang
@@ -63,19 +62,20 @@ namespace ProjectEXE.Controllers
                 filter.Gender = gender;
             }
 
-            // Gán giá trị đã chọn từ query string vào filter
             if (SelectedCategoryIds != null && SelectedCategoryIds.Any())
             {
                 filter.SelectedCategoryIds = SelectedCategoryIds;
             }
 
-            // Lấy danh sách danh mục và điều kiện cho bộ lọc
-            filter.Categories = await _productService.GetAllCategoriesAsync();
+            // BỎ 2 dòng này vì đã được handle trong GetProductListAsync:
+            // filter.Categories = await _productService.GetAllCategoriesAsync();
+            // filter.Conditions = await _productService.GetAllConditionsAsync();
+
+            // Lấy conditions riêng
             filter.Conditions = await _productService.GetAllConditionsAsync();
 
-            // Lấy danh sách sản phẩm theo bộ lọc và phân trang
-            // Truyền rõ giá trị 6 cho pageSize
-            var viewModel = await _productService.GetProductListAsync(filter, page, 6);
+            // Lấy danh sách sản phẩm - categories sẽ được set trong method này
+            var viewModel = await _productService.GetProductListAsync(filter, page, 12);
 
             return View(viewModel);
         }

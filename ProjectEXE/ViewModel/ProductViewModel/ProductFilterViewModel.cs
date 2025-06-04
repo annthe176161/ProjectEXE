@@ -2,7 +2,7 @@
 {
     public class ProductFilterViewModel
     {
-        public List<CategoryViewModel> Categories { get; set; } = new List<CategoryViewModel>();
+        public List<CategoryHierarchyViewModel> Categories { get; set; } = new List<CategoryHierarchyViewModel>();
         public List<int> SelectedCategoryIds { get; set; } = new List<int>();
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }

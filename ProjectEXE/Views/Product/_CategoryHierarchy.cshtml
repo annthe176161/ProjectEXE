@@ -1,0 +1,26 @@
+﻿@model List<ProjectEXE.ViewModel.ProductViewModel.CategoryHierarchyViewModel>
+
+@foreach (var category in Model)
+{
+    <div class="category-item" style="margin-left: @(category.Level * 20)px;">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox"
+                   value="@category.CategoryId"
+                   id="category@(category.CategoryId)"
+                   name="SelectedCategoryIds"
+                   @(category.IsSelected ? "checked" : "")>
+            <label class="form-check-label" for="category@(category.CategoryId)">
+                @if (category.Level > 0)
+                {
+                    <span class="text-muted me-1">└─</span>
+                }
+                @category.CategoryName
+            </label>
+        </div>
+    </div>
+
+    @if (category.Children.Any())
+    {
+        @await Html.PartialAsync("_CategoryHierarchy", category.Children)
+    }
+}
