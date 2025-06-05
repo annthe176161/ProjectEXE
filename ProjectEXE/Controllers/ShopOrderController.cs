@@ -11,13 +11,11 @@ namespace ProjectEXE.Controllers
     {
         private readonly IShopOrderService _shopOrderService;
         private readonly IOrderEmailService _orderEmailService;
-        private readonly ILogger<ShopOrderController> _logger;
 
-        public ShopOrderController(IShopOrderService shopOrderService, IOrderEmailService orderEmailService, ILogger<ShopOrderController> logger)
+        public ShopOrderController(IShopOrderService shopOrderService, IOrderEmailService orderEmailService)
         {
             _shopOrderService = shopOrderService;
             _orderEmailService = orderEmailService;
-            _logger = logger;
         }
 
         public async Task<IActionResult> Index(int page = 1, string statusFilter = null, string dateRange = null)
@@ -30,8 +28,7 @@ namespace ProjectEXE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải danh sách đơn hàng");
-                TempData["ErrorMessage"] = "Có lỗi xảy ra khi tải danh sách đơn hàng";
+                TempData["Error"] = "Có lỗi xảy ra khi tải danh sách đơn hàng";
                 return View(new ShopOrderManagementViewModel());
             }
         }
@@ -45,7 +42,7 @@ namespace ProjectEXE.Controllers
 
                 if (model == null)
                 {
-                    TempData["ErrorMessage"] = "Không tìm thấy đơn hàng hoặc bạn không có quyền truy cập";
+                    TempData["Error"] = "Không tìm thấy đơn hàng hoặc bạn không có quyền truy cập";
                     return RedirectToAction("Index");
                 }
 
@@ -53,8 +50,7 @@ namespace ProjectEXE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải chi tiết đơn hàng {OrderId}", id);
-                TempData["ErrorMessage"] = "Có lỗi xảy ra khi tải chi tiết đơn hàng";
+                TempData["Error"] = "Có lỗi xảy ra khi tải chi tiết đơn hàng";
                 return RedirectToAction("Index");
             }
         }
@@ -65,15 +61,13 @@ namespace ProjectEXE.Controllers
         {
             try
             {
-                _logger.LogInformation("Bắt đầu cập nhật trạng thái đơn hàng {OrderId} thành {StatusId}", model.OrderId, model.StatusId);
-
                 var sellerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
                 // Lấy thông tin đơn hàng hiện tại để validate
                 var currentOrder = await _shopOrderService.GetShopOrderDetailAsync(model.OrderId, sellerId);
                 if (currentOrder == null)
                 {
-                    TempData["ErrorMessage"] = "Không tìm thấy đơn hàng hoặc bạn không có quyền truy cập";
+                    TempData["Error"] = "Không tìm thấy đơn hàng hoặc bạn không có quyền truy cập";
                     return RedirectToAction("Index");
                 }
 
@@ -83,28 +77,28 @@ namespace ProjectEXE.Controllers
                 // Validate status range
                 if (model.StatusId < 1 || model.StatusId > 5)
                 {
-                    TempData["ErrorMessage"] = "Trạng thái không hợp lệ";
+                    TempData["Error"] = "Trạng thái không hợp lệ";
                     return RedirectToAction("OrderDetail", new { id = model.OrderId });
                 }
 
                 // Kiểm tra logic chuyển đổi trạng thái
                 if (!IsValidStatusTransitionForUI(currentOrder.StatusId, model.StatusId))
                 {
-                    string errorMessage = GetStatusTransitionErrorMessage(currentOrder.StatusId, model.StatusId);
-                    TempData["ErrorMessage"] = errorMessage;
+                    string Error = GetStatusTransitionError(currentOrder.StatusId, model.StatusId);
+                    TempData["Error"] = Error;
                     return RedirectToAction("OrderDetail", new { id = model.OrderId });
                 }
 
                 // Custom validation for cancel reason
                 if (model.StatusId == 5 && string.IsNullOrWhiteSpace(model.CancelReason))
                 {
-                    TempData["ErrorMessage"] = "Vui lòng nhập lý do hủy đơn hàng";
+                    TempData["Error"] = "Vui lòng nhập lý do hủy đơn hàng";
                     return RedirectToAction("OrderDetail", new { id = model.OrderId });
                 }
 
                 if (model.StatusId == 5 && !string.IsNullOrWhiteSpace(model.CancelReason) && model.CancelReason.Trim().Length < 10)
                 {
-                    TempData["ErrorMessage"] = "Lý do hủy phải có ít nhất 10 ký tự";
+                    TempData["Error"] = "Lý do hủy phải có ít nhất 10 ký tự";
                     return RedirectToAction("OrderDetail", new { id = model.OrderId });
                 }
 
@@ -127,29 +121,23 @@ namespace ProjectEXE.Controllers
                                 oldStatusId,
                                 model.StatusId,
                                 model.StatusId == 5 ? model.CancelReason : null);
-
-                            _logger.LogInformation("Đã gửi email thông báo cập nhật trạng thái đơn hàng {OrderId} thành công", model.OrderId);
                         }
                         catch (Exception emailEx)
                         {
-                            // Log lỗi nhưng không ảnh hưởng đến luồng chính
-                            _logger.LogError(emailEx, "Lỗi gửi email thông báo cập nhật trạng thái đơn hàng {OrderId}", model.OrderId);
+                            TempData["Error"] = $"Lỗi gửi email thông báo cập nhật trạng thái đơn hàng {model.OrderId}";
                         }
                     }
 
-                    TempData["SuccessMessage"] = GetSuccessMessage(model.StatusId, currentOrder.StatusId);
-                    _logger.LogInformation("Cập nhật trạng thái đơn hàng {OrderId} thành công", model.OrderId);
+                    TempData["Success"] = GetSuccessMessage(model.StatusId, currentOrder.StatusId);
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "Không thể cập nhật trạng thái đơn hàng. Vui lòng thử lại.";
-                    _logger.LogWarning("Không thể cập nhật trạng thái đơn hàng {OrderId}", model.OrderId);
+                    TempData["Error"] = $"Không thể cập nhật trạng thái đơn hàng {model.OrderId}";
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi cập nhật trạng thái đơn hàng {OrderId}", model.OrderId);
-                TempData["ErrorMessage"] = "Có lỗi xảy ra khi cập nhật trạng thái đơn hàng";
+                TempData["Error"] = $"Lỗi khi cập nhật trạng thái đơn hàng {model.OrderId}";
             }
 
             return RedirectToAction("OrderDetail", new { id = model.OrderId });
@@ -175,7 +163,7 @@ namespace ProjectEXE.Controllers
             };
         }
 
-        private string GetStatusTransitionErrorMessage(int currentStatus, int newStatus)
+        private string GetStatusTransitionError(int currentStatus, int newStatus)
         {
             if (currentStatus == 4)
             {

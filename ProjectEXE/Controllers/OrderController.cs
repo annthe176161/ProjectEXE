@@ -29,13 +29,13 @@ namespace ProjectEXE.Controllers
                 var order = await _orderService.CreateOrderAsync(productId, userId);
 
                 // Chuyển hướng đến trang chi tiết đơn hàng với thông báo thành công
-                TempData["SuccessMessage"] = "Đơn hàng của bạn đã được tạo thành công và đang chờ người bán xác nhận. Email thông báo đã được gửi!";
+                TempData["Success"] = "Đơn hàng của bạn đã được tạo thành công và đang chờ người bán xác nhận. Email thông báo đã được gửi!";
                 return RedirectToAction("OrderDetails", new { id = order.OrderId });
             }
             catch (Exception ex)
             {
                 // Nếu có lỗi, chuyển về trang chi tiết sản phẩm với thông báo lỗi
-                TempData["ErrorMessage"] = $"Không thể tạo đơn hàng: {ex.Message}";
+                TempData["Error"] = $"Không thể tạo đơn hàng: {ex.Message}";
                 return RedirectToAction("ProductDetails", "Product", new { id = productId });
             }
         }
@@ -56,7 +56,7 @@ namespace ProjectEXE.Controllers
 
             if (order == null)
             {
-                TempData["ErrorMessage"] = "Không tìm thấy đơn hàng hoặc bạn không có quyền xem đơn hàng này.";
+                TempData["Error"] = "Không tìm thấy đơn hàng hoặc bạn không có quyền xem đơn hàng này.";
                 return RedirectToAction("OrderList");
             }
 
@@ -75,11 +75,11 @@ namespace ProjectEXE.Controllers
 
             if (result)
             {
-                TempData["SuccessMessage"] = "Đơn hàng đã được hủy thành công. Email thông báo đã được gửi!";
+                TempData["Success"] = "Đơn hàng đã được hủy thành công. Email thông báo đã được gửi!";
             }
             else
             {
-                TempData["ErrorMessage"] = "Không thể hủy đơn hàng. Đơn hàng có thể đã được xác nhận hoặc đã hoàn thành.";
+                TempData["Error"] = "Không thể hủy đơn hàng. Đơn hàng có thể đã được xác nhận hoặc đã hoàn thành.";
             }
 
             return RedirectToAction("OrderDetails", new { id = orderId });

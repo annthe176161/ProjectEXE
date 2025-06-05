@@ -17,7 +17,6 @@ namespace ProjectEXE.Controllers
         private readonly IOrderConfirmationService _orderConfirmationService;
         private readonly IOrderService _orderService;
         private readonly IOrderEmailService _orderEmailService;
-        private readonly ILogger<ProductController> _logger;
         private readonly RevaContext _context;
 
         public ProductController(
@@ -32,7 +31,6 @@ namespace ProjectEXE.Controllers
             _orderConfirmationService = orderConfirmationService;
             _orderService = orderService;
             _orderEmailService = orderEmailService;
-            _logger = logger;
             _context = context;
         }
 
@@ -101,14 +99,14 @@ namespace ProjectEXE.Controllers
                 var canPurchase = await _orderConfirmationService.CanUserPurchaseAsync(id, buyerId.Value);
                 if (!canPurchase)
                 {
-                    TempData["ErrorMessage"] = "Bạn không thể mua sản phẩm này.";
+                    TempData["Error"] = "Bạn không thể mua sản phẩm này.";
                     return RedirectToAction("ProductDetails", new { id });
                 }
 
                 var viewModel = await _orderConfirmationService.GetOrderConfirmationDataAsync(id, buyerId.Value);
                 if (viewModel == null)
                 {
-                    TempData["ErrorMessage"] = "Không tìm thấy thông tin sản phẩm hoặc sản phẩm không còn khả dụng.";
+                    TempData["Error"] = "Không tìm thấy thông tin sản phẩm hoặc sản phẩm không còn khả dụng.";
                     return RedirectToAction("ProductDetails", new { id });
                 }
 
@@ -116,8 +114,7 @@ namespace ProjectEXE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in ConfirmPurchase for ProductId: {ProductId}", id);
-                TempData["ErrorMessage"] = "Có lỗi xảy ra. Vui lòng thử lại.";
+                TempData["Error"] = "Có lỗi xảy ra. Vui lòng thử lại.";
                 return RedirectToAction("ProductDetails", new { id });
             }
         }
@@ -127,15 +124,13 @@ namespace ProjectEXE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmPurchase(OrderConfirmationViewModel model)
         {
-            _logger.LogInformation("=== CONFIRMPURCHASE POST METHOD CALLED ===");
-            _logger.LogInformation("ProductId: {ProductId}", model?.ProductId);
+
 
             try
             {
                 var buyerId = GetCurrentUserId();
                 if (buyerId == null)
                 {
-                    _logger.LogWarning("BuyerId is null - redirecting to login");
                     return RedirectToAction("Login", "Account");
                 }
 
@@ -143,7 +138,7 @@ namespace ProjectEXE.Controllers
                 var buyer = await _context.Users.FirstOrDefaultAsync(u => u.UserId == buyerId);
                 if (buyer == null)
                 {
-                    TempData["ErrorMessage"] = "Không tìm thấy thông tin người dùng.";
+                    TempData["Error"] = "Không tìm thấy thông tin người dùng.";
                     return RedirectToAction("ProductDetails", new { id = model.ProductId });
                 }
 
@@ -152,7 +147,7 @@ namespace ProjectEXE.Controllers
                     string.IsNullOrWhiteSpace(buyer.PhoneNumber) ||
                     string.IsNullOrWhiteSpace(buyer.Address))
                 {
-                    TempData["ErrorMessage"] = "Vui lòng cập nhật đầy đủ thông tin liên hệ trong trang cá nhân trước khi gửi yêu cầu mua hàng.";
+                    TempData["Error"] = "Vui lòng cập nhật đầy đủ thông tin liên hệ trong trang cá nhân trước khi gửi yêu cầu mua hàng.";
                     return RedirectToAction("ConfirmPurchase", new { id = model.ProductId });
                 }
 
@@ -174,9 +169,6 @@ namespace ProjectEXE.Controllers
                 {
                     try
                     {
-                        // CHỖ NÀY CHÍNH LÀ PHẦN CẦN SỬA
-                        _logger.LogInformation("🚀 Bắt đầu gửi email cho đơn hàng #{OrderId}", result.OrderId);
-
                         // Lấy đầy đủ thông tin cần thiết cho email ngay tại đây
                         var orderDetails = await _context.Orders
                             .Include(o => o.Product)
@@ -200,31 +192,29 @@ namespace ProjectEXE.Controllers
                                 orderDetails.Seller.Email
                             );
 
-                            _logger.LogInformation("✅ Đã gửi email thành công cho đơn hàng #{OrderId}", result.OrderId);
                         }
                         else
                         {
-                            _logger.LogError("Không tìm thấy thông tin đơn hàng #{OrderId} để gửi email", result.OrderId);
+                            TempData["Error"] = $"Không tìm thấy thông tin đơn hàng #{result.OrderId} để gửi email";
                         }
                     }
                     catch (Exception emailEx)
                     {
-                        _logger.LogError(emailEx, "Lỗi gửi email thông báo đặt hàng cho đơn hàng #{OrderId}", result.OrderId);
+                        TempData["Error"] = $"Lỗi gửi email thông báo đặt hàng cho đơn hàng #{result.OrderId}";
                     }
 
-                    TempData["SuccessMessage"] = "Yêu cầu mua hàng của bạn đã được gửi thành công. Người bán sẽ liên hệ với bạn sớm nhất có thể. Email thông báo đã được gửi!";
+                    TempData["Success"] = "Yêu cầu mua hàng của bạn đã được gửi thành công. Người bán sẽ liên hệ với bạn sớm nhất có thể. Email thông báo đã được gửi!";
                     return RedirectToAction("OrderDetails", "Order", new { id = result.OrderId });
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = result.Message;
+                    TempData["Error"] = result.Message;
                     return RedirectToAction("ConfirmPurchase", new { id = model.ProductId });
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in ConfirmPurchase POST for ProductId: {ProductId}", model?.ProductId);
-                TempData["ErrorMessage"] = "Có lỗi xảy ra khi xử lý yêu cầu. Vui lòng thử lại.";
+                TempData["Error"] = "Có lỗi xảy ra khi xử lý yêu cầu. Vui lòng thử lại.";
                 return RedirectToAction("ConfirmPurchase", new { id = model.ProductId });
             }
         }
@@ -254,7 +244,6 @@ namespace ProjectEXE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in QuickView for ProductId: {ProductId}", id);
                 return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
