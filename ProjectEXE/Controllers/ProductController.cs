@@ -16,6 +16,7 @@ namespace ProjectEXE.Controllers
         private readonly IProductService _productService;
         private readonly IOrderConfirmationService _orderConfirmationService;
         private readonly IOrderService _orderService;
+        private readonly IOrderEmailService _orderEmailService;
         private readonly ILogger<ProductController> _logger;
         private readonly RevaContext _context;
 
@@ -23,34 +24,32 @@ namespace ProjectEXE.Controllers
             IProductService productService,
             IOrderConfirmationService orderConfirmationService,
             IOrderService orderService,
+            IOrderEmailService orderEmailService,
             ILogger<ProductController> logger,
             RevaContext context)
         {
             _productService = productService;
             _orderConfirmationService = orderConfirmationService;
             _orderService = orderService;
+            _orderEmailService = orderEmailService;
             _logger = logger;
             _context = context;
         }
 
         public async Task<IActionResult> Index(ProductFilterViewModel filter, int page = 1)
         {
-            // Nếu filter chưa được khởi tạo, đặt giá trị mặc định
             if (filter == null)
             {
                 filter = new ProductFilterViewModel();
             }
 
-            // Lấy danh sách danh mục và điều kiện cho bộ lọc
             filter.Conditions = await _productService.GetAllConditionsAsync();
-
-            // Lấy danh sách sản phẩm theo bộ lọc và phân trang
             var viewModel = await _productService.GetProductListAsync(filter, page);
 
             return View(viewModel);
         }
 
-        public async Task<IActionResult> ProductList([FromQuery] List<int> SelectedCategoryIds,string gender, ProductFilterViewModel filter, int page = 1)
+        public async Task<IActionResult> ProductList([FromQuery] List<int> SelectedCategoryIds, string gender, ProductFilterViewModel filter, int page = 1)
         {
             if (filter == null)
             {
@@ -67,14 +66,7 @@ namespace ProjectEXE.Controllers
                 filter.SelectedCategoryIds = SelectedCategoryIds;
             }
 
-            // BỎ 2 dòng này vì đã được handle trong GetProductListAsync:
-            // filter.Categories = await _productService.GetAllCategoriesAsync();
-            // filter.Conditions = await _productService.GetAllConditionsAsync();
-
-            // Lấy conditions riêng
             filter.Conditions = await _productService.GetAllConditionsAsync();
-
-            // Lấy danh sách sản phẩm - categories sẽ được set trong method này
             var viewModel = await _productService.GetProductListAsync(filter, page, 12);
 
             return View(viewModel);
@@ -89,13 +81,10 @@ namespace ProjectEXE.Controllers
                 return NotFound();
             }
 
-            // Lấy sản phẩm liên quan
             product.RelatedProducts = await _productService.GetRelatedProductsAsync(id, product.Category, 4);
 
             return View(product);
         }
-
-        // === THÊM CÁC ACTION CHO CHỨC NĂNG MUA HÀNG ===
 
         [HttpGet]
         [Authorize]
@@ -109,7 +98,6 @@ namespace ProjectEXE.Controllers
                     return RedirectToAction("Login", "Account", new { returnUrl = Url.Action("ConfirmPurchase", "Product", new { id }) });
                 }
 
-                // Check if user can purchase this product
                 var canPurchase = await _orderConfirmationService.CanUserPurchaseAsync(id, buyerId.Value);
                 if (!canPurchase)
                 {
@@ -184,7 +172,47 @@ namespace ProjectEXE.Controllers
 
                 if (result.IsSuccess)
                 {
-                    TempData["SuccessMessage"] = "Yêu cầu mua hàng của bạn đã được gửi thành công. Người bán sẽ liên hệ với bạn sớm nhất có thể.";
+                    try
+                    {
+                        // CHỖ NÀY CHÍNH LÀ PHẦN CẦN SỬA
+                        _logger.LogInformation("🚀 Bắt đầu gửi email cho đơn hàng #{OrderId}", result.OrderId);
+
+                        // Lấy đầy đủ thông tin cần thiết cho email ngay tại đây
+                        var orderDetails = await _context.Orders
+                            .Include(o => o.Product)
+                            .ThenInclude(p => p.Shop)
+                            .ThenInclude(s => s.User)
+                            .Include(o => o.Buyer)
+                            .Include(o => o.Seller)
+                            .FirstOrDefaultAsync(o => o.OrderId == result.OrderId);
+
+                        if (orderDetails != null)
+                        {
+                            // Gửi email đồng bộ - đợi email được gửi xong
+                            await _orderEmailService.SendOrderConfirmationNotificationAsync(
+                                orderDetails.OrderId,
+                                orderDetails.Product.ProductName,
+                                orderDetails.Product.Price,
+                                orderDetails.Product.Shop.ShopName,
+                                orderDetails.Buyer.FullName,
+                                orderDetails.Buyer.Email,
+                                orderDetails.Seller.FullName,
+                                orderDetails.Seller.Email
+                            );
+
+                            _logger.LogInformation("✅ Đã gửi email thành công cho đơn hàng #{OrderId}", result.OrderId);
+                        }
+                        else
+                        {
+                            _logger.LogError("Không tìm thấy thông tin đơn hàng #{OrderId} để gửi email", result.OrderId);
+                        }
+                    }
+                    catch (Exception emailEx)
+                    {
+                        _logger.LogError(emailEx, "Lỗi gửi email thông báo đặt hàng cho đơn hàng #{OrderId}", result.OrderId);
+                    }
+
+                    TempData["SuccessMessage"] = "Yêu cầu mua hàng của bạn đã được gửi thành công. Người bán sẽ liên hệ với bạn sớm nhất có thể. Email thông báo đã được gửi!";
                     return RedirectToAction("OrderDetails", "Order", new { id = result.OrderId });
                 }
                 else

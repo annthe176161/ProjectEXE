@@ -9,11 +9,13 @@ namespace ProjectEXE.Services.Implementations
     {
         private readonly RevaContext _context;
         private readonly IProductService _productService;
+        private readonly IOrderEmailService _orderEmailService; 
 
-        public OrderService(RevaContext context, IProductService productService)
+        public OrderService(RevaContext context, IProductService productService, IOrderEmailService orderEmailService)
         {
             _context = context;
             _productService = productService;
+            _orderEmailService = orderEmailService; 
         }
 
         public async Task<OrderDetailsViewModel> CreateOrderAsync(int productId, int buyerId)
@@ -53,6 +55,26 @@ namespace ProjectEXE.Services.Implementations
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
+            try
+            {
+                // Gửi email đồng bộ, không dùng Task.Run
+                await _orderEmailService.SendOrderConfirmationNotificationAsync(
+                    order.OrderId,
+                    product.ProductName,
+                    product.Price,
+                    product.Shop.ShopName,
+                    buyer.FullName,
+                    buyer.Email,
+                    product.Shop.User.FullName,
+                    product.Shop.User.Email
+                );
+                Console.WriteLine($"✅ Đã gửi email thông báo đặt hàng thành công cho đơn hàng #{order.OrderId}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Lỗi gửi email thông báo đặt hàng: {ex.Message}");
+            }
+
             // Lấy thông tin đơn hàng đầy đủ để trả về
             var mainImage = product.ProductImages
                 .FirstOrDefault(pi => pi.IsMainImage)?.ImageUrl
@@ -78,6 +100,57 @@ namespace ProjectEXE.Services.Implementations
             };
         }
 
+        public async Task<bool> CancelOrderAsync(int orderId, int buyerId, string reason)
+        {
+            var order = await _context.Orders
+                .Include(o => o.Product)
+                .ThenInclude(p => p.Shop)
+                .ThenInclude(s => s.User)
+                .Include(o => o.Buyer)
+                .Include(o => o.Seller)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId && o.BuyerId == buyerId);
+
+            if (order == null)
+                return false;
+
+            // Chỉ cho phép hủy đơn hàng khi đang ở trạng thái "Chờ xác nhận"
+            if (order.StatusId != 1)
+                return false;
+
+            order.StatusId = 5; // Đã hủy
+            order.CancelReason = reason;
+            order.UpdatedAt = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+
+            // Gửi email thông báo hủy đơn hàng (chạy bất đồng bộ)
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await _orderEmailService.SendOrderCancellationNotificationAsync(
+                        order.OrderId,
+                        order.Product.ProductName,
+                        order.Product.Price,
+                        order.Product.Shop.ShopName,
+                        order.Buyer.FullName,
+                        order.Buyer.Email,
+                        order.Seller.FullName,
+                        order.Seller.Email,
+                        reason
+                    );
+                }
+                catch (Exception ex)
+                {
+                    // Log lỗi nhưng không làm fail transaction
+                    Console.WriteLine($"Lỗi gửi email thông báo hủy đơn: {ex.Message}");
+                }
+            });
+
+            return true;
+        }
+
+        // Các method khác giữ nguyên...
         public async Task<OrderListViewModel> GetBuyerOrdersAsync(int buyerId, int page = 1, int pageSize = 10)
         {
             var query = _context.Orders
@@ -173,26 +246,6 @@ namespace ProjectEXE.Services.Implementations
                 UpdatedAt = order.UpdatedAt,
                 CancelReason = order.CancelReason
             };
-        }
-
-        public async Task<bool> CancelOrderAsync(int orderId, int buyerId, string reason)
-        {
-            var order = await _context.Orders
-                .FirstOrDefaultAsync(o => o.OrderId == orderId && o.BuyerId == buyerId);
-
-            if (order == null)
-                return false;
-
-            // Chỉ cho phép hủy đơn hàng khi đang ở trạng thái "Chờ xác nhận"
-            if (order.StatusId != 1)
-                return false;
-
-            order.StatusId = 5; // Đã hủy
-            order.CancelReason = reason;
-            order.UpdatedAt = DateTime.Now;
-
-            await _context.SaveChangesAsync();
-            return true;
         }
     }
 }

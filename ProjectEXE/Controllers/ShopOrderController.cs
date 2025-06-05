@@ -10,11 +10,13 @@ namespace ProjectEXE.Controllers
     public class ShopOrderController : Controller
     {
         private readonly IShopOrderService _shopOrderService;
+        private readonly IOrderEmailService _orderEmailService;
         private readonly ILogger<ShopOrderController> _logger;
 
-        public ShopOrderController(IShopOrderService shopOrderService, ILogger<ShopOrderController> logger)
+        public ShopOrderController(IShopOrderService shopOrderService, IOrderEmailService orderEmailService, ILogger<ShopOrderController> logger)
         {
             _shopOrderService = shopOrderService;
+            _orderEmailService = orderEmailService;
             _logger = logger;
         }
 
@@ -75,6 +77,9 @@ namespace ProjectEXE.Controllers
                     return RedirectToAction("Index");
                 }
 
+                // Lưu lại trạng thái cũ để so sánh sau khi cập nhật
+                int oldStatusId = currentOrder.StatusId;
+
                 // Validate status range
                 if (model.StatusId < 1 || model.StatusId > 5)
                 {
@@ -107,6 +112,31 @@ namespace ProjectEXE.Controllers
 
                 if (result)
                 {
+                    // Gửi email thông báo khi cập nhật trạng thái thành công
+                    if (oldStatusId != model.StatusId) // Chỉ gửi khi trạng thái thực sự thay đổi
+                    {
+                        try
+                        {
+                            await _orderEmailService.SendOrderStatusUpdateNotificationAsync(
+                                model.OrderId,
+                                currentOrder.ProductName,
+                                currentOrder.Price,
+                                "Shop " + User.Identity.Name, // Sử dụng tên người dùng làm tên shop
+                                currentOrder.BuyerName,
+                                currentOrder.BuyerEmail,
+                                oldStatusId,
+                                model.StatusId,
+                                model.StatusId == 5 ? model.CancelReason : null);
+
+                            _logger.LogInformation("Đã gửi email thông báo cập nhật trạng thái đơn hàng {OrderId} thành công", model.OrderId);
+                        }
+                        catch (Exception emailEx)
+                        {
+                            // Log lỗi nhưng không ảnh hưởng đến luồng chính
+                            _logger.LogError(emailEx, "Lỗi gửi email thông báo cập nhật trạng thái đơn hàng {OrderId}", model.OrderId);
+                        }
+                    }
+
                     TempData["SuccessMessage"] = GetSuccessMessage(model.StatusId, currentOrder.StatusId);
                     _logger.LogInformation("Cập nhật trạng thái đơn hàng {OrderId} thành công", model.OrderId);
                 }
@@ -124,6 +154,7 @@ namespace ProjectEXE.Controllers
 
             return RedirectToAction("OrderDetail", new { id = model.OrderId });
         }
+        
 
         private bool IsValidStatusTransitionForUI(int currentStatus, int newStatus)
         {

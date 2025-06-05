@@ -45,7 +45,8 @@ namespace ProjectEXE
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IShopServiceOfAdmin, ShopServiceOfAdmin>();
-           
+            builder.Services.AddScoped<IOrderEmailService, OrderEmailService>();
+
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                             .AddCookie(options =>

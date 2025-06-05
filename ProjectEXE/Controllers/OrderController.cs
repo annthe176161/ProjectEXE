@@ -9,10 +9,12 @@ namespace ProjectEXE.Controllers
     public class OrderController : Controller
     {
         private readonly IOrderService _orderService;
+        private readonly IOrderEmailService _orderEmailService; 
 
-        public OrderController(IOrderService orderService)
+        public OrderController(IOrderService orderService, IOrderEmailService orderEmailService)
         {
             _orderService = orderService;
+            _orderEmailService = orderEmailService; 
         }
 
         [HttpPost]
@@ -23,11 +25,11 @@ namespace ProjectEXE.Controllers
                 // Lấy ID người dùng từ claims
                 var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-                // Tạo đơn hàng
+                // Tạo đơn hàng - OrderService đã có logic gửi email
                 var order = await _orderService.CreateOrderAsync(productId, userId);
 
                 // Chuyển hướng đến trang chi tiết đơn hàng với thông báo thành công
-                TempData["SuccessMessage"] = "Đơn hàng của bạn đã được tạo thành công và đang chờ người bán xác nhận.";
+                TempData["SuccessMessage"] = "Đơn hàng của bạn đã được tạo thành công và đang chờ người bán xác nhận. Email thông báo đã được gửi!";
                 return RedirectToAction("OrderDetails", new { id = order.OrderId });
             }
             catch (Exception ex)
@@ -73,7 +75,7 @@ namespace ProjectEXE.Controllers
 
             if (result)
             {
-                TempData["SuccessMessage"] = "Đơn hàng đã được hủy thành công.";
+                TempData["SuccessMessage"] = "Đơn hàng đã được hủy thành công. Email thông báo đã được gửi!";
             }
             else
             {
