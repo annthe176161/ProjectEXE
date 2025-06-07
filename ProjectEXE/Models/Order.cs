@@ -21,6 +21,8 @@ public partial class Order
 
     public DateTime UpdatedAt { get; set; }
 
+    public string? VourcherId { get; set; }
+
     public virtual User Buyer { get; set; } = null!;
 
     public virtual Product Product { get; set; } = null!;
@@ -28,4 +30,6 @@ public partial class Order
     public virtual User Seller { get; set; } = null!;
 
     public virtual OrderStatus Status { get; set; } = null!;
+
+    public virtual Voucher? Vourcher { get; set; }
 }

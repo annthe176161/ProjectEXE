@@ -43,8 +43,9 @@ public partial class RevaContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    { }
+    public virtual DbSet<Voucher> Vouchers { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -70,6 +71,7 @@ public partial class RevaContext : DbContext
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+            entity.Property(e => e.VourcherId).HasMaxLength(50);
 
             entity.HasOne(d => d.Buyer).WithMany(p => p.OrderBuyers)
                 .HasForeignKey(d => d.BuyerId)
@@ -90,6 +92,10 @@ public partial class RevaContext : DbContext
                 .HasForeignKey(d => d.StatusId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Orders_Statuses");
+
+            entity.HasOne(d => d.Vourcher).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.VourcherId)
+                .HasConstraintName("FK_Orders_Vourcher");
         });
 
         modelBuilder.Entity<OrderStatus>(entity =>
@@ -293,6 +299,18 @@ public partial class RevaContext : DbContext
                 .HasForeignKey(d => d.RoleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Users_Roles");
+        });
+
+        modelBuilder.Entity<Voucher>(entity =>
+        {
+            entity.HasKey(e => e.VourcherId).HasName("PK_Vourcher");
+
+            entity.Property(e => e.VourcherId).HasMaxLength(50);
+            entity.Property(e => e.Code)
+                .HasMaxLength(10)
+                .IsFixedLength();
+            entity.Property(e => e.MaxDiscountAmount).HasColumnType("decimal(18, 0)");
+            entity.Property(e => e.MinOrderValue).HasColumnType("decimal(18, 0)");
         });
 
         OnModelCreatingPartial(modelBuilder);
