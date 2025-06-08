@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace ProjectEXE.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Seller")]
     public class ShopProfileController : Controller
     {
         private readonly IShopService _shopService;

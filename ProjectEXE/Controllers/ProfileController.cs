@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProjectEXE.Services.Implementations;
 using ProjectEXE.Services.Interfaces;
 using ProjectEXE.ViewModel.Profile;
@@ -6,6 +7,7 @@ using System.Security.Claims;
 
 namespace ProjectEXE.Controllers
 {
+    [Authorize]
     public class ProfileController : Controller
     {
         private readonly IUserService _userService;

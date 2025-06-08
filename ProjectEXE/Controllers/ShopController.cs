@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ProjectEXE.Controllers
 {
-    //[Authorize]
+    [Authorize(Roles = "Seller")]
     public class ShopController : Controller
     {
         private readonly IShopService _shopService;
