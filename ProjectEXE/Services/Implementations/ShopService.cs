@@ -581,6 +581,7 @@ namespace ProjectEXE.Services.Implementations
                     Material = p.Material,
                     CreatedAt = p.CreatedAt,
                     IsVisible = p.IsVisible,
+                    IsInStock = p.IsInStock,
                     MainImageUrl = p.ProductImages.FirstOrDefault(img => img.IsMainImage == true)?.ImageUrl ?? "default.jpg"
                 }).ToList();
 

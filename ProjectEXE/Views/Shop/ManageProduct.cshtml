@@ -115,7 +115,7 @@
                                     <th class="col-price">Giá bán</th>
                                     <th class="col-category">Danh mục</th>
                                     <th class="col-condition">Tình trạng</th>
-                                    <th class="col-status">Trạng thái</th>
+                                    <th class="col-status" colspan="2">Trạng thái</th>
                                     <th class="col-date">Ngày tạo</th>
                                     <th class="col-actions">Thao tác</th>
                                 </tr>
@@ -126,7 +126,8 @@
                                     <tr class="product-row" 
                                         data-product-name="@item.ProductName.ToLower()"
                                         data-category="@item.CategoryName.ToLower()"
-                                        data-visible="@item.IsVisible.ToString().ToLower()">
+                                        data-visible="@item.IsVisible.ToString().ToLower()"
+                                        data-stock="@item.IsInStock.ToString().ToLower()">
                                         <td class="product-id">
                                             <span class="id-badge">#@item.ProductId</span>
                                         </td>
@@ -165,6 +166,22 @@
                                                 <span class="status-badge status-hidden">
                                                     <i class="fas fa-eye-slash"></i>
                                                     Ẩn
+                                                </span>
+                                            }
+                                        </td>
+                                        <td class="product-status">
+                                            @if (item.IsInStock)
+                                            {
+                                                <span class="status-badge status-visible">
+                                                    <i class="fas fa-box-open"></i>
+                                                    Còn hàng
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="status-badge status-hidden">
+                                                    <i class="fas fa-box"></i>
+                                                    Hết hàng
                                                 </span>
                                             }
                                         </td>
@@ -222,7 +239,17 @@
                             <div class="stat-label">Đang hiển thị</div>
                         </div>
                     </div>
-                    
+
+                    <div class="stat-card visible-products">
+                        <div class="stat-icon">
+                            <i class="fas fa-cart-shopping"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number">@Model.Count(p => !p.IsInStock)</div>
+                            <div class="stat-label">Sản phẩm đã bán</div>
+                        </div>
+                    </div>
+
                     <div class="stat-card hidden-products">
                         <div class="stat-icon">
                             <i class="fas fa-eye-slash"></i>
