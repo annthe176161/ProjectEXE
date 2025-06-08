@@ -148,9 +148,9 @@ namespace ProjectEXE.Services.Implementations
         .Include(p => p.Category)
         .Include(p => p.Condition)
         .Include(p => p.ProductImages)
-        .Where(p => p.IsVisible);
+        .Where(p => p.IsVisible && p.IsInStock);
 
-            // SỬA PHẦN NÀY: Cải thiện logic filter categories
+            // Lọc theo danh mục
             if (filter.SelectedCategoryIds != null && filter.SelectedCategoryIds.Any())
             {
                 // Sử dụng method mới để lấy tất cả category con
@@ -158,7 +158,14 @@ namespace ProjectEXE.Services.Implementations
                 query = query.Where(p => allCategoryIds.Contains(p.CategoryId));
             }
 
-            // ... giữ nguyên phần còn lại của method ...
+            // Thêm lọc theo giới tính
+            if (!string.IsNullOrEmpty(filter.Gender))
+            {
+                query = query.Where(p => p.Gender == filter.Gender);
+            }
+
+            //THÊM sắp xếp mặc định theo ngày đăng mới nhất
+            query = query.OrderByDescending(p => p.CreatedAt);
 
             // Get total count for pagination
             var totalItems = await query.CountAsync();
