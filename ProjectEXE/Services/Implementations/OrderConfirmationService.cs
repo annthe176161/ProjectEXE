@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProjectEXE.DTO;
 using ProjectEXE.Models;
 using ProjectEXE.Services.Interfaces;
 using ProjectEXE.ViewModel.OrderViewModel;
@@ -188,24 +189,26 @@ namespace ProjectEXE.Services.Implementations
                 .AnyAsync(p => p.ProductId == productId && p.IsVisible && p.IsInStock);
         }
 
-        public async Task<bool> CanUserPurchaseAsync(int productId, int buyerId)
+        public async Task<PurchaseValidationResult> CanUserPurchaseAsync(int productId, int buyerId)
         {
             var product = await _context.Products
                 .Include(p => p.Shop)
                 .FirstOrDefaultAsync(p => p.ProductId == productId);
 
             if (product == null)
-                return false;
+                return PurchaseValidationResult.Fail("Sản phẩm không tồn tại.");
 
-            // User cannot buy their own product
             if (product.Shop.UserId == buyerId)
-                return false;
+                return PurchaseValidationResult.Fail("Bạn không thể mua sản phẩm của chính mình.");
 
-            // Check if product is available
-            if (!product.IsVisible || !product.IsInStock)
-                return false;
+            if (!product.IsVisible)
+                return PurchaseValidationResult.Fail("Sản phẩm này hiện không bán. Liên hệ với chủ Shop để biết thêm thông tin.");
 
-            return true;
+            if (!product.IsInStock)
+                return PurchaseValidationResult.Fail("Sản phẩm đã hết hàng.");
+
+            return PurchaseValidationResult.Success();
         }
+
     }
 }

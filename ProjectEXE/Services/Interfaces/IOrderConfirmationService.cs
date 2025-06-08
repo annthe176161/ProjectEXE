@@ -1,4 +1,5 @@
-﻿using ProjectEXE.ViewModel.OrderViewModel;
+﻿using ProjectEXE.DTO;
+using ProjectEXE.ViewModel.OrderViewModel;
 
 namespace ProjectEXE.Services.Interfaces
 {
@@ -7,7 +8,7 @@ namespace ProjectEXE.Services.Interfaces
         Task<OrderConfirmationViewModel?> GetOrderConfirmationDataAsync(int productId, int buyerId);
         Task<OrderConfirmationResultViewModel> CreateOrderAsync(OrderConfirmationViewModel model);
         Task<bool> IsProductAvailableAsync(int productId);
-        Task<bool> CanUserPurchaseAsync(int productId, int buyerId);
+        Task<PurchaseValidationResult> CanUserPurchaseAsync(int productId, int buyerId);
         Task<OrderConfirmationResultViewModel> CreateOrderAsync(CreateOrderRequestViewModel model);
     }
 }

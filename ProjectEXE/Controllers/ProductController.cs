@@ -76,7 +76,8 @@ namespace ProjectEXE.Controllers
 
             if (product == null)
             {
-                return NotFound();
+                TempData["Warning"] = "Sản phẩm không tồn tại.";
+                return RedirectToAction("ProductList", "Product");
             }
 
             product.RelatedProducts = await _productService.GetRelatedProductsAsync(id, product.Category, 4);
@@ -96,10 +97,10 @@ namespace ProjectEXE.Controllers
                     return RedirectToAction("Login", "Account", new { returnUrl = Url.Action("ConfirmPurchase", "Product", new { id }) });
                 }
 
-                var canPurchase = await _orderConfirmationService.CanUserPurchaseAsync(id, buyerId.Value);
-                if (!canPurchase)
+                var validationResult = await _orderConfirmationService.CanUserPurchaseAsync(id, buyerId.Value);
+                if (!validationResult.IsValid)
                 {
-                    TempData["Error"] = "Bạn không thể mua sản phẩm này.";
+                    TempData["Error"] = validationResult.ErrorMessage;
                     return RedirectToAction("ProductDetails", new { id });
                 }
 
