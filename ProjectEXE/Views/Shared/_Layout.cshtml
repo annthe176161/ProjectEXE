@@ -121,6 +121,12 @@
 
                         @if (User.Identity.IsAuthenticated)
                         {
+                            <li class="nav-item">
+                                <a class="nav-link highlight-nav buyer-nav" asp-controller="Profile" asp-action="Index">
+                                    <i class="nav-icon fas fa-user-circle"></i>
+                                    <span class="nav-text">Tài khoản của tôi</span>
+                                </a>
+                            </li>
                             @if (User.IsInRole("Seller"))
                             {
                                 <li class="nav-item">
@@ -147,12 +153,6 @@
                             }
                             else
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link highlight-nav buyer-nav" asp-controller="Profile" asp-action="Index">
-                                        <i class="nav-icon fas fa-user-circle"></i>
-                                        <span class="nav-text">Tài khoản của tôi</span>
-                                    </a>
-                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Order" asp-action="OrderList">
                                         <i class="nav-icon fas fa-receipt"></i>
