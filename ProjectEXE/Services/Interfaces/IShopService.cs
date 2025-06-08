@@ -41,7 +41,11 @@ namespace ProjectEXE.Services.Interfaces
 
         // Doanh thu theo tháng
         Task<decimal> GetMonthlyRevenueByShopIdAsync(int shopId, int year, int month); 
-        Task<decimal> GetCurrentMonthRevenueByShopIdAsync(int shopId); 
+        Task<decimal> GetCurrentMonthRevenueByShopIdAsync(int shopId);
 
+        // Chinh sua shop
+        Task<Shop> GetShopDetailByIdAsync(int shopId);
+        Task<EditShopViewModel> GetShopForEditAsync(int shopId);
+        Task<bool> UpdateShopAsync(EditShopViewModel model, int shopId);
     }
 }

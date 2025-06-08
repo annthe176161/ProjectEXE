@@ -685,5 +685,63 @@ namespace ProjectEXE.Services.Implementations
                 return 0;
             }
         }
+
+        public async Task<Shop> GetShopDetailByIdAsync(int shopId)
+        {
+            return await _context.Shops
+        .Include(s => s.User)
+        .FirstOrDefaultAsync(s => s.ShopId == shopId);
+        }
+
+        public async Task<EditShopViewModel> GetShopForEditAsync(int shopId)
+        {
+            var shop = await _context.Shops.FindAsync(shopId);
+
+            if (shop == null)
+                return null;
+
+            return new EditShopViewModel
+            {
+                ShopId = shop.ShopId,
+                ShopName = shop.ShopName,
+                Description = shop.Description,
+                ProfileImage = shop.ProfileImage,
+                ContactInfo = shop.ContactInfo
+            };
+        }
+
+        public async Task<bool> UpdateShopAsync(EditShopViewModel model, int shopId)
+        {
+            var shop = await _context.Shops.FindAsync(shopId);
+
+            if (shop == null)
+                return false;
+
+            // Kiểm tra tên shop đã tồn tại chưa (nếu đổi tên)
+            if (shop.ShopName != model.ShopName &&
+                await _context.Shops.AnyAsync(s => s.ShopName == model.ShopName))
+            {
+                return false;
+            }
+
+            // Xử lý upload ảnh nếu có
+            if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
+            {
+                string imageUrl = await _cloudinaryService.UploadImageAsync(model.ProfileImageFile);
+                if (!string.IsNullOrEmpty(imageUrl))
+                {
+                    shop.ProfileImage = imageUrl;
+                }
+            }
+            // Đã xóa phần xử lý xóa hình ảnh ở đây
+
+            // Cập nhật thông tin shop
+            shop.ShopName = model.ShopName;
+            shop.Description = model.Description;
+            shop.ContactInfo = model.ContactInfo;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

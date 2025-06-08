@@ -270,10 +270,70 @@ namespace ProjectEXE.Controllers
             }
         }
 
-        public IActionResult EditShop()
+        [Authorize(Roles = "Seller")]
+        public async Task<IActionResult> EditShop()
         {
-            TempData["Warning"] = "Tính năng đang trong quá trình phát triển";
-            return RedirectToAction("Index", "ShopProfile");
+            try
+            {
+                var shopId = await GetCurrentShopIdAsync();
+                if (shopId == null)
+                {
+                    TempData["Error"] = "Không thể truy cập thông tin gian hàng.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                var shopViewModel = await _shopService.GetShopForEditAsync(shopId.Value);
+                if (shopViewModel == null)
+                {
+                    TempData["Error"] = "Không tìm thấy thông tin gian hàng.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                return View("~/Views/ShopProfile/EditShop.cshtml", shopViewModel);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Đã xảy ra lỗi khi tải thông tin gian hàng.";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Seller")]
+        public async Task<IActionResult> EditShop(EditShopViewModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View("~/Views/ShopProfile/EditShop.cshtml", model);
+                }
+
+                var shopId = await GetCurrentShopIdAsync();
+                if (shopId == null || shopId.Value != model.ShopId)
+                {
+                    TempData["Error"] = "Bạn không có quyền chỉnh sửa gian hàng này.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                bool result = await _shopService.UpdateShopAsync(model, shopId.Value);
+                if (result)
+                {
+                    TempData["Success"] = "Cập nhật thông tin gian hàng thành công!";
+                    return RedirectToAction("Index", "ShopProfile");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Tên gian hàng đã tồn tại hoặc có lỗi xảy ra khi cập nhật.");
+                    return View(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Đã xảy ra lỗi khi cập nhật thông tin gian hàng.");
+                return View("~/Views/ShopProfile/EditShop.cshtml", model);
+            }
         }
 
         public IActionResult ViewReport()

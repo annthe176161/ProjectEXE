@@ -1,0 +1,168 @@
+﻿@model ProjectEXE.ViewModel.Shop.EditShopViewModel
+@{
+    ViewData["Title"] = "Chỉnh sửa gian hàng";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/edit-shop.css?v=@DateTime.Now.Ticks">
+}
+
+<div class="edit-shop-page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>
+                        <i class="fas fa-store-alt"></i>
+                        Chỉnh sửa gian hàng
+                    </h1>
+                    <p>Cập nhật thông tin và hình ảnh cho gian hàng của bạn</p>
+                </div>
+                <div class="header-decoration">
+                    <div class="decoration-circle circle-1"></div>
+                    <div class="decoration-circle circle-2"></div>
+                    <div class="decoration-circle circle-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container main-content">
+        <div class="edit-shop-wrapper">
+            @if (TempData["Success"] != null)
+            {
+                <div class="status-message success">
+                    <i class="fas fa-check-circle"></i>
+                    @TempData["Success"]
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="status-message error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    @TempData["Error"]
+                </div>
+            }
+
+            @if (TempData["Warning"] != null)
+            {
+                <div class="status-message warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    @TempData["Warning"]
+                </div>
+            }
+
+            <form asp-action="EditShop" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger validation-summary"></div>
+                <input type="hidden" asp-for="ShopId" />
+                <input type="hidden" asp-for="ProfileImage" />
+
+                <!-- Shop Profile Image -->
+                <div class="edit-section profile-image-section">
+                    <div class="section-header">
+                        <h3>
+                            <i class="fas fa-camera"></i>
+                            Hình ảnh gian hàng
+                        </h3>
+                        <p class="section-description">Tải lên hình ảnh đại diện cho gian hàng của bạn</p>
+                    </div>
+
+                    <div class="image-upload-container">
+                        <div class="current-image-preview">
+                            @if (!string.IsNullOrEmpty(Model.ProfileImage))
+                            {
+                                <img src="@Model.ProfileImage" alt="Shop Profile" class="shop-image" id="shopImagePreview">
+                            }
+                            else
+                            {
+                                <div class="no-image-placeholder" id="shopImagePreview">
+                                    <i class="fas fa-store"></i>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="upload-controls">
+                            <input type="file" name="ProfileImageFile" id="profileImageUpload" class="file-input" accept="image/*" />
+                            <label for="profileImageUpload" class="upload-button">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                Chọn hình ảnh
+                            </label>
+                            <!-- Đã xóa nút xóa hình ảnh -->
+                            <p class="image-guidelines">
+                                <i class="fas fa-info-circle"></i>
+                                Hình ảnh tối đa 2MB, định dạng: JPG, PNG
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shop Information -->
+                <div class="edit-section shop-info-section">
+                    <div class="section-header">
+                        <h3>
+                            <i class="fas fa-info-circle"></i>
+                            Thông tin cơ bản
+                        </h3>
+                        <p class="section-description">Nhập thông tin cơ bản về gian hàng của bạn</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ShopName" class="form-label">Tên gian hàng <span class="required">*</span></label>
+                        <input asp-for="ShopName" class="form-control" placeholder="Nhập tên gian hàng" required />
+                        <span asp-validation-for="ShopName" class="text-danger"></span>
+                        <div class="form-text">Tên gian hàng sẽ hiển thị cho người mua và không thể trùng lặp</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Description" class="form-label">Mô tả gian hàng</label>
+                        <textarea asp-for="Description" class="form-control" rows="5"
+                                  placeholder="Mô tả ngắn về gian hàng của bạn, sản phẩm bạn bán và các thông tin khác"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                        <div class="form-text">Mô tả giúp khách hàng hiểu rõ hơn về gian hàng của bạn (tối đa 500 ký tự)</div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="edit-section contact-section">
+                    <div class="section-header">
+                        <h3>
+                            <i class="fas fa-address-book"></i>
+                            Thông tin liên hệ
+                        </h3>
+                        <p class="section-description">Cập nhật thông tin liên hệ để khách hàng dễ dàng tìm đến bạn</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ContactInfo" class="form-label">Thông tin liên hệ</label>
+                        <textarea asp-for="ContactInfo" class="form-control" rows="3"
+                                  placeholder="Số điện thoại, email, địa chỉ hoặc thông tin liên hệ khác"></textarea>
+                        <span asp-validation-for="ContactInfo" class="text-danger"></span>
+                        <div class="form-text">Các thông tin này sẽ hiển thị trong trang chi tiết gian hàng</div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <a asp-controller="ShopProfile" asp-action="Index" class="btn btn-outline-secondary btn-cancel">
+                        <i class="fas fa-times"></i>
+                        Hủy thay đổi
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-save">
+                        <i class="fas fa-save"></i>
+                        Lưu thay đổi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/edit-shop.js?v=@DateTime.Now.Ticks"></script>
+}
