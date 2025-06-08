@@ -464,5 +464,15 @@ namespace ProjectEXE.Services.Implementations
                 }
             }
         }
+
+        public async Task<bool> MarkProductAsSoldAsync(int productId)
+        {
+            var product = await _context.Products.FindAsync(productId);
+            if (product == null) return false;
+
+            product.IsInStock = false;
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

@@ -11,11 +11,14 @@ namespace ProjectEXE.Controllers
     {
         private readonly IShopOrderService _shopOrderService;
         private readonly IOrderEmailService _orderEmailService;
+        private readonly IProductService _productService;
 
-        public ShopOrderController(IShopOrderService shopOrderService, IOrderEmailService orderEmailService)
+        public ShopOrderController(IShopOrderService shopOrderService, 
+                                    IOrderEmailService orderEmailService, IProductService productService )
         {
             _shopOrderService = shopOrderService;
             _orderEmailService = orderEmailService;
+            _productService = productService;
         }
 
         public async Task<IActionResult> Index(int page = 1, string statusFilter = null, string dateRange = null)
@@ -103,7 +106,10 @@ namespace ProjectEXE.Controllers
                 }
 
                 var result = await _shopOrderService.UpdateOrderStatusAsync(model, sellerId);
-
+                if (model.StatusId == 2) // 2 = Đã xác nhận
+                {
+                    await _productService.MarkProductAsSoldAsync(currentOrder.ProductId);
+                }
                 if (result)
                 {
                     // Gửi email thông báo khi cập nhật trạng thái thành công

@@ -26,6 +26,7 @@ namespace ProjectEXE.Services.Interfaces
         // Product Detail
         Task<ProductDetailViewModel> GetProductDetailByIdAsync(int id);
         Task<List<ProductViewModels>> GetRelatedProductsAsync(int productId, string category, int count = 4);
+        Task<bool> MarkProductAsSoldAsync(int productId);
     }
 }
 
