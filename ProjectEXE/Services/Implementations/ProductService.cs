@@ -164,8 +164,22 @@ namespace ProjectEXE.Services.Implementations
                 query = query.Where(p => p.Gender == filter.Gender);
             }
 
-            //THÊM sắp xếp mặc định theo ngày đăng mới nhất
-            query = query.OrderByDescending(p => p.CreatedAt);
+            // Sắp xếp theo lựa chọn của người dùng (mặc định: newest)
+            switch (filter.SortBy?.ToLower())
+            {
+                case "price_asc":
+                    query = query.OrderBy(p => p.Price);
+                    break;
+
+                case "price_desc":
+                    query = query.OrderByDescending(p => p.Price);
+                    break;
+
+                case "newest":
+                default:
+                    query = query.OrderByDescending(p => p.CreatedAt);
+                    break;
+            }
 
             // Get total count for pagination
             var totalItems = await query.CountAsync();
