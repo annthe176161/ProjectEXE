@@ -296,6 +296,23 @@
                     }
                 </div>
             </form>
+
+            <!-- Áp Mã -->
+            <div class="shop-info-card mb-4">
+                <form asp-action="ApplyDiscount" method="post">
+                    <input type="hidden" name="productId" value="@Model.ProductId" />
+                    <input type="text" name="discountCode" class="form-control" placeholder="Nhập mã giảm giá" />
+                    <button type="submit" class="btn btn-primary mt-2">Áp mã</button>
+                </form>
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success">@TempData["Success"]</div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger">@TempData["Error"]</div>
+                }
+            </div>
         </div>
     </div>
 
