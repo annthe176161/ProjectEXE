@@ -932,3 +932,58 @@
 .btn-primary:focus-visible {
     box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.3);
 }
+
+.referral-code-wrapper {
+    position: relative;
+    margin-top: 10px;
+    padding: 15px;
+    border: 1px dashed #ddd;
+    border-radius: 8px;
+    background-color: rgba(247, 247, 252, 0.7);
+    transition: all 0.3s ease;
+}
+
+    .referral-code-wrapper:hover {
+        border-color: #007bff;
+        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
+    }
+
+.referral-info {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+    .referral-info i {
+        margin-right: 5px;
+        color: #007bff;
+        font-size: 14px;
+    }
+
+.input-wrapper .fas.fa-ticket-alt {
+    transform: rotate(-45deg);
+}
+
+/* Thêm hiệu ứng hào quang cho mã giới thiệu */
+.referral-code-wrapper::before {
+    content: "Ưu đãi";
+    position: absolute;
+    top: -10px;
+    right: 15px;
+    background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+    color: #fff;
+    padding: 3px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+/* Hiệu ứng khi focus vào input mã giới thiệu */
+.referral-code-wrapper .input-wrapper input:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
