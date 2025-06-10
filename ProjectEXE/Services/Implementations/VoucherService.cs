@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjectEXE.Controllers;
+using ProjectEXE.DTO;
 using ProjectEXE.Models;
 using ProjectEXE.Services.Interfaces;
 using ProjectEXE.ViewModel.Voucher;
@@ -168,6 +169,27 @@ namespace ProjectEXE.Services.Implementations
             {
                 return false;
             }
+        }
+
+        public async Task<string> AddVoucherAtRegister(int discount)
+        {
+            var code = $"INV-{ReferralCodeGenerator.Generate(6)}";
+            var voucher = new Voucher
+            {
+                VourcherId = Guid.NewGuid().ToString(),
+                Code = code,
+                Discount = discount,
+                CreateAt = DateOnly.FromDateTime(DateTime.Now),
+                MinOrderValue = 0,
+                MaxDiscountAmount = 20000,
+                Quantity = 1,
+                IsActive = true
+            };
+
+            await  _context.Vouchers.AddAsync(voucher);
+            await _context.SaveChangesAsync();
+
+            return code;
         }
     }
 }

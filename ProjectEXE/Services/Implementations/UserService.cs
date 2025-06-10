@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using ProjectEXE.Models;
 using ProjectEXE.Services.Interfaces;
 using ProjectEXE.ViewModel;
@@ -283,8 +284,10 @@ namespace ProjectEXE.Services.Implementations
             }
         }
 
-       
-        
-        
+        public async Task<User> GetUserByReferralCode(string referralCode)
+        {
+            return await _context.Users.FirstOrDefaultAsync(r => r.ReferralCode == referralCode);
+        }
+
     }
 }

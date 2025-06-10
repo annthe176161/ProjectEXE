@@ -21,5 +21,7 @@ namespace ProjectEXE.Services.Interfaces
 
         // Kiểm tra mã voucher đã tồn tại chưa
         Task<bool> IsCodeUnique(string code, string currentId = null);
+        Task<string> AddVoucherAtRegister(int discount);
+
     }
 }
