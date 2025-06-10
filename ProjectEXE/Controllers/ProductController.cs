@@ -250,6 +250,7 @@ namespace ProjectEXE.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> ApplyDiscount(int productId, string discountCode)
         {
             var product = await _context.Products.FindAsync(productId);
             if (product == null)
