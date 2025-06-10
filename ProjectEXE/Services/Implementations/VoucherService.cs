@@ -191,5 +191,64 @@ namespace ProjectEXE.Services.Implementations
 
             return code;
         }
+
+        public async Task<VoucherResult> ApplyVoucher(string voucherCode, decimal price)
+        {
+            if (string.IsNullOrWhiteSpace(voucherCode))
+            {
+                return new VoucherResult
+                {
+                    IsSuccess = false,
+                    DiscountAmount = 0,
+                    FinalPrice = price,
+                    Message = "Vui lòng nhập mã giảm giá."
+                };
+            }
+
+            var voucher = await _context.Vouchers
+                .FirstOrDefaultAsync(v => v.Code == voucherCode.Trim());
+
+            if (voucher == null)
+            {
+                return new VoucherResult
+                {
+                    IsSuccess = false,
+                    DiscountAmount = 0,
+                    FinalPrice = price,
+                    Message = "Mã giảm giá không hợp lệ."
+                };
+            }
+
+
+            // Kiểm tra ngày hết hạn
+            if (voucher.ExpiryDate.HasValue && voucher.ExpiryDate.Value < DateOnly.FromDateTime(DateTime.UtcNow))
+            {
+                return new VoucherResult
+                {
+                    IsSuccess = false,
+                    DiscountAmount = 0,
+                    FinalPrice = price,
+                    Message = "Mã giảm giá đã hết hạn."
+                };
+            }
+
+            var discount = Math.Round(price * voucher.Discount / 100, 0);
+
+            if(voucher.MaxDiscountAmount.HasValue && discount >= voucher.MaxDiscountAmount)
+            {
+                discount = voucher.MaxDiscountAmount.Value;
+            }
+
+            var finalPrice = price - discount;
+
+
+            return new VoucherResult
+                {
+                    IsSuccess = true,
+                    DiscountAmount = discount,
+                    FinalPrice = finalPrice,
+                    Message = "Áp dụng mã thành công!"
+                };
+        }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProjectEXE.DTO;
 using ProjectEXE.Models;
 using ProjectEXE.Services.Implementations;
 using ProjectEXE.Services.Interfaces;
@@ -18,6 +19,7 @@ namespace ProjectEXE.Controllers
         private readonly IOrderService _orderService;
         private readonly IOrderEmailService _orderEmailService;
         private readonly RevaContext _context;
+        private readonly IVourcherService _voucherService;
 
         public ProductController(
             IProductService productService,
@@ -25,13 +27,15 @@ namespace ProjectEXE.Controllers
             IOrderService orderService,
             IOrderEmailService orderEmailService,
             ILogger<ProductController> logger,
-            RevaContext context)
+            RevaContext context,
+            IVourcherService voucherService)
         {
             _productService = productService;
             _orderConfirmationService = orderConfirmationService;
             _orderService = orderService;
             _orderEmailService = orderEmailService;
             _context = context;
+            _voucherService = voucherService;
         }
 
         public async Task<IActionResult> Index(ProductFilterViewModel filter, int page = 1)
@@ -247,6 +251,33 @@ namespace ProjectEXE.Controllers
             {
                 return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApplyVoucher([FromBody] ApplyVoucherRequest request)
+        {
+            var product = await _productService.GetProductById(request.ProductId);
+            if (product == null)
+                return NotFound(new { message = "Sản phẩm không tồn tại." });
+
+            var result = await _voucherService.ApplyVoucher(request.VoucherCode, product.price);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = result.Message
+                });
+            }
+
+            return Ok(new
+            {
+                success = true,
+                originalPrice = product.price,
+                discountAmount = result.DiscountAmount,
+                finalPrice = result.FinalPrice,
+                message = result.Message
+            });
         }
     }
 }
