@@ -237,7 +237,7 @@
                                 <div class="voucher-input-wrapper">
                                     <label for="voucherCode" class="form-label">Nhập mã giảm giá (nếu có)</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Nhập mã giảm giá..." id="voucherCode" name="voucherCode" maxlength="20">
+                                        <input type="text" class="form-control" placeholder="Nhập mã giảm giá..." asp-for="VoucherCode" maxlength="20">
                                         <button class="btn btn-apply-voucher" type="button" id="applyVoucherBtn">
                                             <i class="fas fa-check-circle me-1"></i>Áp dụng
                                         </button>
@@ -445,7 +445,7 @@
 
             document.getElementById("applyVoucherBtn").addEventListener("click", function () {
             const productId = @Model.Product.ProductId;
-            const voucherCode = document.getElementById("voucherCode").value;
+            const voucherCode = document.getElementById("VoucherCode").value;
 
             fetch('/Product/ApplyVoucher', {
                 method: 'POST',

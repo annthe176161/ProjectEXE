@@ -129,8 +129,6 @@ namespace ProjectEXE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmPurchase(OrderConfirmationViewModel model)
         {
-
-
             try
             {
                 var buyerId = GetCurrentUserId();
@@ -196,6 +194,9 @@ namespace ProjectEXE.Controllers
                                 orderDetails.Seller.FullName,
                                 orderDetails.Seller.Email
                             );
+
+                            //giảm số lượng voucher
+                            await _voucherService.ReduceQuantityVoucher(model.VoucherCode);
 
                         }
                         else

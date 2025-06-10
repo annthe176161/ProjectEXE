@@ -24,5 +24,6 @@ namespace ProjectEXE.Services.Interfaces
         Task<bool> IsCodeUnique(string code, string currentId = null);
         Task<string> AddVoucherAtRegister(int discount);
         Task<VoucherResult> ApplyVoucher(string voucherCode, decimal price);
+        Task ReduceQuantityVoucher(string voucherCode);
     }
 }

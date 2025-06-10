@@ -250,5 +250,16 @@ namespace ProjectEXE.Services.Implementations
                     Message = "Áp dụng mã thành công!"
                 };
         }
+
+        public async Task ReduceQuantityVoucher(string voucherCode)
+        {
+            var voucher = await _context.Vouchers.FirstOrDefaultAsync(v => v.Code == voucherCode);
+
+            if (voucher != null && voucher.Quantity > 0)
+            {
+                voucher.Quantity -= 1;
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }
