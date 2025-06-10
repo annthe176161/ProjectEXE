@@ -19,5 +19,13 @@
         public DateTime? UpdatedAt { get; set; }
         public string CancelReason { get; set; }
         public bool CanBeCancelled => OrderStatusId == 1; // Chỉ được hủy khi đang "Chờ xác nhận"
+
+        // THÊM CÁC THUỘC TÍNH MỚI CHO VOUCHER
+        public string VoucherCode { get; set; }
+        public decimal DiscountAmount { get; set; }
+        public decimal PayAmount { get; set; }
+        public bool HasVoucher => !string.IsNullOrEmpty(VoucherCode);
+        public int VoucherDiscountPercent { get; set; }
+        public DateOnly? VoucherExpiryDate { get; set; }
     }
 }

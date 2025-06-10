@@ -455,3 +455,97 @@
         font-size: 1.2rem;
     }
 }
+
+/* Bổ sung CSS cho phần thông tin thanh toán */
+.payment-card {
+    margin-top: 20px;
+}
+
+.payment-details {
+    padding: 5px 0;
+}
+
+.payment-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.payment-divider {
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 10px 0;
+}
+
+.payment-total {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+    .payment-total .payment-value {
+        font-size: 1.25rem;
+        color: #28a745;
+    }
+
+.discount-value {
+    color: #dc3545;
+}
+
+.voucher-info {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin: 10px 0;
+}
+
+.voucher-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    margin-right: 10px;
+}
+
+.voucher-code {
+    display: inline-block;
+    font-weight: 600;
+    color: #666;
+    letter-spacing: 1px;
+    margin-left: 5px;
+}
+
+.voucher-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 10px;
+    padding: 0 5px;
+}
+
+.voucher-percent, .voucher-expiry {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.payment-note {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #6c757d;
+    display: flex;
+    align-items: flex-start;
+}
+
+    .payment-note i {
+        margin-top: 3px;
+    }

@@ -157,13 +157,14 @@ namespace ProjectEXE.Services.Implementations
         public async Task<OrderListViewModel> GetBuyerOrdersAsync(int buyerId, int page = 1, int pageSize = 10)
         {
             var query = _context.Orders
-                .Include(o => o.Product)
-                .ThenInclude(p => p.ProductImages)
-                .Include(o => o.Seller)
-                .Include(o => o.Status)
-                .Include(o => o.Product.Shop)
-                .Where(o => o.BuyerId == buyerId)
-                .OrderByDescending(o => o.OrderDate);
+        .Include(o => o.Product)
+        .ThenInclude(p => p.ProductImages)
+        .Include(o => o.Seller)
+        .Include(o => o.Status)
+        .Include(o => o.Product.Shop)
+        .Include(o => o.Vourcher) // Thêm include voucher
+        .Where(o => o.BuyerId == buyerId)
+        .OrderByDescending(o => o.OrderDate);
 
             var totalOrders = await query.CountAsync();
             var totalPages = (int)Math.Ceiling(totalOrders / (double)pageSize);
@@ -189,7 +190,14 @@ namespace ProjectEXE.Services.Implementations
                 OrderStatusId = o.StatusId,
                 OrderDate = o.OrderDate,
                 UpdatedAt = o.UpdatedAt,
-                CancelReason = o.CancelReason
+                CancelReason = o.CancelReason,
+
+                // Thêm thông tin voucher
+                VoucherCode = o.Vourcher?.Code,
+                DiscountAmount = o.DiscountAmount,
+                PayAmount = o.PayAmount > 0 ? o.PayAmount : o.Product.Price - o.DiscountAmount,
+                VoucherDiscountPercent = o.Vourcher?.Discount ?? 0,
+                VoucherExpiryDate = o.Vourcher?.ExpiryDate
             }).ToList();
 
             return new OrderListViewModel
@@ -204,13 +212,14 @@ namespace ProjectEXE.Services.Implementations
         public async Task<OrderDetailsViewModel> GetOrderDetailsAsync(int orderId, int userId)
         {
             var order = await _context.Orders
-                .Include(o => o.Product)
-                .ThenInclude(p => p.ProductImages)
-                .Include(o => o.Seller)
-                .Include(o => o.Buyer)
-                .Include(o => o.Status)
-                .Include(o => o.Product.Shop)
-                .FirstOrDefaultAsync(o => o.OrderId == orderId && (o.BuyerId == userId || o.SellerId == userId));
+        .Include(o => o.Product)
+        .ThenInclude(p => p.ProductImages)
+        .Include(o => o.Seller)
+        .Include(o => o.Buyer)
+        .Include(o => o.Status)
+        .Include(o => o.Product.Shop)
+        .Include(o => o.Vourcher) // Include voucher info
+        .FirstOrDefaultAsync(o => o.OrderId == orderId && (o.BuyerId == userId || o.SellerId == userId));
 
             if (order == null)
                 return null;
@@ -225,6 +234,13 @@ namespace ProjectEXE.Services.Implementations
                 shopContactInfo = order.Product.Shop.ContactInfo;
                 buyerPhoneNumber = order.Buyer.PhoneNumber;
                 buyerAddress = order.Buyer.Address;
+            }
+
+            // Tính toán giá trị thanh toán nếu chưa có
+            decimal payAmount = order.PayAmount;
+            if (payAmount == 0)
+            {
+                payAmount = order.Product.Price - order.DiscountAmount;
             }
 
             return new OrderDetailsViewModel
@@ -247,7 +263,14 @@ namespace ProjectEXE.Services.Implementations
                 OrderStatusId = order.StatusId,
                 OrderDate = order.OrderDate,
                 UpdatedAt = order.UpdatedAt,
-                CancelReason = order.CancelReason
+                CancelReason = order.CancelReason,
+
+                // Thông tin voucher
+                VoucherCode = order.Vourcher?.Code,
+                DiscountAmount = order.DiscountAmount,
+                PayAmount = payAmount,
+                VoucherDiscountPercent = order.Vourcher?.Discount ?? 0,
+                VoucherExpiryDate = order.Vourcher?.ExpiryDate
             };
         }
     }
