@@ -135,7 +135,7 @@ namespace ProjectEXE.Controllers
             if (!string.IsNullOrEmpty(model.ReferredBy))
             {
                 var user = await _userService.GetUserByReferralCode(model.ReferredBy);
-                if(user == null)
+                if (user == null)
                 {
                     TempData["Warning"] = "Mã giới thiệu không hợp lệ hoặc không tồn tại!";
                     return View(model);
@@ -179,9 +179,35 @@ namespace ProjectEXE.Controllers
                         //gửi voucher cho người vừa đăng ký tài khoản
                         string codeForInvitee = await _vourcherService.AddVoucherAtRegister(15);
 
-                        //gửi voucher cho người mời
-                        string codeForReferrer = await _vourcherService.AddVoucherAtRegister(10);
+                        // Gửi email thông báo voucher cho người đăng ký mới
+                        if (!string.IsNullOrEmpty(codeForInvitee))
+                        {
+                            await _emailService.SendVoucherNotificationEmailAsync(
+                                model.Email,
+                                codeForInvitee,
+                                15,
+                                true
+                            );
+                        }
 
+                        // Nếu người dùng đăng ký bằng mã giới thiệu, gửi voucher cho người giới thiệu
+                        if (!string.IsNullOrEmpty(model.ReferredBy))
+                        {
+                            var referrer = await _userService.GetUserByReferralCode(model.ReferredBy);
+                            if (referrer != null)
+                            {
+                                //gửi voucher cho người mời
+                                string codeForReferrer = await _vourcherService.AddVoucherAtRegister(10);
+
+                                // Gửi email thông báo cho người giới thiệu
+                                await _emailService.SendVoucherNotificationEmailAsync(
+                                    referrer.Email,
+                                    codeForReferrer,
+                                    10,
+                                    false
+                                );
+                            }
+                        }
 
                         // Redirect to confirmation page
                         return RedirectToAction("RegisterConfirmation");
