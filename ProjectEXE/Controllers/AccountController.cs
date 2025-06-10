@@ -16,13 +16,16 @@ namespace ProjectEXE.Controllers
         private readonly IEmailService _emailService;
         private readonly ISessionService _sessionService;
         private readonly RevaContext _context;
+        private readonly IVourcherService _vourcherService;
 
-        public AccountController(IUserService userService, IEmailService emailService, ISessionService sessionService, RevaContext context)
+        public AccountController(IUserService userService, IEmailService emailService, 
+                ISessionService sessionService, RevaContext context, IVourcherService vourcherService)
         {
             _userService = userService;
             _emailService = emailService;
             _sessionService = sessionService;
             _context = context;
+            _vourcherService = vourcherService;
         }
 
         [HttpGet]
@@ -173,10 +176,12 @@ namespace ProjectEXE.Controllers
                         // Send verification email with session ID
                         await _emailService.SendVerificationEmailAsync(model.Email, sessionId);
 
-                        //gửi vourcher cho người mời
-                        //user
-                        //gửi vourcher cho người vừa đăng ký tài khoản
-                        //model.email
+                        //gửi voucher cho người vừa đăng ký tài khoản
+                        string codeForInvitee = await _vourcherService.AddVoucherAtRegister(15);
+
+                        //gửi voucher cho người mời
+                        string codeForReferrer = await _vourcherService.AddVoucherAtRegister(10);
+
 
                         // Redirect to confirmation page
                         return RedirectToAction("RegisterConfirmation");
