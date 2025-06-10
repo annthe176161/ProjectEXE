@@ -23,6 +23,10 @@ public partial class Order
 
     public string? VourcherId { get; set; }
 
+    public decimal DiscountAmount { get; set; }
+
+    public decimal PayAmount { get; set; }
+
     public virtual User Buyer { get; set; } = null!;
 
     public virtual Product Product { get; set; } = null!;
