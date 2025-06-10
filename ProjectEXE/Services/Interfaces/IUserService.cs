@@ -37,6 +37,7 @@ namespace ProjectEXE.Services.Interfaces
 
         Task UpdateUserAsync(User user);
         Task<bool> DeleteUserAsync(int userId);
+        Task<User> GetUserByReferralCode(string referralCode);
 
     }
     

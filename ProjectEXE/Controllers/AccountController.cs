@@ -129,6 +129,16 @@ namespace ProjectEXE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            if (!string.IsNullOrEmpty(model.ReferredBy))
+            {
+                var user = await _userService.GetUserByReferralCode(model.ReferredBy);
+                if(user == null)
+                {
+                    TempData["Warning"] = "Mã giới thiệu không hợp lệ hoặc không tồn tại!";
+                    return View(model);
+                }
+            }
+
             model.ReferralCode = ReferralCodeGenerator.Generate();
             if (ModelState.IsValid)
             {
