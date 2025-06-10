@@ -173,7 +173,7 @@ namespace ProjectEXE.Services.Implementations
 
         public async Task<string> AddVoucherAtRegister(int discount)
         {
-            var code = $"INV-{ReferralCodeGenerator.Generate(10)}"
+            var code = $"INV-{ReferralCodeGenerator.Generate(10)}";
             var voucher = new Voucher
             {
                 VourcherId = Guid.NewGuid().ToString(),
