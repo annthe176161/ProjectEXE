@@ -34,5 +34,8 @@ namespace ProjectEXE.ViewModel.AccountViewModel
         public string ConfirmPassword { get; set; }
 
         public int RoleId { get; set; } = 2; // Mặc định là Buyer
+        public string? ReferralCode { get; set; } //mã mời của người dùng
+
+        public string ReferredBy { get; set; } = null!; //mã mời của người đăng ký
     }
 }

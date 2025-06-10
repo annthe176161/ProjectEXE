@@ -44,7 +44,7 @@ namespace ProjectEXE.Services.Implementations
         {
             return await _context.Users.FindAsync(userId);
         }
-        public async Task<User> CreateUserAsync(string email, string password, string fullName, string phoneNumber, string address, int roleId)
+        public async Task<User> CreateUserAsync(string email, string password, string fullName, string phoneNumber, string address, int roleId, string referralCode, string referredBy)
         {
             var passwordHash = HashPassword(password);
 
@@ -57,7 +57,9 @@ namespace ProjectEXE.Services.Implementations
                 Address = address,
                 RoleId = roleId,
                 IsActive = 2, // 
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.Now,
+                ReferralCode = referralCode,
+                ReferredBy = referredBy
             };
 
             _context.Users.Add(user);

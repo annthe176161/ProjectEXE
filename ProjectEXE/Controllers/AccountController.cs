@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProjectEXE.DTO;
 using ProjectEXE.Models;
 using ProjectEXE.Services.Interfaces;
 using ProjectEXE.ViewModel.AccountViewModel;
@@ -128,6 +129,7 @@ namespace ProjectEXE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            model.ReferralCode = ReferralCodeGenerator.Generate();
             if (ModelState.IsValid)
             {
                 if (await _userService.IsEmailExistsAsync(model.Email))
@@ -145,7 +147,9 @@ namespace ProjectEXE.Controllers
                         model.FullName,
                         model.PhoneNumber,
                         model.Address,
-                        model.RoleId
+                        model.RoleId,
+                        model.ReferralCode,
+                        model.ReferredBy
                     );
 
                     if (user != null)
