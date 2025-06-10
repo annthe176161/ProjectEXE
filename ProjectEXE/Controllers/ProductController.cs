@@ -248,56 +248,5 @@ namespace ProjectEXE.Controllers
                 return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
-
-        [HttpPost]
-        {
-            var product = await _context.Products.FindAsync(productId);
-            if (product == null)
-            {
-                TempData["Error"] = "Không tìm thấy sản phẩm.";
-                return RedirectToAction("ConfirmPurchase", new { id = productId });
-            }
-
-            var discount = await _context.Vouchers
-                .FirstOrDefaultAsync(d => d.Code == discountCode &&
-                                          d.IsActive &&
-                                          d.Quantity > 0 &&
-                                          d.ExpiryDate >= DateOnly.FromDateTime(DateTime.Now)
-                        );
-
-            if (discount == null)
-            {
-                TempData["Error"] = "Mã giảm giá không hợp lệ hoặc đã hết hạn.";
-                return RedirectToAction("ConfirmPurchase", new { id = productId });
-            }
-
-            // Tính giá mới và cập nhật vào DB
-            // Tính phần trăm giảm giá
-            var discountRate = discount.Discount / 100.0m;
-
-            // Tính số tiền giảm
-            var discountAmount = product.Price * discountRate;
-
-            // Nếu MaxDiscountAmount có giá trị và discountAmount lớn hơn nó, thì dùng MaxDiscountAmount
-            if (discount.MaxDiscountAmount.HasValue && discountAmount > discount.MaxDiscountAmount.Value)
-            {
-                product.Price -= discount.MaxDiscountAmount.Value;
-            }
-            else
-            {
-                product.Price -= discountAmount;
-            }
-            discount.Quantity = discount.Quantity - 1;
-
-            // Lưu thay đổi vào DB
-            _context.Products.Update(product);
-            await _context.SaveChangesAsync();
-
-            TempData["Success"] = $"Đã áp dụng mã giảm giá. Giá mới là {product.Price:N0} đ";
-            return RedirectToAction("ConfirmPurchase", new { id = productId });
-        }
-
-
-
     }
 }
