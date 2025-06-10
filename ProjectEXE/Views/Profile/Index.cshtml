@@ -171,6 +171,25 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Thông tin mã giới thiệu -->
+                            <div class="info-card">
+                                <div class="info-header">
+                                    <i class="fas fa-users info-icon"></i>
+                                    <h5>Thông tin giới thiệu</h5>
+                                </div>
+                                <div class="info-body">
+                                    <div class="info-row">
+                                        <span class="info-label">Mã giới thiệu của bạn</span>
+                                        <div class="referral-code-container">
+                                            <span id="referralCode" class="info-value referral-code">@Model.User?.ReferralCode</span>
+                                            <button id="copyRefBtn" class="btn-copy" title="Sao chép mã">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -272,6 +291,43 @@
                     }, 400);
                 }, 5000);
             });
+
+            // Chức năng sao chép mã giới thiệu
+            const copyRefBtn = document.getElementById('copyRefBtn');
+            const referralCode = document.getElementById('referralCode');
+
+            if (copyRefBtn && referralCode) {
+                copyRefBtn.addEventListener('click', function() {
+                    // Tạo một thẻ input tạm thời
+                    const tempInput = document.createElement('input');
+                    tempInput.value = referralCode.textContent;
+                    document.body.appendChild(tempInput);
+
+                    // Chọn và sao chép văn bản
+                    tempInput.select();
+                    document.execCommand('copy');
+
+                    // Xóa thẻ tạm
+                    document.body.removeChild(tempInput);
+
+                    // Hiệu ứng phản hồi
+                    referralCode.classList.add('copy-success');
+                    setTimeout(() => {
+                        referralCode.classList.remove('copy-success');
+                    }, 1000);
+
+                    // Đổi icon nút tạm thời
+                    const icon = copyRefBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-copy');
+                        icon.classList.add('fa-check');
+                        setTimeout(() => {
+                            icon.classList.remove('fa-check');
+                            icon.classList.add('fa-copy');
+                        }, 1500);
+                    }
+                });
+            }
         });
     </script>
 }
