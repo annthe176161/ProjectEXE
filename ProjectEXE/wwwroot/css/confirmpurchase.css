@@ -1071,3 +1071,381 @@
     .order-confirmation-page .modal-body::-webkit-scrollbar-thumb:hover {
         background: var(--confirm-primary-green-dark);
     }
+
+/* ===== VOUCHER CARD STYLES ===== */
+.order-confirmation-page .voucher-card {
+    background: var(--confirm-white);
+    border-radius: var(--confirm-border-radius-lg);
+    box-shadow: var(--confirm-card-shadow);
+    border: 1px solid var(--confirm-border-light);
+    transition: var(--confirm-transition);
+    overflow: hidden;
+    position: relative;
+}
+
+    .order-confirmation-page .voucher-card:hover {
+        box-shadow: var(--confirm-card-shadow-hover);
+        transform: translateY(-2px);
+    }
+
+    .order-confirmation-page .voucher-card .card-header {
+        background: linear-gradient(135deg, #e8faff, #e0f2ff);
+        border-bottom: 1px solid #d8e8ff;
+    }
+
+        .order-confirmation-page .voucher-card .card-header::before {
+            background: linear-gradient(90deg, #17a2b8, #0dcaf0);
+        }
+
+        .order-confirmation-page .voucher-card .card-header h5 i {
+            color: #17a2b8;
+        }
+
+/* Input Voucher Section */
+.order-confirmation-page .voucher-input-wrapper {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.order-confirmation-page .input-group {
+    border-radius: var(--confirm-border-radius);
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+    .order-confirmation-page .input-group .form-control {
+        border: 2px solid #d8e8ff;
+        background-color: #f8fdff;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--confirm-text-dark);
+        transition: var(--confirm-transition);
+        letter-spacing: 0.5px;
+    }
+
+        .order-confirmation-page .input-group .form-control:focus {
+            border-color: #17a2b8;
+            background-color: #ffffff;
+            box-shadow: none;
+        }
+
+        .order-confirmation-page .input-group .form-control::placeholder {
+            color: #a0aec0;
+            font-weight: 400;
+        }
+
+.order-confirmation-page .btn-apply-voucher {
+    background: linear-gradient(45deg, #17a2b8, #0dcaf0);
+    color: white;
+    border: none;
+    padding: 0 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    transition: var(--confirm-transition);
+}
+
+    .order-confirmation-page .btn-apply-voucher:hover {
+        background: linear-gradient(45deg, #138496, #17a2b8);
+        box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3);
+        transform: translateY(-1px);
+    }
+
+    .order-confirmation-page .btn-apply-voucher:active {
+        transform: translateY(0);
+    }
+
+    .order-confirmation-page .btn-apply-voucher i {
+        font-size: 1.1rem;
+        margin-right: 0.25rem;
+    }
+
+/* Voucher Feedback */
+.order-confirmation-page .voucher-feedback {
+    padding: 0.75rem 1rem;
+    border-radius: var(--confirm-border-radius);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .order-confirmation-page .voucher-feedback.valid {
+        background-color: #d1f8ea;
+        color: #0e6245;
+        border: 1px solid #a3e9cc;
+    }
+
+    .order-confirmation-page .voucher-feedback.invalid {
+        background-color: #ffe8e8;
+        color: #c53030;
+        border: 1px solid #feb2b2;
+    }
+
+/* Available Vouchers */
+.order-confirmation-page .available-vouchers {
+    margin-top: 1.5rem;
+}
+
+.order-confirmation-page .available-vouchers-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--confirm-text-dark);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+    .order-confirmation-page .available-vouchers-title i {
+        color: #17a2b8;
+    }
+
+.order-confirmation-page .voucher-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.order-confirmation-page .voucher-item {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #f0f9ff, #e6f6fe);
+    border: 1px dashed #17a2b8;
+    border-radius: var(--confirm-border-radius);
+    padding: 0.5rem;
+    gap: 1rem;
+    position: relative;
+    transition: var(--confirm-transition);
+}
+
+    .order-confirmation-page .voucher-item:hover {
+        background: linear-gradient(135deg, #e6f6fe, #d9f2ff);
+        border-color: #0c7d95;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(23, 162, 184, 0.15);
+    }
+
+.order-confirmation-page .voucher-badge {
+    background: linear-gradient(45deg, #17a2b8, #0dcaf0);
+    color: white;
+    border-radius: 8px;
+    min-width: 60px;
+    padding: 0.75rem 0.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.2);
+    transform: rotate(-3deg);
+}
+
+    .order-confirmation-page .voucher-badge::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: repeating-linear-gradient( -45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.1) 5px, transparent 5px, transparent 10px );
+        border-radius: 8px;
+    }
+
+.order-confirmation-page .discount-amount {
+    font-size: 1.1rem;
+    font-weight: 900;
+    line-height: 1;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+}
+
+.order-confirmation-page .discount-type {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+.order-confirmation-page .voucher-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.order-confirmation-page .voucher-code {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #138496;
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.5px;
+}
+
+.order-confirmation-page .voucher-desc {
+    font-size: 0.85rem;
+    color: var(--confirm-text-dark);
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.order-confirmation-page .voucher-expiry {
+    font-size: 0.75rem;
+    color: var(--confirm-text-muted);
+}
+
+.order-confirmation-page .btn-use-voucher {
+    background: #17a2b8;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: var(--confirm-transition);
+    white-space: nowrap;
+}
+
+    .order-confirmation-page .btn-use-voucher:hover {
+        background: #138496;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(23, 162, 184, 0.3);
+    }
+
+/* Order Summary */
+.order-confirmation-page .order-summary {
+    background: linear-gradient(135deg, #f0f9ff, #e6f6fe);
+    border-radius: var(--confirm-border-radius-md);
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(23, 162, 184, 0.1);
+    height: 100%;
+}
+
+.order-confirmation-page .summary-title {
+    color: #155724;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(23, 162, 184, 0.2);
+}
+
+.order-confirmation-page .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+    .order-confirmation-page .summary-row span:first-child {
+        color: var(--confirm-text-dark);
+        font-weight: 500;
+    }
+
+.order-confirmation-page .product-price {
+    font-weight: 600;
+    color: var(--confirm-text-dark);
+}
+
+.order-confirmation-page .discount-row {
+    color: #da3737;
+}
+
+.order-confirmation-page .discount-amount {
+    font-weight: 600;
+    color: #da3737;
+}
+
+.order-confirmation-page .summary-divider {
+    height: 1px;
+    background: linear-gradient( 90deg, transparent, rgba(23, 162, 184, 0.3), transparent );
+    margin: 1rem 0;
+}
+
+.order-confirmation-page .total-row {
+    font-size: 1.1rem;
+    margin-bottom: 0;
+}
+
+    .order-confirmation-page .total-row span:first-child {
+        font-weight: 700;
+        color: #155724;
+    }
+
+.order-confirmation-page .total-amount {
+    font-weight: 900;
+    color: #155724;
+    font-size: 1.25rem;
+}
+
+/* Animations */
+.order-confirmation-page .voucher-card {
+    animation: confirmFadeInUp 0.6s ease-out;
+    animation-delay: 0.35s;
+}
+
+@keyframes voucherPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+}
+
+.order-confirmation-page .voucher-feedback.valid {
+    animation: voucherPulse 1s ease-in-out;
+}
+
+/* Responsive Styles */
+@media (max-width: 991.98px) {
+    .order-confirmation-page .order-summary {
+        margin-top: 1.5rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .order-confirmation-page .voucher-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem;
+    }
+
+    .order-confirmation-page .voucher-badge {
+        transform: rotate(0);
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .order-confirmation-page .btn-use-voucher {
+        margin-top: 0.5rem;
+        align-self: flex-end;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .order-confirmation-page .input-group {
+        flex-direction: column;
+    }
+
+        .order-confirmation-page .input-group .form-control {
+            border-radius: var(--confirm-border-radius) var(--confirm-border-radius) 0 0;
+        }
+
+    .order-confirmation-page .btn-apply-voucher {
+        border-radius: 0 0 var(--confirm-border-radius) var(--confirm-border-radius);
+        justify-content: center;
+        padding: 0.625rem;
+    }
+}

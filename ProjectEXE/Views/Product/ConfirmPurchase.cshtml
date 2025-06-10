@@ -226,6 +226,71 @@
                     </div>
                 </div>
 
+                <!-- Voucher Card - PHẦN MÃ GIẢM GIÁ ĐƠN GIẢN -->
+                <div class="voucher-card mb-4">
+                    <div class="card-header">
+                        <h5><i class="fas fa-ticket-alt me-2"></i>Mã giảm giá</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-7">
+                                <div class="voucher-input-wrapper">
+                                    <label for="voucherCode" class="form-label">Nhập mã giảm giá (nếu có)</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Nhập mã giảm giá..." id="voucherCode" name="VoucherCode" maxlength="20">
+                                        <button class="btn btn-apply-voucher" type="button" id="applyVoucher">
+                                            <i class="fas fa-check-circle me-1"></i>Áp dụng
+                                        </button>
+                                    </div>
+                                    <div class="voucher-helper mt-2">
+                                        <small class="text-muted">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            Mã giảm giá sẽ được kiểm tra khi xác nhận đơn hàng
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-5">
+                                <div class="order-summary">
+                                    <h6 class="summary-title">Chi tiết thanh toán</h6>
+
+                                    <!-- Giá sản phẩm gốc -->
+                                    <div class="summary-row">
+                                        <span>Giá gốc sản phẩm:</span>
+                                        <span class="product-price fw-bold">@Model.Product.Price.ToString("N0")₫</span>
+                                    </div>
+
+                                    <!-- Phần giảm giá - mặc định ẩn -->
+                                    <div class="summary-row discount-row d-none" id="discountRow">
+                                        <span>Giảm giá:</span>
+                                        <span class="discount-amount">-0₫</span>
+                                    </div>
+
+                                    <div class="summary-divider"></div>
+
+                                    <!-- Thành tiền cuối cùng -->
+                                    <div class="summary-row total-row">
+                                        <span>Giá sau khi áp mã:</span>
+                                        <span class="total-amount">@Model.Product.Price.ToString("N0")₫</span>
+                                    </div>
+
+                                    <!-- Thông báo khi áp dụng mã thành công -->
+                                    <div class="discount-notice d-none mt-2 text-center py-2" id="discountNotice">
+                                        <small class="text-success">
+                                            <i class="fas fa-check-circle me-1"></i>
+                                            Đã áp dụng mã giảm giá
+                                        </small>
+                                    </div>
+
+                                    <!-- Inputs ẩn để gửi dữ liệu -->
+                                    <input type="hidden" name="DiscountAmount" id="discountAmount" value="0" />
+                                    <input type="hidden" name="PayAmount" id="payAmount" value="@Model.Product.Price" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Process Flow Information -->
                 <div class="process-flow-card mb-4">
                     <div class="card-header">

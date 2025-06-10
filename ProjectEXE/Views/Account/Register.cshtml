@@ -135,6 +135,29 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Phần mã giới thiệu -->
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <div class="form-group referral-code-wrapper">
+                                            <label asp-for="ReferredBy" class="form-label">
+                                                <i class="fas fa-user-friends"></i>
+                                                Mã giới thiệu (nếu có)
+                                            </label>
+                                            <div class="input-wrapper">
+                                                <input asp-for="ReferredBy" class="form-control" placeholder="Nhập mã giới thiệu nếu có..." />
+                                                <div class="input-icon">
+                                                    <i class="fas fa-ticket-alt"></i>
+                                                </div>
+                                            </div>
+                                            <span asp-validation-for="ReferredBy" class="text-danger field-error"></span>
+
+                                            <div class="referral-info">
+                                                <i class="fas fa-info-circle"></i>
+                                                <span>Nhập mã giới thiệu để nhận các đặc quyền dành cho thành viên mới</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Step 2: Security -->
