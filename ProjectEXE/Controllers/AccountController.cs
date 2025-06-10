@@ -173,6 +173,11 @@ namespace ProjectEXE.Controllers
                         // Send verification email with session ID
                         await _emailService.SendVerificationEmailAsync(model.Email, sessionId);
 
+                        //gửi vourcher cho người mời
+                        //user
+                        //gửi vourcher cho người vừa đăng ký tài khoản
+                        //model.email
+
                         // Redirect to confirmation page
                         return RedirectToAction("RegisterConfirmation");
                     }
