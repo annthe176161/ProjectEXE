@@ -162,11 +162,33 @@
                                     </div>
                                 </div>
                                 <div class="price-section">
-                                    <div class="price-amount">
-                                        @order.Price.ToString("N0")₫
-                                    </div>
-                                    <div class="price-label">Giá sản phẩm</div>
-                                </div>
+    @if (order.HasVoucher)
+    {
+        <!-- Nếu có áp dụng voucher, hiển thị cả giá gốc, giảm giá và giá cuối -->
+        <div class="price-with-discount">
+            <div class="original-price">
+                <span class="strikethrough">@order.Price.ToString("N0")₫</span>
+            </div>
+            <div class="discount-info">
+                <div class="voucher-badge">
+                    <i class="fas fa-ticket-alt"></i>
+                    <span>-@order.DiscountAmount.ToString("N0")₫</span>
+                </div>
+            </div>
+            <div class="final-price">
+                @order.PayAmount.ToString("N0")₫
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Nếu không có voucher, chỉ hiển thị giá gốc như cũ -->
+        <div class="price-amount">
+            @order.Price.ToString("N0")₫
+        </div>
+        <div class="price-label">Giá sản phẩm</div>
+    }
+</div>
                             </div>
                         </div>
 

@@ -28,5 +28,15 @@ namespace ProjectEXE.Services.Interfaces
         /// <param name="token">Token đặt lại mật khẩu</param>
         /// <returns>Task</returns>
         Task SendPasswordResetEmailAsync(string email, string token);
+
+        /// <summary>
+        /// Gửi email thông báo về voucher
+        /// </summary>
+        /// <param name="email">Địa chỉ email của người nhận</param>
+        /// <param name="voucherCode">Mã voucher</param>
+        /// <param name="discount">Phần trăm giảm giá</param>
+        /// <param name="isNewUser">True nếu người nhận là người dùng mới đăng ký, False nếu là người đã giới thiệu</param>
+        /// <returns>Task</returns>
+        Task SendVoucherNotificationEmailAsync(string email, string voucherCode, int discount, bool isNewUser);
     }
 }

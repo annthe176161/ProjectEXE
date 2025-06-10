@@ -187,6 +187,67 @@
                         </div>
                     </div>
                 </div>
+                <!-- Thêm phần hiển thị thông tin thanh toán sau phần product-card -->
+<div class="info-card payment-card">
+    <div class="card-header-green">
+        <i class="fas fa-receipt me-2"></i>
+        <span>Chi tiết thanh toán</span>
+    </div>
+    <div class="card-body">
+        <div class="payment-details">
+            <div class="payment-row">
+                <div class="payment-label">Giá sản phẩm</div>
+                <div class="payment-value">@Model.Price.ToString("N0")₫</div>
+            </div>
+            
+            @if (Model.HasVoucher)
+            {
+                <div class="payment-row voucher-info">
+                    <div class="payment-label">
+                        <div class="voucher-badge">
+                            <i class="fas fa-ticket-alt me-1"></i>Voucher
+                        </div>
+                        <div class="voucher-code">@Model.VoucherCode</div>
+                    </div>
+                    <div class="payment-value discount-value">-@Model.DiscountAmount.ToString("N0")₫</div>
+                </div>
+                
+                <div class="voucher-details">
+                    <div class="voucher-percent">
+                        <i class="fas fa-percentage"></i>
+                        <span>Giảm @Model.VoucherDiscountPercent%</span>
+                    </div>
+                    @if (Model.VoucherExpiryDate.HasValue)
+                    {
+                        <div class="voucher-expiry">
+                            <i class="far fa-calendar-alt"></i>
+                            <span>HSD: @Model.VoucherExpiryDate.Value.ToString("dd/MM/yyyy")</span>
+                        </div>
+                    }
+                </div>
+                
+                <div class="payment-divider"></div>
+            }
+            
+            <div class="payment-row payment-total">
+                <div class="payment-label">Thành tiền</div>
+                <div class="payment-value">@Model.PayAmount.ToString("N0")₫</div>
+            </div>
+            
+            <div class="payment-note">
+                <i class="fas fa-info-circle me-2"></i>
+                @if (Model.OrderStatusId == 1)
+                {
+                    <span>Bạn sẽ thanh toán trực tiếp với người bán sau khi đơn hàng được xác nhận</span>
+                }
+                else
+                {
+                    <span>Thanh toán trực tiếp với người bán khi nhận hàng hoặc theo thỏa thuận</span>
+                }
+            </div>
+        </div>
+    </div>
+</div>
             </div>
 
             <div class="col-lg-4">

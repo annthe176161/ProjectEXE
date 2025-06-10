@@ -535,3 +535,58 @@
     outline: 3px solid rgba(40, 167, 69, 0.3);
     outline-offset: 2px;
 }
+
+/* Thêm vào cuối file orderlist.css */
+
+.price-with-discount {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    min-width: 150px;
+}
+
+.original-price {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 4px;
+}
+
+.strikethrough {
+    text-decoration: line-through;
+}
+
+.discount-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.voucher-badge {
+    display: inline-flex;
+    align-items: center;
+    background-color: #ff4d4f;
+    color: white;
+    font-size: 0.8rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+    .voucher-badge i {
+        margin-right: 4px;
+        font-size: 0.75rem;
+    }
+
+.final-price {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #28a745;
+}
+
+/* Điều chỉnh price-section để trực quan hơn */
+.price-section {
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+}
