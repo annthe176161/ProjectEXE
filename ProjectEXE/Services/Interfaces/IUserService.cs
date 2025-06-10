@@ -29,7 +29,7 @@ namespace ProjectEXE.Services.Interfaces
         Task<decimal> GetTotalPackagePaymentsRevenueAsync();
         Task<User> GetUserByEmailAsync(string email);
         Task<bool> ValidatePasswordAsync(User user, string password);
-        Task<User> CreateUserAsync(string email, string password, string fullName, string phoneNumber, string address, int roleId);
+        Task<User> CreateUserAsync(string email, string password, string fullName, string phoneNumber, string address, int roleId, string referralCode, string referredBy);
         Task<bool> IsEmailExistsAsync(string email);
         Task<User> GetUserByIdAsync(int userId);
         ClaimsPrincipal CreateClaimsPrincipal(User user);

@@ -23,6 +23,10 @@ public partial class User
 
     public DateTime CreatedAt { get; set; }
 
+    public string ReferralCode { get; set; } = null!;
+
+    public string? ReferredBy { get; set; }
+
     public virtual ICollection<Order> OrderBuyers { get; set; } = new List<Order>();
 
     public virtual ICollection<Order> OrderSellers { get; set; } = new List<Order>();
