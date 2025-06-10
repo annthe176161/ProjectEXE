@@ -1,69 +1,99 @@
-﻿@model ProjectEXE.Models.Voucher
+﻿@model ProjectEXE.ViewModel.Voucher.VoucherViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Chỉnh sửa Voucher";
 }
 
-<h1>Edit</h1>
+<div class="container-fluid">
+    <h2>Chỉnh sửa Voucher</h2>
+    <hr />
 
-<h4>Voucher</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="VourcherId" />
-            <div class="form-group">
-                <label asp-for="Code" class="control-label"></label>
-                <input asp-for="Code" class="form-control" />
-                <span asp-validation-for="Code" class="text-danger"></span>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="VoucherId" />
+                        <input type="hidden" asp-for="CreateAt" />
+
+                        <div class="mb-3">
+                            <label asp-for="Code" class="form-label">Mã voucher</label>
+                            <input asp-for="Code" class="form-control" />
+                            <span asp-validation-for="Code" class="text-danger"></span>
+                            <small class="text-muted">Mã voucher phải là duy nhất</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Discount" class="form-label">Giảm giá (%)</label>
+                            <input asp-for="Discount" class="form-control" type="number" min="1" max="100" />
+                            <span asp-validation-for="Discount" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Ngày tạo</label>
+                            <input class="form-control" value="@Model.CreateAt.ToString("dd/MM/yyyy")" disabled />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ExpiryDate" class="form-label">Ngày hết hạn</label>
+                            <input asp-for="ExpiryDate" class="form-control" type="date" />
+                            <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="MinOrderValue" class="form-label">Giá trị đơn hàng tối thiểu</label>
+                            <div class="input-group">
+                                <input asp-for="MinOrderValue" class="form-control" type="number" min="0" />
+                                <span class="input-group-text">đ</span>
+                            </div>
+                            <span asp-validation-for="MinOrderValue" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="MaxDiscountAmount" class="form-label">Giảm giá tối đa</label>
+                            <div class="input-group">
+                                <input asp-for="MaxDiscountAmount" class="form-control" type="number" min="0" />
+                                <span class="input-group-text">đ</span>
+                            </div>
+                            <span asp-validation-for="MaxDiscountAmount" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Quantity" class="form-label">Số lượng</label>
+                            <input asp-for="Quantity" class="form-control" type="number" min="1" />
+                            <span asp-validation-for="Quantity" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                            <label asp-for="IsActive" class="form-check-label">Kích hoạt</label>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Discount" class="control-label"></label>
-                <input asp-for="Discount" class="form-control" />
-                <span asp-validation-for="Discount" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Hướng dẫn</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-info-circle text-info me-2"></i> <strong>Mã voucher:</strong> Không được trùng với mã hiện có</li>
+                        <li><i class="fas fa-info-circle text-info me-2"></i> <strong>Giảm giá:</strong> Từ 1% đến 100%</li>
+                        <li><i class="fas fa-info-circle text-info me-2"></i> <strong>Ngày hết hạn:</strong> Phải lớn hơn hoặc bằng ngày tạo</li>
+                        <li><i class="fas fa-info-circle text-info me-2"></i> <strong>Giá trị tối thiểu:</strong> Là số tiền tối thiểu đơn hàng phải đạt</li>
+                        <li><i class="fas fa-info-circle text-info me-2"></i> <strong>Giảm giá tối đa:</strong> Là số tiền giảm tối đa có thể áp dụng</li>
+                    </ul>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="CreateAt" class="control-label"></label>
-                <input asp-for="CreateAt" class="form-control" />
-                <span asp-validation-for="CreateAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ExpiryDate" class="control-label"></label>
-                <input asp-for="ExpiryDate" class="form-control" />
-                <span asp-validation-for="ExpiryDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MinOrderValue" class="control-label"></label>
-                <input asp-for="MinOrderValue" class="form-control" />
-                <span asp-validation-for="MinOrderValue" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MaxDiscountAmount" class="control-label"></label>
-                <input asp-for="MaxDiscountAmount" class="form-control" />
-                <span asp-validation-for="MaxDiscountAmount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Quantity" class="control-label"></label>
-                <input asp-for="Quantity" class="form-control" />
-                <span asp-validation-for="Quantity" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
