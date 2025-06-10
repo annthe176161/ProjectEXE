@@ -49,7 +49,10 @@ namespace ProjectEXE.Services.Implementations
                 ProductId = productId,
                 StatusId = 1, // Chờ xác nhận
                 OrderDate = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                UpdatedAt = DateTime.Now,
+                //VourcherId = ,
+                //DiscountAmount = ,
+                //PayAmount = ,
             };
 
             _context.Orders.Add(order);
