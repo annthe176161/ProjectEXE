@@ -270,6 +270,7 @@ namespace ProjectEXE.Controllers
             }
         }
 
+        [Authorize(Roles = "Seller")]
         public async Task<IActionResult> EditShop()
         {
             try
