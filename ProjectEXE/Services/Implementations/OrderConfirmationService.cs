@@ -135,9 +135,10 @@ namespace ProjectEXE.Services.Implementations
                     ProductId = model.ProductId,
                     StatusId = 1, // Chờ xác nhận
                     OrderDate = DateTime.Now,
-                    UpdatedAt = DateTime.Now
-                    // Lưu ý: Order model hiện tại không có fields để lưu thông tin buyer
-                    // Thông tin buyer sẽ được lấy từ bảng Users khi cần
+                    UpdatedAt = DateTime.Now,
+                    VourcherId = model.VoucherId,
+                    DiscountAmount = model.DiscountAmount,
+                    PayAmount = model.PayAmount,
                 };
 
                 _context.Orders.Add(order);

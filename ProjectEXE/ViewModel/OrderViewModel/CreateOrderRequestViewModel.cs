@@ -11,5 +11,8 @@
         public string BuyerPhone { get; set; } = string.Empty;
         public string? BuyerEmail { get; set; }
         public string BuyerAddress { get; set; } = string.Empty;
+        public string? VoucherId { get; set; }
+        public decimal DiscountAmount { get; set; } 
+        public decimal PayAmount { get; set; }  
     }
 }

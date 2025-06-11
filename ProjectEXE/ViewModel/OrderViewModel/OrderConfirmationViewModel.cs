@@ -33,5 +33,7 @@ namespace ProjectEXE.ViewModel.OrderViewModel
         public int SellerId { get; set; }
 
         public string? VoucherCode { get; set; }
+        public decimal DiscountAmount { get; set; }
+        public decimal PayAmount { get; set; }
     }
 }

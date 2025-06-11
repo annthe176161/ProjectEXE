@@ -25,5 +25,6 @@ namespace ProjectEXE.Services.Interfaces
         Task<string> AddVoucherAtRegister(int discount);
         Task<VoucherResult> ApplyVoucher(string voucherCode, decimal price);
         Task ReduceQuantityVoucher(string voucherCode);
+        Task<string> GetVourcherIdByCode(string voucherCode);
     }
 }

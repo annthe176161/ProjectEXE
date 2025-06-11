@@ -154,6 +154,12 @@ namespace ProjectEXE.Controllers
                     return RedirectToAction("ConfirmPurchase", new { id = model.ProductId });
                 }
 
+                string? voucherId = null;
+                if (!string.IsNullOrWhiteSpace(model.VoucherCode))
+                {
+                    voucherId = await _voucherService.GetVourcherIdByCode(model.VoucherCode);
+                }
+
                 // Tạo model để gửi đến service
                 var createOrderModel = new CreateOrderRequestViewModel
                 {
@@ -163,7 +169,10 @@ namespace ProjectEXE.Controllers
                     BuyerName = buyer.FullName,
                     BuyerPhone = buyer.PhoneNumber,
                     BuyerEmail = buyer.Email,
-                    BuyerAddress = buyer.Address
+                    BuyerAddress = buyer.Address,
+                    VoucherId = voucherId,
+                    DiscountAmount = model.DiscountAmount,
+                    PayAmount = model.PayAmount,
                 };
 
                 var result = await _orderConfirmationService.CreateOrderAsync(createOrderModel);

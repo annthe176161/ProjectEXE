@@ -261,5 +261,11 @@ namespace ProjectEXE.Services.Implementations
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<string> GetVourcherIdByCode(string voucherCode)
+        {
+            var voucher = await _context.Vouchers.FirstOrDefaultAsync(v => v.Code == voucherCode);
+            return voucher.VourcherId;
+        }
     }
 }
