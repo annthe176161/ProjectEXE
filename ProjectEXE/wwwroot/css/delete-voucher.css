@@ -1,0 +1,102 @@
+﻿/* Voucher preview styles */
+.voucher-preview-container {
+    padding: 1.5rem;
+}
+
+.voucher-preview {
+    border: 2px dashed #dc3545;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: white;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.1);
+}
+
+.voucher-header {
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.voucher-code {
+    font-weight: bold;
+    font-size: 1.25rem;
+    letter-spacing: 1px;
+}
+
+.voucher-discount {
+    font-size: 1.75rem;
+    font-weight: bold;
+    display: flex;
+    align-items: baseline;
+}
+
+    .voucher-discount span {
+        font-size: 1rem;
+        margin-left: 2px;
+    }
+
+/* Delete button effects */
+.delete-btn {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+    .delete-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+    }
+
+    .delete-btn:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(-100%);
+        transition: all 0.3s ease;
+    }
+
+    .delete-btn:hover:before {
+        transform: translateX(0);
+    }
+
+/* Animation for warning */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.warning-icon {
+    animation: pulse 2s infinite;
+}
+
+/* Card transition effects */
+.card {
+    transition: all 0.3s;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(220, 53, 69, 0.15) !important;
+    }
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .detail-icon {
+        min-width: 36px;
+    }
+}

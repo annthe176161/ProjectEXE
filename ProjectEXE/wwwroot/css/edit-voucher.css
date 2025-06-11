@@ -1,0 +1,201 @@
+﻿/* Cải tiến chung */
+.container-fluid {
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+
+h2 {
+    color: var(--primary-green);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+    h2::before {
+        content: '\f02b';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        margin-right: 10px;
+        background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 1.5rem;
+    }
+
+hr {
+    border-color: rgba(40, 167, 69, 0.1);
+    margin-bottom: 25px;
+}
+
+/* Card styles */
+.card {
+    border: none;
+    box-shadow: var(--shadow-md);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    margin-bottom: 24px;
+}
+
+    .card:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-3px);
+    }
+
+.voucher-edit-card {
+    border-top: 4px solid var(--primary-green);
+}
+
+.card-body {
+    padding: 24px;
+}
+
+/* Form controls */
+.form-label {
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.form-control {
+    padding: 12px 16px;
+    height: auto;
+    border: 2px solid rgba(40, 167, 69, 0.15);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    font-size: 0.95rem;
+}
+
+    .form-control:focus {
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
+        transform: translateY(-1px);
+    }
+
+    .form-control:disabled {
+        background-color: rgba(40, 167, 69, 0.05);
+        border-color: rgba(40, 167, 69, 0.1);
+        font-style: italic;
+    }
+
+.input-group-text {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: var(--primary-green);
+    font-weight: 600;
+    border: 2px solid rgba(40, 167, 69, 0.15);
+    border-left: none;
+}
+
+.input-group .form-control {
+    border-right: none;
+}
+
+.form-control::-webkit-inner-spin-button,
+.form-control::-webkit-outer-spin-button {
+    opacity: 1;
+}
+
+/* Custom switch */
+.custom-switch .form-check-input {
+    width: 3em;
+    height: 1.5em;
+    margin-top: 0.25em;
+    background-color: rgba(40, 167, 69, 0.2);
+    border-color: rgba(40, 167, 69, 0.3);
+}
+
+    .custom-switch .form-check-input:checked {
+        background-color: var(--primary-green);
+        border-color: var(--primary-green-dark);
+    }
+
+.custom-switch .form-check-label {
+    color: var(--text-dark);
+    font-weight: 500;
+    padding-left: 8px;
+}
+
+/* Buttons */
+.btn {
+    padding: 12px 24px;
+    font-weight: 600;
+    border-radius: 30px;
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+    border: none;
+}
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        background: linear-gradient(135deg, var(--primary-green-dark) 0%, var(--primary-green) 100%);
+    }
+
+.btn-secondary {
+    background-color: var(--light-gray);
+    color: var(--text-dark);
+    border: none;
+}
+
+    .btn-secondary:hover {
+        transform: translateY(-2px);
+        background-color: var(--gray);
+        color: var(--white);
+    }
+
+/* Guide card */
+.guide-card {
+    border-top: 4px solid var(--accent-green);
+}
+
+    .guide-card .card-header {
+        background: linear-gradient(135deg, var(--accent-green) 0%, var(--info) 100%);
+        padding: 16px 24px;
+        border-bottom: none;
+    }
+
+.guide-list li {
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(40, 167, 69, 0.15);
+}
+
+    .guide-list li:last-child {
+        border-bottom: none;
+    }
+
+.guide-list i {
+    color: var(--accent-green);
+}
+
+.guide-list strong {
+    color: var(--text-dark);
+}
+
+/* Validation */
+.text-danger {
+    font-size: 0.85rem;
+    margin-top: 6px;
+    display: block;
+}
+
+small.text-muted {
+    font-size: 0.85rem;
+    display: block;
+    margin-top: 6px;
+    font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .btn {
+        padding: 10px 16px;
+        font-size: 0.95rem;
+    }
+
+    .form-control {
+        font-size: 16px; /* prevent zoom on mobile */
+    }
+}

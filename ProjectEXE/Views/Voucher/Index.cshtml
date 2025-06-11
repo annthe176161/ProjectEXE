@@ -1,90 +1,359 @@
 ﻿@model IEnumerable<ProjectEXE.ViewModel.Voucher.VoucherViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Quản lý Voucher";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/manage-voucher.css?v=@DateTime.Now.Ticks" />
+}
 
-
-
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Quản lý Voucher</h2>
-        <a asp-action="Create" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Thêm mới
-        </a>
+<div class="container-fluid py-4">
+    <!-- Tiêu đề và thông tin tổng quan -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0 overflow-hidden">
+                <div class="card-body p-0">
+                    <div class="bg-gradient-success p-4">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <h2 class="text-white mb-0 fw-bold">Quản lý Voucher</h2>
+                                <p class="text-white-50 mb-0">Tạo và quản lý các mã giảm giá</p>
+                            </div>
+                            <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                                <a asp-action="Create" class="btn btn-light text-success shadow-sm">
+                                    <i class="fas fa-plus me-2"></i>Thêm mới Voucher
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- Thông báo -->
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["Success"]
+        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong>Thành công!</strong> @TempData["Success"]
+            </div>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
 
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            @TempData["Error"]
+        <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <strong>Lỗi!</strong> @TempData["Error"]
+            </div>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
 
-    <div class="card">
+    <!-- Bộ lọc và tìm kiếm -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-success"></i></span>
+                        <input type="text" id="searchVoucher" class="form-control border-start-0" placeholder="Tìm kiếm mã voucher...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select id="statusFilter" class="form-select">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="active">Đang hoạt động</option>
+                        <option value="inactive">Không hoạt động</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select id="sortOrder" class="form-select">
+                        <option value="newest">Mới nhất</option>
+                        <option value="oldest">Cũ nhất</option>
+                        <option value="discount">Giảm giá cao nhất</option>
+                        <option value="expiring">Sắp hết hạn</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-outline-success w-100" id="resetFilters">
+                        <i class="fas fa-sync-alt me-2"></i>Đặt lại
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danh sách Voucher -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 text-success">Danh sách Voucher</h5>
+            <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-outline-success" id="btnCardView">
+                    <i class="fas fa-th"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-success active" id="btnTableView">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead>
+                <table class="table table-hover align-middle" id="voucherTable">
+                    <thead class="table-light">
                         <tr>
+                            <th class="text-center" style="width: 60px;">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="selectAll">
+                                </div>
+                            </th>
                             <th>Mã</th>
-                            <th>Giảm giá (%)</th>
-                            <th>Ngày tạo</th>
-                            <th>Ngày hết hạn</th>
-                            <th>Đơn hàng tối thiểu</th>
-                            <th>Giảm giá tối đa</th>
-                            <th>Số lượng</th>
-                            <th>Trạng thái</th>
-                            <th>Thao tác</th>
+                            <th>Giảm giá</th>
+                            <th>Thời gian</th>
+                            <th>Điều kiện</th>
+                            <th class="text-center">Số lượng</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-end">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr>
-                                <td>@item.Code</td>
-                                <td>@item.Discount%</td>
-                                <td>@item.CreateAt.ToString("dd/MM/yyyy")</td>
-                                <td>@(item.ExpiryDate.HasValue ? item.ExpiryDate.Value.ToString("dd/MM/yyyy") : "Không có")</td>
-                                <td>@(item.MinOrderValue.HasValue ? string.Format("{0:N0} đ", item.MinOrderValue) : "Không có")</td>
-                                <td>@(item.MaxDiscountAmount.HasValue ? string.Format("{0:N0} đ", item.MaxDiscountAmount) : "Không có")</td>
-                                <td>@item.Quantity</td>
+                            <tr class="align-middle">
+                                <td class="text-center">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="@item.VoucherId">
+                                    </div>
+                                </td>
                                 <td>
-                                    @if (item.IsActive)
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-voucher bg-light-success text-success me-3 rounded">
+                                            <i class="fas fa-ticket-alt"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold">@item.Code</h6>
+                                            <small class="text-muted">ID: @item.VoucherId</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success fs-6">@item.Discount%</span>
+                                    @if (item.MaxDiscountAmount.HasValue)
                                     {
-                                        <span class="badge bg-success">Kích hoạt</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-danger">Không kích hoạt</span>
+                                        <div class="small text-muted mt-1">Tối đa: @string.Format("{0:N0} đ", item.MaxDiscountAmount)</div>
                                     }
                                 </td>
                                 <td>
-                                    <a asp-action="Edit" asp-route-id="@item.VoucherId" class="btn btn-sm btn-warning">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a asp-action="Delete" asp-route-id="@item.VoucherId" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
+                                    <div class="small">
+                                        <i class="fas fa-calendar-plus text-muted me-1"></i> @item.CreateAt.ToString("dd/MM/yyyy")
+                                    </div>
+                                    @if (item.ExpiryDate.HasValue)
+                                    {
+                                        // Chuyển đổi DateOnly? thành DateTime để so sánh
+                                        var expiryDateTime = item.ExpiryDate.Value.ToDateTime(TimeOnly.MinValue);
+                                        var today = DateTime.Now;
+                                        var threeDaysLater = today.AddDays(3);
+
+                                        <div class="small @(expiryDateTime <= threeDaysLater ? "text-danger" : "text-muted")">
+                                            <i class="fas fa-calendar-times me-1"></i> @item.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                                        </div>
+
+                                        @if (expiryDateTime <= threeDaysLater && expiryDateTime > today)
+                                        {
+                                            <div class="badge bg-warning text-dark mt-1">Sắp hết hạn</div>
+                                        }
+                                        else if (expiryDateTime < today)
+                                        {
+                                            <div class="badge bg-danger mt-1">Đã hết hạn</div>
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.MinOrderValue.HasValue)
+                                    {
+                                        <div class="small">
+                                            <i class="fas fa-shopping-cart text-muted me-1"></i> Tối thiểu: @string.Format("{0:N0} đ", item.MinOrderValue)
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">Không có điều kiện</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <h6 class="mb-0">@item.Quantity</h6>
+                                </td>
+                                <td class="text-center">
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="badge bg-success-soft text-success px-3 py-2">
+                                            <i class="fas fa-check-circle me-1"></i> Đang hoạt động
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger-soft text-danger px-3 py-2">
+                                            <i class="fas fa-times-circle me-1"></i> Không hoạt động
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a asp-action="Edit" asp-route-id="@item.VoucherId" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.VoucherId" class="btn btn-sm btn-outline-danger voucher-delete-btn" data-bs-toggle="tooltip" title="Xóa">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="tooltip" title="Sao chép mã" onclick="copyToClipboard('@item.Code')">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
+
+            <!-- Hiển thị khi không có dữ liệu -->
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5">
+                    <img src="~/images/no-data.svg" alt="Không có dữ liệu" style="max-width: 200px; opacity: 0.5;" />
+                    <h5 class="mt-4 text-muted">Chưa có voucher nào được tạo</h5>
+                    <p class="text-muted">Bắt đầu bằng cách tạo voucher đầu tiên của bạn</p>
+                    <a asp-action="Create" class="btn btn-success mt-3">
+                        <i class="fas fa-plus me-2"></i>Tạo voucher mới
+                    </a>
+                </div>
+            }
+
+            <!-- Phân trang -->
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <div class="text-muted">
+                    Hiển thị <span class="fw-bold">1-@Model.Count()</span> trên tổng số <span class="fw-bold">@Model.Count()</span> voucher
+                </div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
 </div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Copy to clipboard function
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                // Show toast notification
+                showToast('Đã sao chép mã: ' + text);
+            });
+        }
+
+        // Show toast function
+        function showToast(message) {
+            var toastEl = document.createElement('div');
+            toastEl.className = 'toast align-items-center text-white bg-success border-0 position-fixed bottom-0 end-0 m-3';
+            toastEl.setAttribute('role', 'alert');
+            toastEl.setAttribute('aria-live', 'assertive');
+            toastEl.setAttribute('aria-atomic', 'true');
+
+            var toastBody = '<div class="d-flex"><div class="toast-body">' +
+                            '<i class="fas fa-check-circle me-2"></i>' + message +
+                            '</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>';
+
+            toastEl.innerHTML = toastBody;
+            document.body.appendChild(toastEl);
+
+            var toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+            toast.show();
+
+            toastEl.addEventListener('hidden.bs.toast', function () {
+                document.body.removeChild(toastEl);
+            });
+        }
+
+        // Initialize tooltips
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+
+            // Search functionality
+            document.getElementById('searchVoucher').addEventListener('keyup', function() {
+                var searchText = this.value.toLowerCase();
+                var rows = document.querySelectorAll('#voucherTable tbody tr');
+
+                rows.forEach(function(row) {
+                    var code = row.querySelector('h6').textContent.toLowerCase();
+                    if (code.includes(searchText)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+
+            // Status filter
+            document.getElementById('statusFilter').addEventListener('change', function() {
+                var status = this.value;
+                var rows = document.querySelectorAll('#voucherTable tbody tr');
+
+                if (status === '') {
+                    rows.forEach(function(row) {
+                        row.style.display = '';
+                    });
+                    return;
+                }
+
+                rows.forEach(function(row) {
+                    var isActive = row.querySelector('.badge').textContent.includes('Đang hoạt động');
+                    if ((status === 'active' && isActive) || (status === 'inactive' && !isActive)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+
+            // Reset filters
+            document.getElementById('resetFilters').addEventListener('click', function() {
+                document.getElementById('searchVoucher').value = '';
+                document.getElementById('statusFilter').value = '';
+                document.getElementById('sortOrder').value = 'newest';
+
+                var rows = document.querySelectorAll('#voucherTable tbody tr');
+                rows.forEach(function(row) {
+                    row.style.display = '';
+                });
+            });
+
+            // Select all checkboxes
+            document.getElementById('selectAll').addEventListener('change', function() {
+                var checkboxes = document.querySelectorAll('#voucherTable tbody input[type="checkbox"]');
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.checked = this.checked;
+                }, this);
+            });
+        });
+    </script>
 }
