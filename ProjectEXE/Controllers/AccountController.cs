@@ -176,39 +176,6 @@ namespace ProjectEXE.Controllers
                         // Send verification email with session ID
                         await _emailService.SendVerificationEmailAsync(model.Email, sessionId);
 
-                        //gửi voucher cho người vừa đăng ký tài khoản
-                        string codeForInvitee = await _vourcherService.AddVoucherAtRegister(15);
-
-                        // Gửi email thông báo voucher cho người đăng ký mới
-                        if (!string.IsNullOrEmpty(codeForInvitee))
-                        {
-                            await _emailService.SendVoucherNotificationEmailAsync(
-                                model.Email,
-                                codeForInvitee,
-                                15,
-                                true
-                            );
-                        }
-
-                        // Nếu người dùng đăng ký bằng mã giới thiệu, gửi voucher cho người giới thiệu
-                        if (!string.IsNullOrEmpty(model.ReferredBy))
-                        {
-                            var referrer = await _userService.GetUserByReferralCode(model.ReferredBy);
-                            if (referrer != null)
-                            {
-                                //gửi voucher cho người mời
-                                string codeForReferrer = await _vourcherService.AddVoucherAtRegister(10);
-
-                                // Gửi email thông báo cho người giới thiệu
-                                await _emailService.SendVoucherNotificationEmailAsync(
-                                    referrer.Email,
-                                    codeForReferrer,
-                                    10,
-                                    false
-                                );
-                            }
-                        }
-
                         // Redirect to confirmation page
                         return RedirectToAction("RegisterConfirmation");
                     }
@@ -234,7 +201,6 @@ namespace ProjectEXE.Controllers
         }
 
         [HttpGet]
-
         public async Task<IActionResult> VerifyEmail(string email, string sessionId)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(sessionId))
@@ -253,6 +219,37 @@ namespace ProjectEXE.Controllers
                     user.IsActive = 1; // Kích hoạt tài khoản
                     await _userService.UpdateUserAsync(user);
 
+                    // Gửi voucher cho người dùng xác nhận email thành công
+                    string codeForInvitee = await _vourcherService.AddVoucherAtRegister(15);
+                    if (!string.IsNullOrEmpty(codeForInvitee))
+                    {
+                        await _emailService.SendVoucherNotificationEmailAsync(
+                            email,
+                            codeForInvitee,
+                            15,
+                            true // là người đăng ký
+                        );
+                    }
+
+                    // Nếu có mã giới thiệu → gửi voucher cho người giới thiệu
+                    if (!string.IsNullOrEmpty(user.ReferredBy))
+                    {
+                        var referrer = await _userService.GetUserByReferralCode(user.ReferredBy);
+                        if (referrer != null)
+                        {
+                            string codeForReferrer = await _vourcherService.AddVoucherAtRegister(10);
+                            if (!string.IsNullOrEmpty(codeForReferrer))
+                            {
+                                await _emailService.SendVoucherNotificationEmailAsync(
+                                    referrer.Email,
+                                    codeForReferrer,
+                                    10,
+                                    false // là người giới thiệu
+                                );
+                            }
+                        }
+                    }
+
                     // Tự động đăng nhập
                     var principal = _userService.CreateClaimsPrincipal(user);
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
@@ -267,10 +264,6 @@ namespace ProjectEXE.Controllers
 
             return View("EmailVerificationFailed");
         }
-
-
-
-
 
 
         [HttpGet]
