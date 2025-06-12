@@ -4,70 +4,267 @@
     ViewData["Title"] = "Xóa Voucher";
 }
 
-<div class="container-fluid">
-    <h2 class="text-danger">Xóa Voucher</h2>
-    <hr />
+@section Styles {
+    <link rel="stylesheet" href="~/css/delete-voucher.css?v=@DateTime.Now.Ticks" />
+}
 
-    <div class="card mb-4">
-        <div class="card-header bg-danger text-white">
-            <h5 class="mb-0">Cảnh báo</h5>
-        </div>
-        <div class="card-body">
-            <p class="mb-0">Bạn có chắc chắn muốn xóa voucher này? Hành động này không thể hoàn tác.</p>
+<div class="container-fluid py-4">
+    <!-- Header section với gradient -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm overflow-hidden">
+                <div class="card-body p-0">
+                    <div class="bg-gradient-danger p-4" style="background: linear-gradient(45deg, #dc3545, #e74c3c);">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h2 class="text-white mb-1"><i class="fas fa-trash-alt me-3"></i>Xóa Voucher</h2>
+                                <p class="text-white-50 mb-0">Xóa voucher <span class="fw-bold">#@Model.Code</span></p>
+                            </div>
+                            <div>
+                                <a asp-action="Index" class="btn btn-light px-4">
+                                    <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <dl class="row">
-                        <dt class="col-sm-4">Mã voucher:</dt>
-                        <dd class="col-sm-8">@Model.Code</dd>
-
-                        <dt class="col-sm-4">Giảm giá:</dt>
-                        <dd class="col-sm-8">@Model.Discount%</dd>
-
-                        <dt class="col-sm-4">Ngày tạo:</dt>
-                        <dd class="col-sm-8">@Model.CreateAt.ToString("dd/MM/yyyy")</dd>
-
-                        <dt class="col-sm-4">Ngày hết hạn:</dt>
-                        <dd class="col-sm-8">@(Model.ExpiryDate.HasValue ? Model.ExpiryDate.Value.ToString("dd/MM/yyyy") : "Không có")</dd>
-                    </dl>
-                </div>
-                <div class="col-md-6">
-                    <dl class="row">
-                        <dt class="col-sm-6">Giá trị đơn hàng tối thiểu:</dt>
-                        <dd class="col-sm-6">@(Model.MinOrderValue.HasValue ? string.Format("{0:N0} đ", Model.MinOrderValue) : "Không có")</dd>
-
-                        <dt class="col-sm-6">Giảm giá tối đa:</dt>
-                        <dd class="col-sm-6">@(Model.MaxDiscountAmount.HasValue ? string.Format("{0:N0} đ", Model.MaxDiscountAmount) : "Không có")</dd>
-
-                        <dt class="col-sm-6">Số lượng:</dt>
-                        <dd class="col-sm-6">@Model.Quantity</dd>
-
-                        <dt class="col-sm-6">Trạng thái:</dt>
-                        <dd class="col-sm-6">
-                            @if (Model.IsActive)
-                            {
-                                <span class="badge bg-success">Kích hoạt</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-danger">Không kích hoạt</span>
-                            }
-                        </dd>
-                    </dl>
+    <!-- Warning section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-danger border-2 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="warning-icon me-4">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center bg-danger bg-opacity-10" style="width: 64px; height: 64px;">
+                                <i class="fas fa-exclamation-triangle text-danger fs-2"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="text-danger fw-bold mb-2">Cảnh báo: Hành động không thể hoàn tác</h5>
+                            <p class="mb-0 text-muted">Voucher sẽ bị xóa vĩnh viễn khỏi hệ thống. Bạn có chắc chắn muốn xóa voucher này?</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <form asp-action="DeleteConfirmed" method="post">
-                <input type="hidden" name="id" value="@Model.VoucherId" />
-                <div class="d-flex gap-2 mt-3">
-                    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
-                    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    <!-- Voucher details and confirmation -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h5 class="mb-0 text-dark">Thông tin Voucher</h5>
                 </div>
-            </form>
+                <div class="card-body p-0">
+                    <div class="voucher-preview-container">
+                        <div class="voucher-preview">
+                            <div class="voucher-header" style="background: linear-gradient(45deg, #dc3545, #e74c3c);">
+                                <div class="voucher-code">@Model.Code</div>
+                                <div class="voucher-discount">@Model.Discount<span>%</span></div>
+                            </div>
+                            <div class="p-4 border-bottom">
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <div class="d-flex mb-3">
+                                            <div class="detail-icon me-3">
+                                                <div class="rounded-circle d-flex align-items-center justify-content-center bg-danger bg-opacity-10" style="width: 36px; height: 36px;">
+                                                    <i class="fas fa-calendar-plus text-danger"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p class="small text-muted mb-0">Ngày tạo</p>
+                                                <h6 class="mb-0 fw-semibold">@Model.CreateAt.ToString("dd/MM/yyyy")</h6>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex mb-3">
+                                            <div class="detail-icon me-3">
+                                                <div class="rounded-circle d-flex align-items-center justify-content-center bg-danger bg-opacity-10" style="width: 36px; height: 36px;">
+                                                    <i class="fas fa-calendar-alt text-danger"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p class="small text-muted mb-0">Ngày hết hạn</p>
+                                                <h6 class="mb-0 fw-semibold">
+                                                    @if (Model.ExpiryDate.HasValue)
+                                                    {
+                                                        @($"{Model.ExpiryDate.Value.Day:00}/{Model.ExpiryDate.Value.Month:00}/{Model.ExpiryDate.Value.Year}")
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-muted fst-italic">Không có</span>
+                                                    }
+                                                </h6>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex">
+                                            <div class="detail-icon me-3">
+                                                <div class="rounded-circle d-flex align-items-center justify-content-center bg-danger bg-opacity-10" style="width: 36px; height: 36px;">
+                                                    <i class="fas fa-tag text-danger"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p class="small text-muted mb-0">Số lượng</p>
+                                                <h6 class="mb-0 fw-semibold">@Model.Quantity</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="d-flex mb-3">
+                                            <div class="detail-icon me-3">
+                                                <div class="rounded-circle d-flex align-items-center justify-content-center bg-danger bg-opacity-10" style="width: 36px; height: 36px;">
+                                                    <i class="fas fa-shopping-cart text-danger"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p class="small text-muted mb-0">Giá trị đơn hàng tối thiểu</p>
+                                                <h6 class="mb-0 fw-semibold">
+                                                    @if (Model.MinOrderValue.HasValue)
+                                                    {
+                                                        <span>@string.Format("{0:N0} đ", Model.MinOrderValue)</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-muted fst-italic">Không có</span>
+                                                    }
+                                                </h6>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex mb-3">
+                                            <div class="detail-icon me-3">
+                                                <div class="rounded-circle d-flex align-items-center justify-content-center bg-danger bg-opacity-10" style="width: 36px; height: 36px;">
+                                                    <i class="fas fa-money-bill-wave text-danger"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p class="small text-muted mb-0">Giảm giá tối đa</p>
+                                                <h6 class="mb-0 fw-semibold">
+                                                    @if (Model.MaxDiscountAmount.HasValue)
+                                                    {
+                                                        <span>@string.Format("{0:N0} đ", Model.MaxDiscountAmount)</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-muted fst-italic">Không có</span>
+                                                    }
+                                                </h6>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex">
+                                            <div class="detail-icon me-3">
+                                                <div class="rounded-circle d-flex align-items-center justify-content-center bg-danger bg-opacity-10" style="width: 36px; height: 36px;">
+                                                    <i class="fas fa-toggle-on text-danger"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p class="small text-muted mb-0">Trạng thái</p>
+                                                <h6 class="mb-0">
+                                                    @if (Model.IsActive)
+                                                    {
+                                                        <span class="badge bg-success-subtle text-success px-3 py-2">
+                                                            <i class="fas fa-check-circle me-1"></i>Đang kích hoạt
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-danger-subtle text-danger px-3 py-2">
+                                                            <i class="fas fa-times-circle me-1"></i>Không kích hoạt
+                                                        </span>
+                                                    }
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4">
+                        <form asp-action="DeleteConfirmed" method="post">
+                            <input type="hidden" name="id" value="@Model.VoucherId" />
+                            <div class="d-flex gap-2">
+                                <a asp-action="Index" class="btn btn-light px-4 py-2">
+                                    <i class="fas fa-times-circle me-2"></i>Hủy thao tác
+                                </a>
+                                <button type="submit" class="btn btn-danger px-4 py-2 ms-auto delete-btn" 
+                                        style="background: linear-gradient(45deg, #dc3545, #e74c3c); border: none;">
+                                    <i class="fas fa-trash-alt me-2"></i>Xác nhận xóa
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header text-white py-3" style="background: linear-gradient(45deg, #dc3545, #e74c3c);">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <h5 class="mb-0">Lưu ý khi xóa</h5>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <ul class="list-unstyled mb-0">
+                        <li class="d-flex mb-3">
+                            <div class="me-3">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center bg-danger bg-opacity-10" style="width: 36px; height: 36px;">
+                                    <i class="fas fa-trash-alt text-danger"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Không thể khôi phục</h6>
+                                <p class="mb-0 small text-muted">Sau khi xóa, dữ liệu về voucher này sẽ không thể khôi phục.</p>
+                            </div>
+                        </li>
+                        <li class="d-flex mb-3">
+                            <div class="me-3">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center bg-danger bg-opacity-10" style="width: 36px; height: 36px;">
+                                    <i class="fas fa-history text-danger"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Lịch sử giao dịch</h6>
+                                <p class="mb-0 small text-muted">Các giao dịch đã sử dụng voucher này vẫn sẽ được lưu giữ.</p>
+                            </div>
+                        </li>
+                        <li class="d-flex">
+                            <div class="me-3">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center bg-danger bg-opacity-10" style="width: 36px; height: 36px;">
+                                    <i class="fas fa-lightbulb text-danger"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Giải pháp thay thế</h6>
+                                <p class="mb-0 small text-muted">Thay vì xóa, bạn có thể vô hiệu hóa voucher bằng cách hủy kích hoạt.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add confirmation dialog
+        document.querySelector('.delete-btn').addEventListener('click', function(e) {
+            if (!confirm('Bạn có chắc chắn muốn xóa voucher này? Hành động này không thể hoàn tác.')) {
+                e.preventDefault();
+            }
+        });
+        
+        // Animation for warning section
+        const warningCard = document.querySelector('.border-danger');
+        setTimeout(function() {
+            warningCard.classList.add('animate__animated', 'animate__headShake');
+        }, 500);
+    });
+</script>
