@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 
 namespace ProjectEXE.Controllers
 {
-    [Authorize(Roles = "Seller")]
     public class ShopController : Controller
     {
         private readonly IShopService _shopService;
@@ -41,11 +40,12 @@ namespace ProjectEXE.Controllers
             return View("ShopView", shopViewModel);
         }
 
+        [Authorize(Roles = "Seller")]
         public ActionResult ActiveShop(int id)
         {
             return View();
         }
-
+        [Authorize(Roles = "Seller")]
         [HttpPost]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> ActiveShop(ShopView shopModel)
@@ -65,6 +65,7 @@ namespace ProjectEXE.Controllers
         }
 
 
+        [Authorize(Roles = "Seller")]
         public async Task<IActionResult> AddNewProduct()
         {
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -92,6 +93,7 @@ namespace ProjectEXE.Controllers
             return View(viewModel);
         }
 
+        [Authorize(Roles = "Seller")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddNewProduct(ProductFormViewModel model)
@@ -117,6 +119,7 @@ namespace ProjectEXE.Controllers
             return View("AddNewProduct", model);
         }
 
+        [Authorize(Roles = "Seller")]
         public async Task<IActionResult> ManageProduct()
         {
             var shopId = await GetCurrentShopIdAsync();
@@ -131,6 +134,7 @@ namespace ProjectEXE.Controllers
             return View(products);
         }
 
+        [Authorize(Roles = "Seller")]
         public async Task<IActionResult> EditProduct(int? id)
         {
             if (id == null) return NotFound();
@@ -170,6 +174,7 @@ namespace ProjectEXE.Controllers
             return View(viewModel);
         }
 
+        [Authorize(Roles = "Seller")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProduct(int id, ProductEditViewModel model)
@@ -205,6 +210,7 @@ namespace ProjectEXE.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Seller")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteProduct(int id)
