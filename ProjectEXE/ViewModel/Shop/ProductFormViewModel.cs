@@ -17,7 +17,7 @@ namespace ProjectEXE.ViewModel.Shop
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập giá sản phẩm")]
-        [Range(1000, 100000000, ErrorMessage = "Giá phải từ 1.000đ đến 100.000.000đ")]
+        [Range(0, 100000000, ErrorMessage = "Giá phải từ 0đ đến 100.000.000đ")]
         [Display(Name = "Giá")]
         public decimal Price { get; set; }
 

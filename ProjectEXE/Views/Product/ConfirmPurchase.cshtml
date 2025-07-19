@@ -53,39 +53,86 @@
                         <h5><i class="fas fa-box me-2"></i>Thông tin sản phẩm</h5>
                     </div>
                     <div class="card-body">
+                        <!-- Kiểm tra nếu sản phẩm có giá 0đ -->
+                        @if (Model.Product.Price == 0)
+                        {
+                            <!-- Thông báo đặc biệt cho sản phẩm 0đ -->
+                            <div class="alert alert-warning border-warning mb-4" style="background: linear-gradient(135deg, #fff3cd 0%, #fef9e7 100%); border-left: 5px solid #ff9800;">
+                                <div class="d-flex align-items-start">
+                                    <div class="me-3">
+                                        <i class="fas fa-gift fa-2x text-warning"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h5 class="alert-heading text-warning mb-3">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            Sản phẩm khuyến mãi đặc biệt - 0đ
+                                        </h5>
+
+                                        <div class="special-product-notice">
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <div class="notice-item">
+                                                        <i class="fas fa-hand-paper text-danger me-2"></i>
+                                                        <strong class="text-danger">Chỉ được nhận 1 lần duy nhất</strong>
+                                                        <p class="mb-0 small text-muted">Mỗi tài khoản chỉ được nhận tối đa 1 sản phẩm 0đ từ shop khuyến mãi</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="notice-item">
+                                                        <i class="fas fa-shield-alt text-info me-2"></i>
+                                                        <strong class="text-info">Hệ thống kiểm tra tự động</strong>
+                                                        <p class="mb-0 small text-muted">Đơn hàng sẽ được xác minh qua hệ thống chống spam</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="warning-box p-3 mb-3" style="background: #fff5f5; border: 1px solid #fed7d7; border-radius: 8px;">
+                                                <h6 class="text-danger mb-2">
+                                                    <i class="fas fa-exclamation-circle me-2"></i>Lưu ý quan trọng:
+                                                </h6>
+                                                <ul class="mb-0 text-dark">
+                                                    <li class="mb-1">
+                                                        <strong>Vi phạm quy định:</strong> Nếu phát hiện tài khoản đã nhận sản phẩm 0đ trước đó, đơn hàng sẽ bị <span class="text-danger font-weight-bold">từ chối ngay lập tức</span>
+                                                    </li>
+                                                    <li class="mb-1">
+                                                        <strong>Tài khoản ảo/giả mạo:</strong> Sử dụng nhiều tài khoản để nhận sản phẩm 0đ có thể dẫn đến <span class="text-danger font-weight-bold">khóa tài khoản vĩnh viễn</span>
+                                                    </li>
+                                                    <li class="mb-0">
+                                                        <strong>Mục đích:</strong> Sản phẩm 0đ nhằm hỗ trợ cộng đồng, vui lòng chỉ nhận khi thực sự cần thiết
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <div class="promotion-rules p-3" style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;">
+                                                <h6 class="text-success mb-2">
+                                                    <i class="fas fa-info-circle me-2"></i>Điều kiện nhận sản phẩm:
+                                                </h6>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <ul class="mb-0 small">
+                                                            <li>✅ Thông tin tài khoản đầy đủ và chính xác</li>
+                                                            <li>✅ Chưa từng nhận sản phẩm 0đ trước đó</li>
+                                                            <li>✅ Cam kết sử dụng đúng mục đích</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <ul class="mb-0 small">
+                                                            <li>✅ Tài khoản hoạt động ít nhất 7 ngày</li>
+                                                            <li>✅ Không vi phạm quy định cộng đồng</li>
+                                                            <li>✅ Xác nhận đã đọc và hiểu các điều khoản</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Thông tin sản phẩm thông thường -->
                         <div class="row align-items-center">
-                            <div class="col-md-3">
-                                <div class="product-image">
-                                    <img src="@Model.Product.MainImageUrl" alt="@Model.Product.ProductName" class="img-fluid rounded">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="product-details">
-                                    <h6 class="product-name">@Model.Product.ProductName</h6>
-                                    <div class="product-specs">
-                                        @if (!string.IsNullOrEmpty(Model.Product.Brand))
-                                        {
-                                            <span class="spec-item"><i class="fas fa-tag"></i> @Model.Product.Brand</span>
-                                        }
-                                        @if (!string.IsNullOrEmpty(Model.Product.Size))
-                                        {
-                                            <span class="spec-item"><i class="fas fa-ruler"></i> Size @Model.Product.Size</span>
-                                        }
-                                        @if (!string.IsNullOrEmpty(Model.Product.Color))
-                                        {
-                                            <span class="spec-item"><i class="fas fa-palette"></i> @Model.Product.Color</span>
-                                        }
-                                    </div>
-                                    <div class="condition-badge">
-                                        <span class="badge">@Model.Product.Condition</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 text-end">
-                                <div class="product-price">
-                                    <span class="price-amount">@Model.Product.Price.ToString("N0")₫</span>
-                                </div>
-                            </div>
+                            <!-- ...existing product info code... -->
                         </div>
                     </div>
                 </div>
@@ -334,9 +381,22 @@
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="agreeTerms" required>
                         <label class="form-check-label" for="agreeTerms">
-                            Tôi đã đọc và đồng ý với
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">điều khoản sử dụng</a>
-                            của REVA
+                            @if (Model.Product.Price == 0)
+                            {
+                                <span>
+                                    Tôi đã đọc và đồng ý với
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">điều khoản sử dụng</a>
+                                    của REVA và <strong class="text-danger">cam kết đây là lần đầu tiên nhận sản phẩm khuyến mãi 0đ</strong>
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    Tôi đã đọc và đồng ý với
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">điều khoản sử dụng</a>
+                                    của REVA
+                                </span>
+                            }
                         </label>
                     </div>
                 </div>
