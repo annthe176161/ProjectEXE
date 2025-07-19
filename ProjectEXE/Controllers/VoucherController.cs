@@ -17,17 +17,50 @@ namespace ProjectEXE.Controllers
     public class VoucherController : Controller
     {
         private readonly IVourcherService _voucherService;
-
+        private readonly int ITEM_PER_PAGE = 10;
         public VoucherController(IVourcherService vourcherService)
         {
             _voucherService = vourcherService;
         }
 
         // GET: Voucher
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? code, bool? status, int p = 1)
         {
             var vouchers = await _voucherService.GetAllVouchers();
-            return View(vouchers);
+
+            // Lọc theo mã
+            if (!string.IsNullOrWhiteSpace(code))
+            {
+                vouchers = vouchers
+                    .Where(v => v.Code != null && v.Code.Contains(code, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            // Lọc theo trạng thái
+            if (status.HasValue)
+            {
+                vouchers = vouchers
+                    .Where(v => v.IsActive == status.Value) 
+                    .ToList();
+            }
+
+            var totalRecord = vouchers.Count();
+            var totalPage = (int)Math.Ceiling((double)totalRecord / ITEM_PER_PAGE); 
+            p = Math.Max(1, Math.Min(p, totalPage));
+
+            ViewBag.CurrentPage = p;
+            ViewBag.CountPage = totalPage;
+            ViewBag.Code = code;
+            ViewBag.Status = status;
+            ViewBag.PageSize = ITEM_PER_PAGE;
+            ViewBag.TotalRecord = totalRecord;
+
+            var paggedVoucher = vouchers
+                .Skip((p - 1) * ITEM_PER_PAGE)
+                .Take(ITEM_PER_PAGE)
+                .ToList();
+
+            return View(paggedVoucher);
         }
 
         // GET: Voucher/Create

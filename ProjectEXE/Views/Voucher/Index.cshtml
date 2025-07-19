@@ -32,62 +32,47 @@
         </div>
     </div>
 
-    <!-- Thông báo -->
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">
-            <div class="d-flex align-items-center">
-                <i class="fas fa-check-circle me-2"></i>
-                <strong>Thành công!</strong> @TempData["Success"]
-            </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm" role="alert">
-            <div class="d-flex align-items-center">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                <strong>Lỗi!</strong> @TempData["Error"]
-            </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-
     <!-- Bộ lọc và tìm kiếm -->
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <div class="input-group">
-                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-success"></i></span>
-                        <input type="text" id="searchVoucher" class="form-control border-start-0" placeholder="Tìm kiếm mã voucher...">
+            <form id="voucherFilterForm" method="get">
+                <div class="row g-2 justify-content-end align-items-center">
+
+                    <div class="col-auto">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0">
+                                <i class="fas fa-search text-success"></i>
+                            </span>
+                            <input type="text" id="searchVoucher" name="code"
+                                   class="form-control border-start-0" placeholder="Tìm kiếm mã voucher..." value="@ViewBag.Code" />
+                        </div>
                     </div>
+
+                    <div class="col-auto">
+                        <select id="statusFilter" name="status" class="form-select">
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="true">Đang hoạt động</option>
+                            <option value="false">Không hoạt động</option>
+                        </select>
+                    </div>
+
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="fa-solid fa-magnifying-glass me-1"></i> Tìm kiếm
+                        </button>
+                    </div>
+
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-outline-success" id="resetFilters">
+                            <i class="fas fa-sync-alt me-2"></i>Đặt lại
+                        </button>
+                    </div>
+
                 </div>
-                <div class="col-md-3">
-                    <select id="statusFilter" class="form-select">
-                        <option value="">Tất cả trạng thái</option>
-                        <option value="active">Đang hoạt động</option>
-                        <option value="inactive">Không hoạt động</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <select id="sortOrder" class="form-select">
-                        <option value="newest">Mới nhất</option>
-                        <option value="oldest">Cũ nhất</option>
-                        <option value="discount">Giảm giá cao nhất</option>
-                        <option value="expiring">Sắp hết hạn</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <button type="button" class="btn btn-outline-success w-100" id="resetFilters">
-                        <i class="fas fa-sync-alt me-2"></i>Đặt lại
-                    </button>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
+
 
     <!-- Danh sách Voucher -->
     <div class="card border-0 shadow-sm">
@@ -107,11 +92,6 @@
                 <table class="table table-hover align-middle" id="voucherTable">
                     <thead class="table-light">
                         <tr>
-                            <th class="text-center" style="width: 60px;">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="selectAll">
-                                </div>
-                            </th>
                             <th>Mã</th>
                             <th>Giảm giá</th>
                             <th>Thời gian</th>
@@ -125,11 +105,7 @@
                         @foreach (var item in Model)
                         {
                             <tr class="align-middle">
-                                <td class="text-center">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="@item.VoucherId">
-                                    </div>
-                                </td>
+
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div class="icon-voucher bg-light-success text-success me-3 rounded">
@@ -235,31 +211,64 @@
             }
 
             <!-- Phân trang -->
-            <div class="d-flex justify-content-between align-items-center mt-4">
-                <div class="text-muted">
-                    Hiển thị <span class="fw-bold">1-@Model.Count()</span> trên tổng số <span class="fw-bold">@Model.Count()</span> voucher
+            @{
+                int currentPage = ViewBag.CurrentPage;
+                int pageSize = ViewBag.PageSize;
+                int totalRecord = ViewBag.TotalRecord;
+
+                var paggingModel = new ProjectEXE.Helpers.PaggingModel()
+                {
+                CurrentPage = currentPage,
+                CountPage = ViewBag.CountPage,
+
+                GenerateUrl = (int? p) => Url.Action("Index", new
+                    {
+                        code = @ViewBag.code,
+                        p = p,
+                    })
+                };
+                int start = (currentPage - 1) * pageSize + 1;
+                int end = Math.Min(currentPage * pageSize, totalRecord);
+            }
+            <div class="row align-items-center mb-3">
+                <div class="col-md-6 text-muted">
+                    Hiển thị <span class="fw-bold">@start-@end</span> trên tổng số <span class="fw-bold">@totalRecord</span> voucher
                 </div>
-                <nav aria-label="Page navigation">
-                    <ul class="pagination pagination-sm mb-0">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a>
-                        </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>
-                        </li>
-                    </ul>
-                </nav>
+                <div class="col-md-6 d-flex justify-content-end">
+                    <partial name="_Pagging" model="@paggingModel" />
+                </div>
             </div>
+
         </div>
     </div>
 </div>
 
+
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
+        document.getElementById('voucherFilterForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const params = new URLSearchParams();
+            const code = document.getElementById('searchVoucher').value.trim();
+            const status = document.getElementById('statusFilter').value;
+
+            if (code) params.append('code', code);
+            if (status) params.append('status', status);
+
+            const query = params.toString();
+            const url = '?' + query;
+
+            window.location.href = url;
+        });
+
+        document.getElementById('resetFilters').addEventListener('click', function () {
+            window.location.href = window.location.pathname;
+        });
+
+
         // Copy to clipboard function
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(function() {
@@ -313,33 +322,11 @@
                 });
             });
 
-            // Status filter
-            document.getElementById('statusFilter').addEventListener('change', function() {
-                var status = this.value;
-                var rows = document.querySelectorAll('#voucherTable tbody tr');
-
-                if (status === '') {
-                    rows.forEach(function(row) {
-                        row.style.display = '';
-                    });
-                    return;
-                }
-
-                rows.forEach(function(row) {
-                    var isActive = row.querySelector('.badge').textContent.includes('Đang hoạt động');
-                    if ((status === 'active' && isActive) || (status === 'inactive' && !isActive)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
 
             // Reset filters
             document.getElementById('resetFilters').addEventListener('click', function() {
                 document.getElementById('searchVoucher').value = '';
                 document.getElementById('statusFilter').value = '';
-                document.getElementById('sortOrder').value = 'newest';
 
                 var rows = document.querySelectorAll('#voucherTable tbody tr');
                 rows.forEach(function(row) {
@@ -347,13 +334,6 @@
                 });
             });
 
-            // Select all checkboxes
-            document.getElementById('selectAll').addEventListener('change', function() {
-                var checkboxes = document.querySelectorAll('#voucherTable tbody input[type="checkbox"]');
-                checkboxes.forEach(function(checkbox) {
-                    checkbox.checked = this.checked;
-                }, this);
-            });
         });
     </script>
 }

@@ -71,7 +71,6 @@ namespace ProjectEXE.Controllers
             if (user == null) return NotFound();
 
             user.FullName = model.FullName;
-            user.Email = model.Email;
             user.PhoneNumber = model.PhoneNumber;
             user.Address = model.Address;
 
