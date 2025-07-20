@@ -6,6 +6,56 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/productlist.css?v=@DateTime.Now.Ticks" />
     <link rel="stylesheet" href="~/css/quickview.css" />
+    <link rel="stylesheet" href="~/css/free-product.css" />
+
+    <style>
+        /* Quick view overlay cho tất cả sản phẩm */
+        .product-image-container {
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .quick-view-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 3;
+            color: white;
+            font-weight: bold;
+        }
+
+        .product-image-container:hover .quick-view-overlay {
+            opacity: 1;
+        }
+
+        .quick-view-overlay i {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        /* Đảm bảo overlay của sản phẩm miễn phí có z-index cao hơn */
+        .free-product-overlay {
+            z-index: 5;
+        }
+
+        .free-product-card:hover .quick-view-overlay {
+            opacity: 0; /* Ẩn quick view khi hover vào sản phẩm miễn phí */
+        }
+
+        .free-product-card .product-image-container:hover .free-product-overlay ~ .quick-view-overlay {
+            opacity: 0; /* Ẩn quick view khi hiển thị overlay miễn phí */
+        }
+    </style>
 }
 
 <!-- THÊM CLASS product-list-page VÀO MAIN CONTAINER -->
@@ -99,43 +149,91 @@
             <!-- Grid sản phẩm -->
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                 @foreach (var product in Model.Products)
+{
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card product-card h-100 @(product.Price == 0 ? "free-product-card" : "")">
+            @if (product.Price == 0)
+            {
+                <!-- Badge đặc biệt cho sản phẩm 0đ -->
+                <div class="free-product-badge">
+                    <div class="badge-content">
+                        <i class="fas fa-gift"></i>
+                        <span>MIỄN PHÍ</span>
+                    </div>
+                    <div class="badge-shine"></div>
+                </div>
+                
+                <!-- Hiệu ứng viền sáng -->
+                <div class="free-product-glow"></div>
+            }
+
+            <!-- Container ảnh với quick view cho TẤT CẢ sản phẩm -->
+            <div class="product-image-container quick-view-trigger" data-product-id="@product.ProductId">
+                <img src="@product.MainImageUrl" class="card-img-top" alt="@product.ProductName">
+                
+                @if (product.Price == 0)
                 {
-                    <div class="col">
-                        <div class="card product-card h-100">
-                            @if (product.IsNew)
-                            {
-                                <div class="product-badge">Mới</div>
-                            }
-                            else if (product.IsBestSeller)
-                            {
-                                <div class="product-badge bestseller-badge">Bán chạy</div>
-                            }
-
-                            <!-- Thêm chức năng quick view vào hình ảnh -->
-                            <div class="product-image-container quick-view-trigger" data-product-id="@product.ProductId">
-                                <img src="@product.MainImageUrl" class="card-img-top" alt="@product.ProductName">
-                                <div class="quick-view-overlay">
-                                    <i class="fas fa-eye"></i>
-                                    <span>Xem nhanh</span>
-                                </div>
-                            </div>
-
-                            <div class="card-body">
-                                <h5 class="card-title">@product.ProductName</h5>
-                                <p class="shop-name">
-                                    <i class="fas fa-store-alt me-1"></i>
-                                    @product.Shop.ShopName
-                                </p>
-                                <p class="price">@product.Price.ToString("N0")đ</p>
-                                <div class="d-flex justify-content-between">
-                                    <a asp-controller="Product" asp-action="ProductDetails" asp-route-id="@product.ProductId" class="btn btn-outline-primary btn-sm">
-                                        <i class="fas fa-eye me-1"></i> Chi tiết
-                                    </a>
-                                </div>
-                            </div>
+                    <!-- Overlay đặc biệt cho sản phẩm 0đ -->
+                    <div class="free-product-overlay">
+                        <div class="free-text">
+                            <i class="fas fa-star"></i>
+                            SẢN PHẨM KHUYẾN MÃI
                         </div>
                     </div>
                 }
+                
+                <!-- Quick view overlay cho TẤT CẢ sản phẩm -->
+                <div class="quick-view-overlay">
+                    <i class="fas fa-eye"></i>
+                    <span>Xem nhanh</span>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <h5 class="card-title">@product.ProductName</h5>
+                <p class="shop-name">
+                    <i class="fas fa-store-alt me-1"></i>
+                    @product.Shop.ShopName
+                </p>
+                
+                @if (product.Price == 0)
+                {
+                    <!-- Hiển thị giá đặc biệt cho sản phẩm 0đ -->
+                    <div class="free-price-container">
+                        <p class="free-price">
+                            <span class="free-text-large">MIỄN PHÍ</span>
+                            <span class="original-price-crossed">50.000₫</span>
+                        </p>
+                        <div class="limited-offer">
+                            <i class="fas fa-clock"></i>
+                            <span>Số lượng có hạn</span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <p class="price">@product.Price.ToString("N0")₫</p>
+                }
+                
+                <div class="d-flex justify-content-between">
+                    <a asp-controller="Product" asp-action="ProductDetails" asp-route-id="@product.ProductId" 
+                       class="btn @(product.Price == 0 ? "btn-free-product" : "btn-outline-primary") btn-sm">
+                        @if (product.Price == 0)
+                        {
+                            <i class="fas fa-gift me-1"></i>
+                            <span>Nhận ngay</span>
+                        }
+                        else
+                        {
+                            <i class="fas fa-eye me-1"></i>
+                            <span>Chi tiết</span>
+                        }
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
                 @if (!Model.Products.Any())
                 {

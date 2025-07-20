@@ -1,0 +1,148 @@
+﻿/* ===== FREE PRODUCT STYLES ===== */
+:root {
+    --free-primary: #ff6b35;
+    --free-secondary: #f7931e;
+    --free-accent: #ffd700;
+    --free-glow: rgba(255, 107, 53, 0.4);
+}
+/* Card container cho sản phẩm miễn phí */
+.free-product-card {
+    position: relative;
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px var(--free-glow) !important;
+    border: 2px solid var(--free-accent);
+    background: linear-gradient(145deg, #fff 0%, #fffef7 100%);
+    animation: freeProductPulse 3s ease-in-out infinite;
+}
+
+    .free-product-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 12px 35px var(--free-glow) !important;
+    }
+/* Badge miễn phí */
+.free-product-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    z-index: 10;
+    background: linear-gradient(135deg, var(--free-primary) 0%, var(--free-secondary) 100%);
+    color: white;
+    border-radius: 20px;
+    padding: 8px 12px;
+    font-weight: bold;
+    font-size: 0.75rem;
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.5);
+    animation: freeBadgeBounce 2s ease-in-out infinite;
+}
+
+.badge-content {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+/* Overlay trên ảnh */
+.free-product-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 107, 53, 0.9), rgba(247, 147, 30, 0.9));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 5;
+}
+
+.free-product-card:hover .free-product-overlay {
+    opacity: 1;
+}
+
+.free-text {
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    font-size: 0.9rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+    .free-text i {
+        display: block;
+        font-size: 1.5rem;
+        margin-bottom: 5px;
+    }
+/* Phần giá miễn phí */
+.free-price-container {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.free-price {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.free-text-large {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--free-primary);
+    text-shadow: 0 1px 2px rgba(255, 107, 53, 0.3);
+}
+
+.original-price-crossed {
+    font-size: 0.85rem;
+    color: #999;
+    text-decoration: line-through;
+}
+
+.limited-offer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    color: var(--free-secondary);
+    font-weight: 600;
+    margin-top: 5px;
+}
+/* Button cho sản phẩm miễn phí */
+.btn-free-product {
+    background: linear-gradient(135deg, var(--free-primary) 0%, var(--free-secondary) 100%);
+    color: white;
+    border: none;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    transition: all 0.3s ease;
+}
+
+    .btn-free-product:hover {
+        background: linear-gradient(135deg, var(--free-secondary) 0%, var(--free-primary) 100%);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(255, 107, 53, 0.4);
+    }
+/* Animations */
+@keyframes freeProductPulse {
+    0%, 100% {
+        box-shadow: 0 8px 25px var(--free-glow);
+    }
+
+    50% {
+        box-shadow: 0 12px 35px rgba(255, 107, 53, 0.6);
+    }
+}
+
+@keyframes freeBadgeBounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-3px);
+    }
+}
