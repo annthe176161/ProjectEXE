@@ -248,31 +248,71 @@
             </div>
 
             <!-- Phân trang -->
-            @if (Model.Pagination.TotalPages > 1)
+            @{
+                int totalPages = Model.Pagination.TotalPages;
+                int currentPage = Model.Pagination.CurrentPage;
+            }
+
+            @if (totalPages > 1)
             {
                 <nav class="d-flex justify-content-center mt-5">
                     <ul class="pagination">
-                        <li class="page-item @(Model.Pagination.CurrentPage == 1 ? "disabled" : "")">
-                            <a class="page-link" href="@Url.Action("ProductList", "Product", new { page = Model.Pagination.CurrentPage - 1, SelectedCategoryIds = Model.Filter.SelectedCategoryIds, MinPrice = Model.Filter.MinPrice, MaxPrice = Model.Filter.MaxPrice, SelectedConditionIds = Model.Filter.SelectedConditionIds, SortBy = Model.Filter.SortBy, ShowPremiumOnly = Model.Filter.ShowPremiumOnly })" tabindex="-1" aria-disabled="@(Model.Pagination.CurrentPage == 1)">
+                        <!-- Previous -->
+                        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Action("ProductList", "Product", new { page = currentPage - 1, SelectedCategoryIds = Model.Filter.SelectedCategoryIds, MinPrice = Model.Filter.MinPrice, MaxPrice = Model.Filter.MaxPrice, SelectedConditionIds = Model.Filter.SelectedConditionIds, SortBy = Model.Filter.SortBy, ShowPremiumOnly = Model.Filter.ShowPremiumOnly })" tabindex="-1" aria-disabled="@(currentPage == 1)">
                                 <i class="fas fa-chevron-left"></i>
                             </a>
                         </li>
 
-                        @for (int i = 1; i <= Model.Pagination.TotalPages; i++)
+                        @if (totalPages <= 7)
                         {
-                            <li class="page-item @(i == Model.Pagination.CurrentPage ? "active" : "")">
-                                <a class="page-link" href="@Url.Action("ProductList", "Product", new { page = i, SelectedCategoryIds = Model.Filter.SelectedCategoryIds, MinPrice = Model.Filter.MinPrice, MaxPrice = Model.Filter.MaxPrice, SelectedConditionIds = Model.Filter.SelectedConditionIds, SortBy = Model.Filter.SortBy, ShowPremiumOnly = Model.Filter.ShowPremiumOnly })">@i</a>
+                            for (int i = 1; i <= totalPages; i++)
+                            {
+                                <li class="page-item @(i == currentPage ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("ProductList", "Product", new { page = i, SelectedCategoryIds = Model.Filter.SelectedCategoryIds, MinPrice = Model.Filter.MinPrice, MaxPrice = Model.Filter.MaxPrice, SelectedConditionIds = Model.Filter.SelectedConditionIds, SortBy = Model.Filter.SortBy, ShowPremiumOnly = Model.Filter.ShowPremiumOnly })">@i</a>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            // Always show page 1
+                            <li class="page-item @(1 == currentPage ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("ProductList", "Product", new { page = 1, SelectedCategoryIds = Model.Filter.SelectedCategoryIds, MinPrice = Model.Filter.MinPrice, MaxPrice = Model.Filter.MaxPrice, SelectedConditionIds = Model.Filter.SelectedConditionIds, SortBy = Model.Filter.SortBy, ShowPremiumOnly = Model.Filter.ShowPremiumOnly })">1</a>
+                            </li>
+
+                            if (currentPage > 4)
+                            {
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            }
+
+                            for (int i = Math.Max(2, currentPage - 2); i <= Math.Min(totalPages - 1, currentPage + 2); i++)
+                            {
+                                <li class="page-item @(i == currentPage ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("ProductList", "Product", new { page = i, SelectedCategoryIds = Model.Filter.SelectedCategoryIds, MinPrice = Model.Filter.MinPrice, MaxPrice = Model.Filter.MaxPrice, SelectedConditionIds = Model.Filter.SelectedConditionIds, SortBy = Model.Filter.SortBy, ShowPremiumOnly = Model.Filter.ShowPremiumOnly })">@i</a>
+                                </li>
+                            }
+
+                            if (currentPage < totalPages - 3)
+                            {
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            }
+
+                            // Always show last page
+                            <li class="page-item @(totalPages == currentPage ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("ProductList", "Product", new { page = totalPages, SelectedCategoryIds = Model.Filter.SelectedCategoryIds, MinPrice = Model.Filter.MinPrice, MaxPrice = Model.Filter.MaxPrice, SelectedConditionIds = Model.Filter.SelectedConditionIds, SortBy = Model.Filter.SortBy, ShowPremiumOnly = Model.Filter.ShowPremiumOnly })">@totalPages</a>
                             </li>
                         }
 
-                        <li class="page-item @(Model.Pagination.CurrentPage == Model.Pagination.TotalPages ? "disabled" : "")">
-                            <a class="page-link" href="@Url.Action("ProductList", "Product", new { page = Model.Pagination.CurrentPage + 1, SelectedCategoryIds = Model.Filter.SelectedCategoryIds, MinPrice = Model.Filter.MinPrice, MaxPrice = Model.Filter.MaxPrice, SelectedConditionIds = Model.Filter.SelectedConditionIds, SortBy = Model.Filter.SortBy, ShowPremiumOnly = Model.Filter.ShowPremiumOnly })">
+                        <!-- Next -->
+                        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Action("ProductList", "Product", new { page = currentPage + 1, SelectedCategoryIds = Model.Filter.SelectedCategoryIds, MinPrice = Model.Filter.MinPrice, MaxPrice = Model.Filter.MaxPrice, SelectedConditionIds = Model.Filter.SelectedConditionIds, SortBy = Model.Filter.SortBy, ShowPremiumOnly = Model.Filter.ShowPremiumOnly })">
                                 <i class="fas fa-chevron-right"></i>
                             </a>
                         </li>
                     </ul>
                 </nav>
             }
+
         </div>
     </div>
 </main>
